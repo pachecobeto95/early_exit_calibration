@@ -8,8 +8,7 @@ import time, io
 #import torchvision.transforms as transforms
 from PIL import Image
 #from .utils import load_model
-#from .utils import ModelLoad
-#from .utils import transform_image
+from .utils import ModelLoad, transform_image
 #import torchvision.models as models
 
 model = ModelLoad()
