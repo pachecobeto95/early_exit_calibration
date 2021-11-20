@@ -14,12 +14,6 @@ def edgeModelConfiguration():
 	model.load_temperature()
 	return jsonify({"status": "ok"}), 200
 
-
-
-data_dict = {"nr_branches_model": nr_branches_model, "dataset_name": dataset_name, 
-	"model_name": model_name}
-
-
 # Define url for the user send the image
 @api.route('/edge/edgeInference', methods=["POST"])
 def edge_inference():
