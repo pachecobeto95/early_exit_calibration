@@ -24,14 +24,6 @@ class ModelLoad():
 	def __init__(self):
 		self.model_params = None
 
-	@property
-	def model_params(self):
-		return self.model_params
-	
-	@model_params.setter
-	def model_params(self, model_params):
-		self.model_params = model_params
-
 	def load_model(self):
 		self.ee_model = Early_Exit_DNN(self.model_params["model_name"], self.model_params["n_classes"], config.pretrained, 
 			config.n_branches, 
