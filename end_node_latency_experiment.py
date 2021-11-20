@@ -27,7 +27,7 @@ def sendModelConf(url, nr_branches_model, dataset_name, model_name):
 	
 
 	data_dict = {"nr_branches_model": nr_branches_model, "dataset_name": dataset_name, 
-	"model_name": model_name, "n_classes": config.models_params[model_name]["n_classes"]}
+	"model_name": model_name, "n_classes": config.models_params[dataset_name]["n_classes"]}
 
 	try:
 		r = requests.post(url, json=data_dict, timeout=30)
