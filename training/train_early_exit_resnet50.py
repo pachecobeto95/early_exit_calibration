@@ -3,7 +3,7 @@ import torchvision
 from torchvision import datasets, transforms
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision.utils import save_image
-import os, cv2, sys, time, math, os
+import os, sys, time, math, os
 from torchvision import transforms, utils, datasets
 from torch.utils.data import Dataset, DataLoader, SubsetRandomSampler, WeightedRandomSampler
 from torch.utils.data import random_split
@@ -20,13 +20,17 @@ import torchvision.models as models
 from torch.optim.lr_scheduler import _LRScheduler
 from torch.optim import lr_scheduler
 from torchvision import datasets, transforms
-!pip install pthflops
 from pthflops import count_ops
 from torch import Tensor
 from typing import Callable, Any, Optional, List, Type, Union
 import torch.nn.init as init
 import functools
 from tqdm import tqdm
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
+
+
 
 def create_save_dir(dataset_save_path, model_name, save_indices_path):
   if (not os.path.exists(dataset_save_path)):
@@ -139,8 +143,8 @@ class LoadDataset():
       
       train_idx = np.load(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       val_idx = np.load(os.path.join(savePath_idx, "validation_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
-      test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
-      test_idx = np.array(list(test_idx.tolist()))
+      #test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
+      #test_idx = np.array(list(test_idx.tolist()))
     else:
       # This line get the indices of the samples which belong to the training dataset and test dataset. 
       train_idx, test_idx = self.get_indices(train_set, split_ratio)
@@ -158,13 +162,13 @@ class LoadDataset():
     # This line mounts the training and test dataset, selecting the samples according indices. 
     train_data = torch.utils.data.Subset(train_set, indices=train_idx)
     val_data = torch.utils.data.Subset(val_set, indices=val_idx)
-    test_data = torch.utils.data.Subset(test_set, indices=test_idx)
+    #test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=self.batch_size_train, shuffle=True, num_workers=4)
     val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=4)
-    test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
+    #test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
 
-    return train_loader, val_loader, test_loader 
+    return train_loader, val_loader, 0
 
   def simple_caltech256(self, dataset_path, split_ratio, dataset_name, savePath_idx):
 
@@ -513,7 +517,6 @@ class Early_Exit_DNN(nn.Module):
                                    "inceptionV3": self.early_exit_inceptionV3}
 
     self.pool_size = 7 if(self.model_name == "vgg16") else 1
-    print(self.pool_size)
     return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
 
   def select_distribution_method(self):
@@ -1227,7 +1230,7 @@ def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
 input_dim = 224
 batch_size_train = 32
 batch_size_test = 1
-model_id = 2
+model_id = 7
 split_ratio = 0.2
 n_classes = 258
 pretrained = True
@@ -1250,7 +1253,7 @@ dataset_save_path = os.path.join(root_save_path, dataset_name)
 save_indices_path = os.path.join(dataset_save_path, "indices")
 #create_save_dir(dataset_save_path, model_name, save_indices_path)
 
-dataset_path = "./datasets/Caltech256/256_ObjectCategories/"
+dataset_path = "./datasets/256_ObjectCategories/"
 
 model_save_path = os.path.join(dataset_save_path, model_name, "models", "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
 history_save_path = os.path.join(dataset_save_path, model_name, "history", "history_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
@@ -1275,9 +1278,13 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]},
-                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-                       {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[1]}], weight_decay=weight_decay)
+#optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]},
+#                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
+#                       {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[1]}], weight_decay=weight_decay)
+
+optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': 0.005}, 
+                      {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
+                      {'params': early_exit_dnn.classifier.parameters(), 'lr': 0.005}], momentum=0, weight_decay=0)
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 
@@ -1315,6 +1322,7 @@ while (count < patience):
     torch.save(save_dict, model_save_path)
 
   else:
+    print("Current Patience: %s"%(count))
     count += 1
 
 print("Stop! Patience is finished")
