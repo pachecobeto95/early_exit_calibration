@@ -45,6 +45,7 @@ dataset_name = "caltech256"
 nr_branch_model = nr_branch_model = 5
 input_dim = 256
 input_shape = 224
+pretrained = True
 
 
 disabled_branches = [1, 2]
