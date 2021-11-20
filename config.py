@@ -54,3 +54,6 @@ timeout = 30
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
+models_params = {"caltech256": {"n_classes": 258}, "cifar100": {"n_classes": 100}}
+
+
