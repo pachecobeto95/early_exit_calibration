@@ -55,6 +55,7 @@ def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 		response_request = sendToCloud(config.url_cloud_overall_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
 
 	inference_time = time.time() - start
+	return response_request
 
 	if(response_request["status"] == "ok"):
 		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
@@ -103,6 +104,7 @@ def edgeAllSamplesCalibInference(fileImg, p_tar, nr_branch_edge):
 		response_request = sendToCloud(config.url_cloud_all_samples_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
 
 	inference_time = time.time() - start
+	return response_request
 
 	if(response_request["status"] == "ok"):
 		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
