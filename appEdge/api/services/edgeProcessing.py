@@ -1,5 +1,5 @@
 from flask import jsonify, session, current_app as app
-import os, pickle, requests, sys, config, time
+import os, pickle, requests, sys, config, time, math
 import numpy as np, json
 import torchvision.models as models
 import torch
@@ -161,6 +161,7 @@ def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
 	"""
 	print(conf_list)
 	print(type(conf_list[0]))
+	print()
 	conf_list = [0 if math.isnan(x) else x for x in conf_list] if(np.nan in conf_list) else conf_list
 	print(conf_list)
 
