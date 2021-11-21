@@ -23,6 +23,8 @@ def transform_image(image_bytes):
 class ModelLoad():
 	def __init__(self):
 		self.model_params = None
+		self.n_exits = config.n_branches + 1
+
 
 	def load_model(self):
 		self.ee_model = Early_Exit_DNN(self.model_params["model_name"], self.model_params["n_classes"], config.pretrained, 
@@ -42,7 +44,7 @@ class ModelLoad():
 		if(overall):
 			select_temp_branches = ["temperature"]
 		else:
-			select_temp_branches = ["temperature_branch_%s"%(i) for i in range(1, n_exits+1)]
+			select_temp_branches = ["temperature_branch_%s"%(i) for i in range(1, self.n_exits+1)]
 		return df[select_temp_branches]
 
 	def load_temperature(self):

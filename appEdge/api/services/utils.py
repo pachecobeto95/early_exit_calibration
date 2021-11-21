@@ -23,6 +23,7 @@ def transform_image(image_bytes):
 class ModelLoad():
 	def __init__(self):
 		self.model_params = None
+		self.n_exits = config.n_branches + 1
 
 	def load_model(self):
 		self.ee_model = Early_Exit_DNN(self.model_params["model_name"], self.model_params["n_classes"], config.pretrained, 

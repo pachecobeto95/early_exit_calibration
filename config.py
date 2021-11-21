@@ -44,6 +44,7 @@ model_name = "mobilenet"
 dataset_name = "caltech256"
 nr_branch_model = nr_branch_model = 5
 input_dim = 224
+input_resize = 224
 input_shape = (3, input_dim, input_dim)
 pretrained = False
 n_branches = 5
