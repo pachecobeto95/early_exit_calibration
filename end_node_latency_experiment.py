@@ -102,8 +102,6 @@ def main(args):
 	nr_branches_model = args.n_branches
 
 	imgs_files_list = list(glob(os.path.join(config.dataset_path[args.dataset_name], "*")))
-	print(imgs_files_list)
-	sys.exit()
 	p_tar_list = np.arange(0.7, 0.95, 0.05)
 
 	#This line defines the number of side branches processed at the cloud
