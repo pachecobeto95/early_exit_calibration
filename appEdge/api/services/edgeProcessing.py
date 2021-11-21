@@ -40,6 +40,7 @@ def edgeNoCalibInference(fileImg, p_tar, nr_branch_edge):
 
 
 def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
+	response_request = {"status": "ok"}
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -64,6 +65,7 @@ def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 
 
 def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
+	response_request = {"status": "ok"}
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -90,6 +92,7 @@ def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 
 
 def edgeAllSamplesCalibInference(fileImg, p_tar, nr_branch_edge):
+	response_request = {"status": "ok"}
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
