@@ -708,6 +708,10 @@ class Early_Exit_DNN(nn.Module):
 
 
   def temperature_scale_branches(self, logits, temperature, exit_branch):
+    print(logits.shape)
+    if(temperature[exit_branch] is None):
+      return torch.zeros(logits.shape)
+
     return torch.div(logits, temperature[exit_branch])
 
 
