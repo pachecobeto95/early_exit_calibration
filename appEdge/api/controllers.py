@@ -39,6 +39,7 @@ def edge_inference_no_calib():
 
 	fileImg = request.files['img']
 	json_data = json.load(request.files['data'])
+	return jsonify({"status": "OK"}), 200
 
 	result = edgeProcessing.edgeNoCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
 
