@@ -70,6 +70,8 @@ def sendImage(img_path, url, p_tar, nr_branch_edge):
 		print("Url: ¨%s, Timeout error: %s"%(url, timeout_err))
 
 def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
+	print("Exp")
+	print(imgs_files_list)
 	for (i, img_path) in enumerate(imgs_files_list, 1):
 		print("Img: %s"%(i))
 
@@ -105,8 +107,10 @@ def main(args):
 
 	#This line defines the number of side branches processed at the cloud
 	nr_branch_edge = np.arange(2, nr_branches_model+1)
+	print("Sending Confs")
 	sendModelConf(config.urlConfModelEdge, nr_branches_model, args.dataset_name, args.model_name)
 	sendModelConf(config.urlConfModelCloud, nr_branches_model, args.dataset_name, args.model_name)
+	print("Finish Confs")
 	inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge)
 
 
