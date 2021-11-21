@@ -53,7 +53,7 @@ n_branches = 5
 exit_type = "bnpool"
 distribution = "linear"
 
-disabled_branches = [1, 2]
+disabled_branches = [None]
 
 timeout = 30
 

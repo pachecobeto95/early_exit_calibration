@@ -1,5 +1,5 @@
 import torchvision
-import os, sys, time, math, os
+import os, sys, time, math, config
 from torchvision import transforms, utils, datasets
 from PIL import Image
 import torch
