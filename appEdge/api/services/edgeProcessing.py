@@ -16,12 +16,14 @@ model = ModelLoad()
 def edgeNoCalibInference(fileImg, p_tar, nr_branch_edge):
 
 	#This line reads the fileImg, obtaining pixel matrix.
+	response_request = {"status": "ok"}
 	start = time.time()
 	image_bytes = fileImg.read()
 
 	#Starts measuring the inference time
 	tensor_img = transform_image(image_bytes) #transform input data, which resizes the input image
 
+	return response_request
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge)
 
