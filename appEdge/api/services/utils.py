@@ -44,8 +44,8 @@ class ModelLoad():
 			select_temp_branches = ["temperature"]
 		else:
 			select_temp_branches = ["temperature_branch_%s"%(i) for i in range(1, self.n_exits+1)]
-		print(df[select_temp_branches])
-		return df[select_temp_branches]
+		
+		return df[select_temp_branches].where(pd.notnull(df[select_temp_branches]), None)
 
 	def load_temperature(self):
 		overall_calib_temp_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], 
