@@ -728,7 +728,7 @@ class Early_Exit_DNN(nn.Module):
         return output_branch, conf_branch, infered_class_branch, True
 
       else:
-        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
     return x, conf_list, class_list, False
 
@@ -753,7 +753,7 @@ class Early_Exit_DNN(nn.Module):
         return output_branch, conf_branch, infered_class_branch, True
 
       else:
-        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
     return x, conf_list, class_list, False
     
@@ -776,7 +776,7 @@ class Early_Exit_DNN(nn.Module):
         return output_branch, conf_branch, infered_class_branch, True
 
       else:
-        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
     return x, conf_list, class_list, False
 
@@ -801,7 +801,7 @@ class Early_Exit_DNN(nn.Module):
         return output_branch, conf_branch, infered_class_branch, True
 
       else:
-        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
     return x, conf_list, class_list, False
 
