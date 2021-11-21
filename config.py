@@ -43,9 +43,9 @@ nr_min_branches = 2
 model_name = "mobilenet"
 dataset_name = "caltech256"
 nr_branch_model = nr_branch_model = 5
-input_dim = 256
-input_shape = 224
-pretrained = True
+input_dim = 224
+input_shape = (3, input_dim, input_dim)
+pretrained = False
 n_branches = 5
 exit_type = "bnpool"
 distribution = "linear"
@@ -58,5 +58,5 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 models_params = {"caltech256": {"n_classes": 258}, "cifar100": {"n_classes": 100}}
-
+model_id = 1
 
