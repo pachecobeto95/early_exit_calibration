@@ -30,7 +30,7 @@ class ModelLoad():
 			config.n_branches, config.input_shape, config.exit_type, config.device, distribution=config.distribution)
 
 		model_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], self.model_params["model_name"], 
-			"models", "ee_%s_branches_%s_id_%s.pth"%(self.model_params["model_name"], config.n_branches, 7))
+			"models", "ee_%s_branches_%s_id_%s.pth"%(self.model_params["model_name"], config.n_branches, config.model_id))
 		
 		self.ee_model.load_state_dict(torch.load(model_path, map_location=config.device)["model_state_dict"])
 

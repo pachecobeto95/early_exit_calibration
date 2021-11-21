@@ -158,9 +158,7 @@ def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
 	feature_map (Tensor): output data from partitioning layer
 	conf_list (list): this list contains the confidence obtained for each early exit during Early-exit DNN inference
 	"""
-	print(conf_list)
-	print(type(conf_list[0]))
-	print()
+
 	conf_list = [0 if math.isnan(x) else x for x in conf_list] if(np.nan in conf_list) else conf_list
 	print(conf_list)
 
