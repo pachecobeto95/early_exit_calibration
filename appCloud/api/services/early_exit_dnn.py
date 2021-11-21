@@ -765,7 +765,7 @@ class Early_Exit_DNN(nn.Module):
 
 
   def forwardBranchesCalibCloudInference(self, x, conf_list, class_list, p_tar, nr_branch_edge):
-    print(int(nr_branch_edge))
+
     for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
         x = self.stages[i](x)
 
