@@ -152,6 +152,7 @@ def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
 	
 	#data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": conf_list, "p_tar": p_tar, 
 	#"nr_branch_edge": nr_branch_edge, "class_list": class_list}
+	print(conf_list, class_list)
 	data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": [1], "p_tar": 1, 
 	"nr_branch_edge": 1, "class_list": [1]}
 
