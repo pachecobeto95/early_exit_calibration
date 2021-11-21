@@ -36,14 +36,15 @@ class ModelLoad():
 
 
 	def get_temperature(self, df, overall=False):
-		print(df)
+		#print(df)
 		df = df.where(pd.notnull(df), None)
-		print(df)
+		#print(df)
 		df.set_index("p_tar", inplace=True)
 		if(overall):
 			select_temp_branches = ["temperature"]
 		else:
 			select_temp_branches = ["temperature_branch_%s"%(i) for i in range(1, self.n_exits+1)]
+		print(df[select_temp_branches])
 		return df[select_temp_branches]
 
 	def load_temperature(self):
