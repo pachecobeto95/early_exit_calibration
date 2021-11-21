@@ -85,11 +85,11 @@ def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
 				sendImage(img_path, config.url_edge_all_samples_calib, p_tar, int(5))
 
 
-		start = time.time()
-		sendImageToCloud(img_path, config.urlOnlyCloudProcessing)
-		end = time.time()
-		cloud_inference_time = end-start
-		saveInferenceTimeCloud(cloud_inference_time)
+		#start = time.time()
+		#sendImageToCloud(img_path, config.urlOnlyCloudProcessing)
+		#end = time.time()
+		#cloud_inference_time = end-start
+		#saveInferenceTimeCloud(cloud_inference_time)
 
  
 
