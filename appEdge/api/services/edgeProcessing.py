@@ -75,6 +75,7 @@ def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge)
 
+	print("AAAAAAAAAAAAAAAA")
 	if (not isTerminate):
 		response_request = sendToCloud(config.url_cloud_branches_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
 
