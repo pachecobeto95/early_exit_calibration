@@ -45,7 +45,9 @@ class ModelLoad():
 		else:
 			select_temp_branches = ["temperature_branch_%s"%(i) for i in range(1, self.n_exits+1)]
 		
-		return df[select_temp_branches].where(pd.notnull(df[select_temp_branches]), None)
+		df_temp = df[select_temp_branches]
+
+		return df_temp.where(pd.notnull(df_temp), None)
 
 	def load_temperature(self):
 		overall_calib_temp_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], 
@@ -69,7 +71,7 @@ class ModelLoad():
 		self.ee_model.temperature_overall = self.overall_temp.loc[p_tar].item()
 		
 	def update_branches_temperature(self, p_tar):
-		print(self.temp_branches.loc[p_tar])
+		print(self.temp_branches)
 		self.ee_model.temperature_branches = self.temp_branches.loc[p_tar].values
 		
 	def update_all_samples_temperature(self, p_tar):
