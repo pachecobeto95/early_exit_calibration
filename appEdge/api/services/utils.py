@@ -11,8 +11,8 @@ import pandas as pd
 def transform_image(image_bytes):
 	imagenet_mean = [0.457342265910642, 0.4387686270106377, 0.4073427106250871]
 	imagenet_std = [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
-	my_transforms = transforms.Compose([transforms.Resize(config.input_dim),
-		transforms.CenterCrop(config.input_resize),
+	my_transforms = transforms.Compose([transforms.Resize(224),
+		transforms.CenterCrop(224),
 		transforms.ToTensor(),
 		transforms.Normalize(imagenet_mean, imagenet_std)])
 
