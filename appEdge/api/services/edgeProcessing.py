@@ -1,11 +1,11 @@
 from flask import jsonify, session, current_app as app
 import os, pickle, requests, sys, config, time
 import numpy as np, json
-#import torchvision.models as models
-#import torch
+import torchvision.models as models
+import torch
 import datetime
 import time, io
-#import torchvision.transforms as transforms
+import torchvision.transforms as transforms
 from PIL import Image
 from .utils import ModelLoad, transform_image
 import pandas as pd

@@ -70,8 +70,7 @@ def sendImage(img_path, url, p_tar, nr_branch_edge):
 		print("Url: ¨%s, Timeout error: %s"%(url, timeout_err))
 
 def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
-	print("Exp")
-	print(imgs_files_list)
+
 	for (i, img_path) in enumerate(imgs_files_list, 1):
 		print("Img: %s"%(i))
 
