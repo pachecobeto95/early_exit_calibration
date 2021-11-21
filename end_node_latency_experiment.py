@@ -79,7 +79,7 @@ def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
 
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
-				sendImage(img_path, config.url_edge_no_calib, p_tar, int(5))
+				sendImage(img_path, config.url_edge_no_calib, p_tar, int(2))
 				sys.exit()
 				sendImage(img_path, config.url_edge_overall_calib, p_tar, int(nr_branch_edge))
 				sendImage(img_path, config.url_edge_branches_calib, p_tar, int(nr_branch_edge))
