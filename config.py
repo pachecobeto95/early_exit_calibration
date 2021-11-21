@@ -38,6 +38,9 @@ cloud_model_root_path = os.path.join(DIR_NAME, "appCloud", "api", "services", "m
 #Dataset Path
 dataset_path = os.path.join(DIR_NAME, "datasets", "test_dataset_caltech256")
 
+dataset_path = {"caltech256": os.path.join(DIR_NAME, "datasets", "caltech256", "test_dataset"), 
+"cifar100": os.path.join(DIR_NAME, "datasets", "cifar100", "test_dataset")}
+
 nr_max_branches = 5
 nr_min_branches = 2
 model_name = "mobilenet"
