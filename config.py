@@ -46,7 +46,9 @@ nr_branch_model = nr_branch_model = 5
 input_dim = 256
 input_shape = 224
 pretrained = True
-
+n_branches = 5
+exit_type = "bnpool"
+distribution = "linear"
 
 disabled_branches = [1, 2]
 
