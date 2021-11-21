@@ -725,7 +725,7 @@ class Early_Exit_DNN(nn.Module):
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
       if (conf_branch.item() >= p_tar):
-        return output_branch, conf_branch, infered_class_branch, True
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
 
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
@@ -750,7 +750,7 @@ class Early_Exit_DNN(nn.Module):
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
       if (conf_branch.item() >= p_tar):
-        return output_branch, conf_branch, infered_class_branch, True
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
 
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
@@ -773,7 +773,7 @@ class Early_Exit_DNN(nn.Module):
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
       if (conf_branch.item() >= p_tar):
-        return output_branch, conf_branch, infered_class_branch, True
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
 
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
@@ -798,7 +798,7 @@ class Early_Exit_DNN(nn.Module):
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
       if (conf_branch.item() >= p_tar):
-        return output_branch, conf_branch, infered_class_branch, True
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
 
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())

@@ -711,8 +711,7 @@ class Early_Exit_DNN(nn.Module):
   def temperature_scale_branches(self, logits, temperature, exit_branch):
     return torch.div(logits, temperature[exit_branch])
 
-
-  def forwardNoCalibCloudInference(self, x, p_tar, nr_branch_edge):
+  def forwardNoCalibCloudInference(self, x, conf_list, class_list, p_tar, nr_branch_edge):
     for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
         x = self.stages[i](x)
 
@@ -726,18 +725,18 @@ class Early_Exit_DNN(nn.Module):
     # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
     # This also happens in the last exit
     if (conf.item() >= p_tar):
-      return conf.item(), infered_class
+      return conf.item(), infered_class.item()
     else:
 
       # If any exit can reach the p_tar value, the output is give by the more confidence output.
       # If evaluation, it returns max(output), max(conf) and the number of the early exit.
 
-      conf_list.append(conf.item()), class_list.append(infered_class)
+      conf_list.append(conf.item()), class_list.append(infered_class.item())
       max_conf = np.argmax(conf_list)
 
       return conf_list[max_conf], class_list[max_conf]
 
-  def forwardOverallCalibCloudInference(self, x, p_tar, nr_branch_edge):
+  def forwardOverallCalibCloudInference(self, x, conf_list, class_list, p_tar, nr_branch_edge):
     for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
         x = self.stages[i](x)
 
@@ -753,19 +752,19 @@ class Early_Exit_DNN(nn.Module):
     # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
     # This also happens in the last exit
     if (conf.item() >= p_tar):
-      return conf.item(), infered_class
+      return conf.item(), infered_class.item()
     else:
 
       # If any exit can reach the p_tar value, the output is give by the more confidence output.
       # If evaluation, it returns max(output), max(conf) and the number of the early exit.
 
-      conf_list.append(conf.item()), class_list.append(infered_class)
+      conf_list.append(conf.item()), class_list.append(infered_class.item())
       max_conf = np.argmax(conf_list)
       
       return conf_list[max_conf], class_list[max_conf]
 
 
-  def forwardBranchesCalibCloudInference(self, x, p_tar, nr_branch_edge):
+  def forwardBranchesCalibCloudInference(self, x, conf_list, class_list, p_tar, nr_branch_edge):
     for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
         x = self.stages[i](x)
 
@@ -781,19 +780,19 @@ class Early_Exit_DNN(nn.Module):
     # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
     # This also happens in the last exit
     if (conf.item() >= p_tar):
-      return conf.item(), infered_class
+      return conf.item(), infered_class.item()
     else:
 
       # If any exit can reach the p_tar value, the output is give by the more confidence output.
       # If evaluation, it returns max(output), max(conf) and the number of the early exit.
 
-      conf_list.append(conf.item()), class_list.append(infered_class)
+      conf_list.append(conf.item()), class_list.append(infered_class.item())
       max_conf = np.argmax(conf_list)
       
       return conf_list[max_conf], class_list[max_conf]
 
 
-  def forwardAllSamplesCalibCloudInference(self, x, p_tar, nr_branch_edge):
+  def forwardAllSamplesCalibCloudInference(self, x, conf_list, class_list, p_tar, nr_branch_edge):
     for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
         x = self.stages[i](x)
 
@@ -809,13 +808,13 @@ class Early_Exit_DNN(nn.Module):
     # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
     # This also happens in the last exit
     if (conf.item() >= p_tar):
-      return conf.item(), infered_class
+      return conf.item(), infered_class.item()
     else:
 
       # If any exit can reach the p_tar value, the output is give by the more confidence output.
       # If evaluation, it returns max(output), max(conf) and the number of the early exit.
 
-      conf_list.append(conf.item()), class_list.append(infered_class)
+      conf_list.append(conf.item()), class_list.append(infered_class.item())
       max_conf = np.argmax(conf_list)
       
       return conf_list[max_conf], class_list[max_conf]
