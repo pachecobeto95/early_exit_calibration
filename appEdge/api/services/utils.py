@@ -69,6 +69,7 @@ class ModelLoad():
 		self.ee_model.temperature_overall = self.overall_temp.loc[p_tar].item()
 		
 	def update_branches_temperature(self, p_tar):
+		print(self.temp_branches.loc[p_tar])
 		self.ee_model.temperature_branches = self.temp_branches.loc[p_tar].values
 		
 	def update_all_samples_temperature(self, p_tar):
