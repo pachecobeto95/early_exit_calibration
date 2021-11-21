@@ -165,7 +165,7 @@ def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
 	#"nr_branch_edge": 1, "class_list": [1]}
 
 	try:
-		#response = requests.post(url, json=data, timeout=config.timeout)
+		response = requests.post(url, json=data, timeout=config.timeout)
 		response.raise_for_status()
 		return {"status": "ok"}
 
