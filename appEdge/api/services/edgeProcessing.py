@@ -125,7 +125,7 @@ def ee_dnn_overall_calib_inference(tensor_img, p_tar, nr_branch_edge):
 	with torch.no_grad():
 		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeOverallCalibInference(tensor_img, p_tar, nr_branch_edge)
 
-	return conf_list, class_list, isTerminate
+	return output, conf_list, class_list, isTerminate
 
 def ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge):
 	model.ee_model.eval()
@@ -133,7 +133,7 @@ def ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge):
 	with torch.no_grad():
 		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeBranchesCalibInference(tensor_img, p_tar, nr_branch_edge)
 
-	return conf_list, class_list, isTerminate
+	return output, conf_list, class_list, isTerminate
 
 def ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge):
 	model.ee_model.eval()
@@ -141,7 +141,7 @@ def ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge):
 	with torch.no_grad():
 		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeAllSamplesCalibInference(tensor_img, p_tar, nr_branch_edge)
 
-	return conf_list, class_list, isTerminate
+	return output, conf_list, class_list, isTerminate
 
 
 def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
