@@ -156,7 +156,8 @@ def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
 	feature_map (Tensor): output data from partitioning layer
 	conf_list (list): this list contains the confidence obtained for each early exit during Early-exit DNN inference
 	"""
-	
+	print("Send Cloud")
+	print(conf_list, class_list)
 	data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": conf_list, "p_tar": p_tar, 
 	"nr_branch_edge": nr_branch_edge, "class_list": class_list}
 	#print(conf_list, class_list)
