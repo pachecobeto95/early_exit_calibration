@@ -1062,11 +1062,11 @@ class Early_Exit_DNN(nn.Module):
 
     return actual_conf, actual_inferred_class, actual_exit_branch, conf_list, class_list, exit_branches
 
-  def temperature_scale_overall(self, logits):
-    if (self.temp_overall is None):
+  def temperature_scale_overall(self, logits, temp_overall):
+    if (temp_overall is None):
       return torch.zeros(logits.shape).to(self.device)
     else:    
-      return torch.div(logits, self.temp_overall)
+      return torch.div(logits, temp_overall)
 
 
   def temperature_scale_branches(self, logits, temp, exit_branch):
@@ -1102,7 +1102,7 @@ class Early_Exit_DNN(nn.Module):
     return output_list, conf_list, infered_class_list
 
 
-  def forwardOverallCalibration(self, x):
+  def forwardOverallCalibration(self, x, temp_overall):
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
 
@@ -1110,7 +1110,7 @@ class Early_Exit_DNN(nn.Module):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
       
-      output_branch = self.temperature_scale_overall(output_branch)
+      output_branch = self.temperature_scale_overall(output_branch, temp_overall)
 
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
@@ -1130,14 +1130,14 @@ class Early_Exit_DNN(nn.Module):
 
     return output_list, conf_list, class_list
 
-  def forwardBranchesCalibration(self, x):
+  def forwardBranchesCalibration(self, x, temp_branches):
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
 
     for i, exitBlock in enumerate(self.exits):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
-      output_branch = self.temperature_scale_branches(output_branch, self.temp_branches, i)
+      output_branch = self.temperature_scale_branches(output_branch, temp_branches, i)
 
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
@@ -1149,7 +1149,7 @@ class Early_Exit_DNN(nn.Module):
     x = torch.flatten(x, 1)
 
     output = self.classifier(x)
-    output = self.temperature_scale_branches(output, self.temp_branches, -1)
+    output = self.temperature_scale_branches(output, temp_branches, -1)
     output_list.append(output)
 
     conf, infered_class = torch.max(self.softmax(output), 1)
@@ -1157,14 +1157,14 @@ class Early_Exit_DNN(nn.Module):
 
     return output_list, conf_list, class_list
 
-  def forwardAllSamplesCalibration(self, x):
+  def forwardAllSamplesCalibration(self, x, temp_all_samples):
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
 
     for i, exitBlock in enumerate(self.exits):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
-      output_branch = self.temperature_scale_branches(output_branch, self.temp_all_samples, i)
+      output_branch = self.temperature_scale_branches(output_branch, temp_all_samples, i)
 
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
@@ -1176,7 +1176,7 @@ class Early_Exit_DNN(nn.Module):
     x = torch.flatten(x, 1)
 
     output = self.classifier(x)
-    output = self.temperature_scale_branches(output, self.temp_all_samples, -1)
+    output = self.temperature_scale_branches(output, temp_all_samples, -1)
     output_list.append(output)
 
     conf, infered_class = torch.max(self.softmax(output), 1)
@@ -1296,6 +1296,10 @@ class BranchesModelWithTemperature(nn.Module):
     
     # This line initiates a single temperature parameter for the entire early-exit DNN model
     self.temperature_overall = nn.Parameter(1*torch.ones(1).to(self.device))
+
+
+  def forwardAllSamplesCalibration(self, x):
+    return self.model.forwardAllSamplesCalibration(x, self.temperature_branches)
 
   def forwardBranchesCalibration(self, x):
     return self.model.forwardBranchesCalibration(x, self.temperature_branches)
