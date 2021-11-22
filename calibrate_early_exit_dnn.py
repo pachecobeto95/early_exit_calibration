@@ -1547,11 +1547,11 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   n_exits = n_branches + 1
   conf_branches_list, infered_class_branches_list, target_list = [], [], []
   correct_list, exit_branch_list = [], []
-
+  id_list = []
   model.eval()
 
   with torch.no_grad():
-    for data, target in tqdm(test_loader):
+    for i, (data, target) in tqdm(enumerate(test_loader, 1)):
       
       data, target = data.to(device), target.to(device)
 
@@ -1563,11 +1563,14 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
 
       else:
         _, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
-      
 
-      conf_branches_list.append(conf_branches), infered_class_branches_list.append(infered_class_branches)     
-      target_list.append(target.item())      
+
+      conf_branches_list.append([conf.item() for conf in conf_branches])
+      infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
       correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
+      id_list.append(i)
+      target_list.append(target.item())
+      
 
       del data, target
       torch.cuda.empty_cache()
@@ -1576,7 +1579,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   infered_class_branches_list = np.array(infered_class_branches_list)
   correct_list = np.array(correct_list)
 
-  results = {"target": target_list}
+  results = {"target": target_list, "id":, "p_tar": [p_tar]*len(target_list)}
   for i in range(n_exits):
     results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
                     "infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
