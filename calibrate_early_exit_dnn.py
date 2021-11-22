@@ -1640,7 +1640,7 @@ p_tar_calib = 0.8
 distribution = "linear"
 exit_type = "bnpool"
 dataset_name = "caltech256"
-model_name = "resnet50"
+model_name = "mobilenet"
 root_save_path = os.path.dirname(__file__)
 
 save_indices_path = os.path.join(root_save_path, "datasets", dataset_name, "indices")
