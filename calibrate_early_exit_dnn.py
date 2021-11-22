@@ -1715,7 +1715,7 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 3
+model_id = 4  
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
