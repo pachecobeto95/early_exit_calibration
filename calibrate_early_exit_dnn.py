@@ -1062,6 +1062,19 @@ class Early_Exit_DNN(nn.Module):
 
     return actual_conf, actual_inferred_class, actual_exit_branch, conf_list, class_list, exit_branches
 
+  def temperature_scale_overall(self, logits):
+    if (self.temp_overall is None):
+      return torch.zeros(logits.shape).to(self.device)
+    else:    
+      return torch.div(logits, self.temp_overall)
+
+
+  def temperature_scale_branches(self, logits, temp, exit_branch):
+    if(temp[exit_branch] is None):
+      return torch.zeros(logits.shape).to(self.device)
+    else:
+      return torch.div(logits, temp[exit_branch])
+
   def forwardAllExits(self, x):  
 
     output_list, conf_list, infered_class_list = [], [], []
@@ -1088,69 +1101,88 @@ class Early_Exit_DNN(nn.Module):
    
     return output_list, conf_list, infered_class_list
 
-  def forwardEval(self, x, p_tar):
-    """
-    This method is used to train the early-exit DNN model
-    """
-    output_list, conf_list, class_list  = [], [], []
+
+  def forwardOverallCalibration(self, x):
+    output_list, conf_list, class_list = [], [], []
+    n_exits = self.n_branches + 1
 
     for i, exitBlock in enumerate(self.exits):
       x = self.stages[i](x)
-
       output_branch = exitBlock(x)
-      conf, infered_class = torch.max(self.softmax(output_branch), 1)
+      
+      output_branch = self.temperature_scale_overall(output_branch)
 
-      # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
-      if (conf.item() >= p_tar):
-        return output_branch, conf, infered_class, i+1
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
-      else:
-        output_list.append(output_branch)
-        conf_list.append(conf)
-        class_list.append(infered_class)
-
+      output_list.append(output_branch)
+      conf_list.append(conf_branch), class_list.append(infered_class_branch)
+      
     x = self.stages[-1](x)
     
     x = torch.flatten(x, 1)
 
     output = self.classifier(x)
+    output = self.temperature_scale_overall(output)
+    output_list.append(output)
+
     conf, infered_class = torch.max(self.softmax(output), 1)
-    
-    # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
-    # This also happens in the last exit
-    if (conf.item() >= p_tar):
-      return output, conf, infered_class, self.n_branches 
-    else:
+    conf_list.append(conf), class_list.append(infered_class)
 
-      # If any exit can reach the p_tar value, the output is give by the more confidence output.
-      # If evaluation, it returns max(output), max(conf) and the number of the early exit.
+    return output_list, conf_list, class_list
 
-      conf_list.append(conf)
-      class_list.append(infered_class)
-      output_list.append(output)
-      conf_list_temp = np.array([conf.item() for conf in conf_list])
-      max_conf = np.argmax(conf_list_temp)
+  def forwardBranchesCalibration(self, x):
+    output_list, conf_list, class_list = [], [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits):
+      x = self.stages[i](x)
+      output_branch = exitBlock(x)
+      output_branch = self.temperature_scale_branches(output_branch, self.temp_branches, i)
+
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      output_list.append(output_branch)
+      conf_list.append(conf_branch), class_list.append(infered_class_branch)
       
-      return output_list[max_conf], conf_list[max_conf], class_list[max_conf], self.n_branches
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
 
-  def forwardDefinedBranch(self, x, i):
+    output = self.classifier(x)
+    output = self.temperature_scale_branches(output, self.temp_branches, -1)
+    output_list.append(output)
 
-    n_branches = len(self.exits)
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    conf_list.append(conf), class_list.append(infered_class)
 
-    if(i < n_branches):
-      intermediate_model = nn.Sequential(*self.stages[:(i+1)])
-      x = intermediate_model(x)
-      output_branch = self.exits[i](x)
-      #_, infered_class = torch.max(self.softmax(output_branch), 1)
-      return output_branch
+    return output_list, conf_list, class_list
 
-    else:
-      intermediate_model = nn.Sequential(*self.stages[:(i+1)])
-      x = intermediate_model(x)
-      x = torch.flatten(x, 1)
-      output = self.classifier(x)
-      #_, infered_class = torch.max(self.softmax(output), 1)
-      return output
+  def forwardAllSamplesCalibration(self, x):
+    output_list, conf_list, class_list = [], [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits):
+      x = self.stages[i](x)
+      output_branch = exitBlock(x)
+      output_branch = self.temperature_scale_branches(output_branch, self.temp_all_samples, i)
+
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      output_list.append(output_branch)
+      conf_list.append(conf_branch), class_list.append(infered_class_branch)
+      
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)
+    output = self.temperature_scale_branches(output, self.temp_all_samples, -1)
+    output_list.append(output)
+
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    conf_list.append(conf), class_list.append(infered_class)
+
+    return output_list, conf_list, class_list
 
   def forward(self, x, p_tar=0.5, training=True):
     """
@@ -1546,8 +1578,8 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
 
   n_exits = n_branches + 1
   conf_branches_list, infered_class_branches_list, target_list = [], [], []
-  correct_list, exit_branch_list = [], []
-  id_list = []
+  correct_list, exit_branch_list, id_list = [], [], []
+
   model.eval()
 
   with torch.no_grad():
@@ -1561,16 +1593,19 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
       elif(model_type == "calib_overall"):
         _, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
 
-      else:
+      elif(model_type == "calib_branches"):
         _, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
 
+      else:
+        _, conf_branches, infered_class_branches = model.forwardAllSamplesCalibration(data)
 
       conf_branches_list.append([conf.item() for conf in conf_branches])
       infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
       correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
       id_list.append(i)
       target_list.append(target.item())
-      
+      #print([conf.item() for conf in conf_branches])
+      #print([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 
       del data, target
       torch.cuda.empty_cache()
@@ -1579,7 +1614,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   infered_class_branches_list = np.array(infered_class_branches_list)
   correct_list = np.array(correct_list)
 
-  results = {"target": target_list, "id": id_list, "p_tar": [p_tar]*len(target_list)}
+  results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
   for i in range(n_exits):
     results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
                     "infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
