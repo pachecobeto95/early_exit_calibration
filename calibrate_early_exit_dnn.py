@@ -1122,7 +1122,7 @@ class Early_Exit_DNN(nn.Module):
     x = torch.flatten(x, 1)
 
     output = self.classifier(x)
-    output = self.temperature_scale_overall(output)
+    output = self.temperature_scale_overall(output, temp_overall)
     output_list.append(output)
 
     conf, infered_class = torch.max(self.softmax(output), 1)
