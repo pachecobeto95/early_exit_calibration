@@ -1128,7 +1128,9 @@ class Early_Exit_DNN(nn.Module):
       conf_list.append(conf)
       class_list.append(infered_class)
       output_list.append(output)
-      max_conf = np.argmax(conf_list)
+      conf_list_temp = np.array([conf.item() for conf in conf_list])
+      max_conf = np.argmax(conf_list_temp)
+      
       return output_list[max_conf], conf_list[max_conf], class_list[max_conf], self.n_branches
 
   def forwardDefinedBranch(self, x, i):
