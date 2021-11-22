@@ -1579,7 +1579,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   infered_class_branches_list = np.array(infered_class_branches_list)
   correct_list = np.array(correct_list)
 
-  results = {"target": target_list, "id":, "p_tar": [p_tar]*len(target_list)}
+  results = {"target": target_list, "id": id_list, "p_tar": [p_tar]*len(target_list)}
   for i in range(n_exits):
     results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
                     "infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
