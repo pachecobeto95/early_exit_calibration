@@ -1684,7 +1684,6 @@ saveTempBranchesAllSamplesPath = os.path.join(root_save_path, "appEdge", "api", 
   dataset_name, model_name, "temperature", "temp_all_samples_id_%s.csv"%(model_id))
 
 saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTempBranchesPath,
-                "calib_branches_augmentation": saveTempBranchesAugmentationSamplesPath, 
                 "calib_branches_all_samples": saveTempBranchesAllSamplesPath}
 
 
