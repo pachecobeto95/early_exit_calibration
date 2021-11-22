@@ -3,7 +3,7 @@ import torchvision
 from torchvision import datasets, transforms
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision.utils import save_image
-import os, cv2, sys, time, math, os
+import os, sys, time, math, os
 from torchvision import transforms, utils, datasets
 from torch.utils.data import Dataset, DataLoader, SubsetRandomSampler, WeightedRandomSampler
 from torch.utils.data import random_split
@@ -1674,14 +1674,14 @@ saveResultsDict = {"no_calib": save_no_calib_path, "calib_overall": save_calib_o
                    "calib_branches_all_samples": save_calib_all_samples_path}
 
 
-saveTempOverallPath = os.path.join(dataset_save_path, model_name, "temperature", 
-                                   "temp_overall_id_%s.csv"%(model_id))
+saveTempOverallPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+  dataset_name, model_name, "temperature", "temp_overall_id_%s.csv"%(model_id))
 
-saveTempBranchesPath = os.path.join(dataset_save_path, model_name, "temperature", 
-                                    "temp_branches_id_%s.csv"%(model_id))
+saveTempBranchesPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+  dataset_name, model_name, "temperature", "temp_branches_id_%s.csv"%(model_id))
 
-saveTempBranchesAllSamplesPath = os.path.join(dataset_save_path, model_name, "temperature", 
-                                    "temp_all_samples_id_%s.csv"%(model_id))
+saveTempBranchesAllSamplesPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+  dataset_name, model_name, "temperature", "temp_all_samples_id_%s.csv"%(model_id))
 
 saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTempBranchesPath,
                 "calib_branches_augmentation": saveTempBranchesAugmentationSamplesPath, 
