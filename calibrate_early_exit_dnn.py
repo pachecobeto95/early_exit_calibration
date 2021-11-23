@@ -141,7 +141,7 @@ class LoadDataset():
       print("Entroy")
       train_idx = np.load(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       val_idx = np.load(os.path.join(savePath_idx, "validation_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
-      #self.val_idx = val_idx
+      self.val_idx = val_idx
       test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
       test_idx = np.array(list(test_idx.tolist()))
 
