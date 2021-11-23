@@ -354,7 +354,7 @@ class BranchyNet:
 
     for i in range(n_models):
       if (remainingXVar is None) or (remainingTVar is None):
-      	numexits.append(0), accuracies.append(0)
+        numexits.append(0), accuracies.append(0)
         break
 
       output_branch, class_infered_branch = self.network.forwardBranchesTrain(remainingXVar, i)
