@@ -260,7 +260,7 @@ class BranchyNet:
 
       else:
         opt_branch = optim.Adam([{"params":self.network.stages[i].parameters()},
-                              {"params":self.network.exits.parameters()}], lr=self.lr_main, betas=(0.9, 0.999), 
+                              {"params":self.network.exits.parameters()}], lr=self.lr_branches, betas=(0.9, 0.999), 
                               weight_decay=self.weight_decay)
 
       self.optimizer_list.append(opt_branch)
@@ -312,33 +312,6 @@ class BranchyNet:
     acc = 100*infered_class.eq(t.view_as(infered_class)).sum().item()/t.size(0)    
 
     return loss.item(), acc
-
-  def val_joint_branches(self, x, t):
-
-    losses, acc_branches_list = [], []
-
-    n_models = len(self.network.stages)
-    
-    n_samples = x.data.shape[0]
-
-    softmax = nn.Softmax(dim=1)
-
-    for i in range(n_models):
-
-      output_branch, class_infered_branch = self.network.forwardBranchesTrain(x, i)
-      
-      accuracy_branch = 100*class_infered_branch.eq(t.view_as(class_infered_branch)).sum().item()/t.size(0)
-      acc_branches_list.append(accuracy_branch)
-
-      loss = self.criterion(output_branch, t)
-      losses.append(loss)  
-                
-    losses = [loss.item() for loss in losses]
-
-    overall_acc = np.mean(acc_branches_list, 0)
-    overall_loss = np.mean(losses, 0)
-
-    return losses, overall_loss, acc_branches_list, overall_acc 
 
   def val_branches(self, x, t):
     remainingXVar = x
@@ -517,13 +490,13 @@ class BranchyNet:
         remainingTVar = None
 
 
-    self.optimizer_main.zero_grad()
+    #self.optimizer_main.zero_grad()
     [optimizer.zero_grad() for optimizer in self.optimizer_list]
     for i, (weight, loss) in enumerate(zip(self.weight_list, losses)):
       loss = weight*loss
       loss.backward()
             
-    self.optimizer_main.step()
+    #self.optimizer_main.step()
     [optimizer.step() for optimizer in self.optimizer_list]
 
     loss_branches = np.array([loss.item() for loss in losses])
