@@ -241,7 +241,7 @@ class BranchyNet:
                                        weight_decay=self.weight_decay)
 
     else:
-      self.optimizer_main = optim.SGD([{"params":self.network.stages.parameters()},
+      self.optimizer_main = optim.Adam([{"params":self.network.stages.parameters()},
                                        {"params":self.network.classifier.parameters()}], lr=self.lr_main, momentum=self.momentum, 
                                       weight_decay=self.weight_decay)
 
