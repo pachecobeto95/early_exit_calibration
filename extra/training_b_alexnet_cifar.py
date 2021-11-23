@@ -259,8 +259,8 @@ class BranchyNet:
         #                      weight_decay=self.weight_decay)
 
       #else:
-        opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
-                               {"params":self.network.exits.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
+      opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
+                              {"params":self.network.exits.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
 
       self.optimizer_list.append(opt_branch)
