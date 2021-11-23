@@ -175,9 +175,9 @@ class DNN(nn.Module):
     return inputs
 
 class BranchyNet:
-  def __init__(self, network, device, weight_list=None, thresholdExits=None, percentTestExits=.9, percentTrainKeeps=.5, lr_main=0.005, 
+  def __init__(self, network, device, weight_list=None, thresholdExits=None, percentTestExits=.9, percentTrainKeeps=.5, lr_main=0.1, 
                lr_branches=1.5e-4, momentum=0.9, weight_decay=0.0001, alpha=0.001, confidence_metric="confidence", 
-               opt="SGD", joint=True, verbose=False):
+               opt="Adam", joint=True, verbose=False):
     
     self.network = network
     self.lr_main = lr_main
@@ -254,13 +254,13 @@ class BranchyNet:
 
     for i in range(len(self.network.stages)):
       if(i == len(self.network.stages)-1):
-        opt_branch = optim.SGD([{"params":self.network.stages.parameters()},
-                                {"params":self.network.classifier.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
+        opt_branch = optim.Adam([{"params":self.network.stages.parameters()},
+                                {"params":self.network.classifier.parameters()}], lr=self.lr_main, betas=(0.9, 0.999), 
                               weight_decay=self.weight_decay)
 
       else:
-        opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
-                              {"params":self.network.exits.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
+        opt_branch = optim.Adam([{"params":self.network.stages[i].parameters()},
+                              {"params":self.network.exits.parameters()}], lr=self.lr_main, betas=(0.9, 0.999), 
                               weight_decay=self.weight_decay)
 
       self.optimizer_list.append(opt_branch)
