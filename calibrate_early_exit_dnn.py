@@ -141,7 +141,7 @@ class LoadDataset():
       print("Entroy")
       train_idx = np.load(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       val_idx = np.load(os.path.join(savePath_idx, "validation_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
-      self.val_idx = val_idx
+      #self.val_idx = val_idx
       test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
       test_idx = np.array(list(test_idx.tolist()))
 
@@ -1714,7 +1714,7 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 
 input_dim = 224
 batch_size_train = 64
-batch_size_test = 1
+batch_size_test = 6
 model_id = 7  
 split_ratio = 0.2
 n_classes = 258
