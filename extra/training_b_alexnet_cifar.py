@@ -461,8 +461,8 @@ class BranchyNet:
       acc_branch = 100*class_infered_branch.eq(remainingTVar.view_as(class_infered_branch)).sum().item()/remainingTVar.size(0)    
 
 
-      if (i == n_models-1):
-        continue
+      #if (i == n_models-1):
+      #  continue
       losses.append(loss_branch)
       acc_list.append(acc_branch)
       
@@ -517,13 +517,13 @@ class BranchyNet:
         remainingTVar = None
 
 
-    #self.optimizer_main.zero_grad()
+    self.optimizer_main.zero_grad()
     [optimizer.zero_grad() for optimizer in self.optimizer_list]
     for i, (weight, loss) in enumerate(zip(self.weight_list, losses)):
       loss = weight*loss
       loss.backward()
             
-    #self.optimizer_main.step()
+    self.optimizer_main.step()
     [optimizer.step() for optimizer in self.optimizer_list]
 
     loss_branches = np.array([loss.item() for loss in losses])
