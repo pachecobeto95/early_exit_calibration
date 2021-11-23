@@ -253,13 +253,13 @@ class BranchyNet:
     self.scheduler_list = []
 
     for i in range(len(self.network.stages)):
-      #if(i == len(self.network.stages)-1):
-        #opt_branch = optim.SGD([{"params":self.network.stages.parameters()},
-        #                        {"params":self.network.classifier.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
-        #                      weight_decay=self.weight_decay)
+      if(i == len(self.network.stages)-1):
+        opt_branch = optim.SGD([{"params":self.network.stages.parameters()},
+                                {"params":self.network.classifier.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
+                              weight_decay=self.weight_decay)
 
-      #else:
-      opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
+      else:
+        opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
                               {"params":self.network.exits.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
 
@@ -670,10 +670,11 @@ input_resize, input_crop = 256, 224
 train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
 
 model_id = 2
-saveModelPath = "./main_%s.pth"%(model_id)
+saveMainModelPath = "./main_%s.pth"%(model_id)
+saveBranchesModelPath = "./branches_%s.pth"%(model_id)
 history_main_path = "./history_main_%s.csv"%(model_id)
 history_branches_path = "./history_branches_%s.csv"%(model_id)
 
 #train_eval(branchynet, train_loader, test_loader, device, saveModelPath, history_main_path, main=True)
-branchynet.network.load_state_dict(torch.load("./main.pth")['model_state_dict'])
-train_eval(branchynet, train_loader, test_loader, device, "./branches.pth", history_branches_path, main=False)
+#branchynet.network.load_state_dict(torch.load("./main.pth")['model_state_dict'])
+train_eval(branchynet, train_loader, test_loader, device, saveBranchesModelPath, history_branches_path, main=False)
