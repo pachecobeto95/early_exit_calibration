@@ -175,7 +175,7 @@ class DNN(nn.Module):
     return inputs
 
 class BranchyNet:
-  def __init__(self, network, device, weight_list=None, thresholdExits=None, percentTestExits=.9, percentTrainKeeps=.5, lr_main=0.1, 
+  def __init__(self, network, device, weight_list=None, thresholdExits=None, percentTestExits=.9, percentTrainKeeps=.5, lr_main=0.001, 
                lr_branches=1.5e-4, momentum=0.9, weight_decay=0.0001, alpha=0.001, confidence_metric="confidence", 
                opt="Adam", joint=True, verbose=False):
     
