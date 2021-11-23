@@ -693,6 +693,11 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 branchynet = build_b_alexnet(device, n_classes)
 branchynet.to_device()
 
+batch_size_train = 512
+batch_size_test = 512
+input_resize, input_crop = 256, 224
+train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
+
 
 saveModelPath = "./main.pth"
 
