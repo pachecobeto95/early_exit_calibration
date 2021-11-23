@@ -673,7 +673,7 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, mai
     df = df.append(pd.Series(results), ignore_index=True)
     #df.to_csv(savePathResults)
 
-    if (result["val_loss"] <=  best_val_loss):
+    if (results["val_loss"] <=  best_val_loss):
       best_val_loss = results["val_loss"]
       count = 0
       save_dict.update({"model_state_dict": branchynet.network.state_dict(), "epoch": epoch, "val_loss": best_val_loss,
