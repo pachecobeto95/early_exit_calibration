@@ -209,23 +209,6 @@ class BranchyNet:
 
     self.main = []
     self.models = []
-    """
-    for layer in network:
-
-      if not isinstance(layer,Branch):
-        self.main.append(layer)
-      else:
-        self.models.append(list(self.main)+[layer])
-
-  
-    self.main = nn.Sequential(*nn.ModuleList(self.main))
-    self.models = [nn.Sequential(*nn.ModuleList(model)) for model in self.models]
-
-    if (self.opt == "Adam"):
-      self.optimizer_main = optim.Adam(self.main.parameters(), lr=self.lr, weight_decay=self.weight_decay)
-    else:
-      self.optimizer_main = optim.SGD(self.main.parameters(), lr=self.lr, momentum=self.momentum, weight_decay=self.weight_decay)
-    """
 
     if (self.opt == "Adam"):
       self.optimizer_main = optim.Adam([{"params":self.network.stages.parameters()},
@@ -426,8 +409,8 @@ class BranchyNet:
       acc_branch = 100*class_infered_branch.eq(remainingTVar.view_as(class_infered_branch)).sum().item()/remainingTVar.size(0)    
 
 
-      #if (i == n_models-1):
-      #  continue
+      if (i == n_models-1):
+        continue
       losses.append(loss_branch)
       acc_list.append(acc_branch)
       
@@ -482,13 +465,13 @@ class BranchyNet:
         remainingTVar = None
 
 
-    #self.optimizer_main.zero_grad()
+    self.optimizer_main.zero_grad()
     [optimizer.zero_grad() for optimizer in self.optimizer_list]
     for i, (weight, loss) in enumerate(zip(self.weight_list, losses)):
       loss = weight*loss
       loss.backward()
             
-    #self.optimizer_main.step()
+    self.optimizer_main.step()
     [optimizer.step() for optimizer in self.optimizer_list]
 
     loss_branches = np.array([loss.item() for loss in losses])
@@ -505,10 +488,8 @@ class BranchyNet:
 
     return overall_loss, overall_acc, loss_branches, acc_list
 
-
-
 def build_b_alexnet(device, n_classes):
-  pretrained = False
+  pretrained = True
   branch1 = norm() + conv(64) + conv(32) + cap(512)
   b_alexnet = B_AlexNet(branch1, None, n_classes, pretrained)
   branchynet = BranchyNet(b_alexnet, device)
@@ -603,7 +584,7 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, sav
 
     result_train = train_model(branchynet, epoch, train_loader, device, main)
     result_val = valid_model(branchynet, epoch, test_loader, device, main)
-    [schedule.step() for schedule in branchynet.scheduler_list]
+    #[schedule.step() for schedule in branchynet.scheduler_list]
 
     results.update(result_train), results.update(result_val)
     df = df.append(pd.Series(results), ignore_index=True)
