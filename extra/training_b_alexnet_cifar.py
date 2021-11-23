@@ -638,7 +638,7 @@ def valid_model(branchynet, epoch, val_loader, device, main):
 
   print("Val Loss: %s, Val Acc: %s"%(avg_val_loss, avg_val_acc))
 
-  result = {"val_loss": avg_train_loss, "val_acc": avg_train_acc}
+  result = {"val_loss": avg_val_loss, "val_acc": avg_val_acc}
   
   if(not main):
     avg_val_loss_branches = np.mean(val_loss_branches_list, 0)
