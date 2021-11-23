@@ -534,7 +534,9 @@ class BranchyNet:
       overall_acc += acc*numexits[i]
       overall_loss += loss*numexits[i]
 
-overall_acc
+    overall_acc = overall_acc/np.sum(numexits)
+    overall_loss = overall_loss/np.sum(numexits)
+
 
     return overall_loss, overall_acc, loss_branches, acc_list
 
