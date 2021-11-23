@@ -188,7 +188,7 @@ class EarlyExitBlock(nn.Module):
       self.layers.append(nn.BatchNorm2d(channel))
 
     if (exit_type != 'plain'):
-      self.layers.append(nn.AdaptiveAvgPool2d(1))
+      self.layers.append(nn.AdaptiveAvgPool2d(7))
     
     #This line defines the data shape that fully-connected layer receives.
     current_channel, current_width, current_height = self.get_current_data_shape()
@@ -1714,8 +1714,8 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 
 input_dim = 224
 batch_size_train = 64
-batch_size_test = 6
-model_id = 7  
+batch_size_test = 1
+model_id = 3  
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
