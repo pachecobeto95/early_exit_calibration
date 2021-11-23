@@ -679,9 +679,10 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, mai
       save_dict.update({"model_state_dict": branchynet.network.state_dict(), "epoch": epoch, "val_loss": best_val_loss,
                         "val_acc": results["val_acc"]})
       
-      for i in range(n_exits):
-        save_dict.update({"val_loss_branches_%s"%(i+1): results["val_loss_branches_%s"%(i+1)], 
-                          "val_acc_branches_%s"%(i+1): results["val_acc_branches_%s"%(i+1)]})
+      if(not main):
+	      for i in range(n_exits):
+	        save_dict.update({"val_loss_branches_%s"%(i+1): results["val_loss_branches_%s"%(i+1)], 
+	                          "val_acc_branches_%s"%(i+1): results["val_acc_branches_%s"%(i+1)]})
     else:
       count += 1
       print("Current Patience: %s"%(count))
