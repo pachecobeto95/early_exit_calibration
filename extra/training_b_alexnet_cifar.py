@@ -543,7 +543,7 @@ class BranchyNet:
 
 
 def build_b_alexnet(device, n_classes):
-  pretrained = True
+  pretrained = False
   branch1 = norm() + conv(64) + conv(32) + cap(512)
   b_alexnet = B_AlexNet(branch1, None, n_classes, pretrained)
   branchynet = BranchyNet(b_alexnet, device)
@@ -669,12 +669,12 @@ batch_size_test = 512
 input_resize, input_crop = 256, 224
 train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
 
-model_id = 2
+model_id = 3
 saveMainModelPath = "./main_%s.pth"%(model_id)
 saveBranchesModelPath = "./branches_%s.pth"%(model_id)
 history_main_path = "./history_main_%s.csv"%(model_id)
 history_branches_path = "./history_branches_%s.csv"%(model_id)
 
-#train_eval(branchynet, train_loader, test_loader, device, saveModelPath, history_main_path, main=True)
+train_eval(branchynet, train_loader, test_loader, device, saveModelPath, history_main_path, main=True)
 #branchynet.network.load_state_dict(torch.load("./main.pth")['model_state_dict'])
 train_eval(branchynet, train_loader, test_loader, device, saveBranchesModelPath, history_branches_path, main=False)
