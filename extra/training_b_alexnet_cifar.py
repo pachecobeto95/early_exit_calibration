@@ -432,49 +432,14 @@ class BranchyNet:
     for i, (accuracy, loss) in enumerate(zip(acc_branches_list, losses)):
       overall_acc += accuracy*numexits[i]
       overall_loss += loss*numexits[i]
-      n_accumulated_exits[i] +=numexits[i]
       
     overall_acc = overall_acc/np.sum(numexits)
     overall_loss = overall_loss/np.sum(numexits)
 
-    cdf_exits = 100*(n_accumulated_exits/np.sum(numexits))
-    pct_exit_branches = 100*(np.array(numexits)/np.sum(numexits))
-
-    return losses, overall_loss.item(), acc_branches_list, overall_acc, pct_exit_branches, cdf_exits 
-
-  def train_joint_branches(self, x, t):
-    losses, acc_list = [], []
-    
-    n_models = len(self.network.stages)
-    n_samples = x.data.shape[0]
-
-    softmax = nn.Softmax(dim=1)
-
-    for i in range(n_models):
-      output_branch, class_infered_branch = self.network.forwardBranchesTrain(x, i)
-      
-      loss_branch = self.criterion(output_branch, t)
-      acc_branch = 100*class_infered_branch.eq(t.view_as(class_infered_branch)).sum().item()/t.size(0)    
-
-      losses.append(loss_branch)
-      acc_list.append(acc_branch)
-      
-      softmax_output = softmax(output_branch)
-      
-    self.optimizer_main.zero_grad()
-    [optimizer.zero_grad() for optimizer in self.optimizer_list]
-    for i, (weight, loss) in enumerate(zip(self.weight_list, losses)):
-      loss = weight*loss
-      loss.backward()
-            
-    self.optimizer_main.step()
-    [optimizer.step() for optimizer in self.optimizer_list]
-
-    losses = np.array([loss.item() for loss in losses])
-    acc_list = np.array(acc_list)
-
-    return losses, acc_list
+    return losses, acc_branches_list, overall_loss, acc_branches_list
   
+
+
   def train_branches(self, x, t):
     remainingXVar = x
     remainingTVar = t
@@ -568,6 +533,8 @@ class BranchyNet:
     for i, (acc, loss) in enumerate(zip(acc_list, loss_branches)):
       overall_acc += acc*numexits[i]
       overall_loss += loss*numexits[i]
+
+overall_acc
 
     return overall_loss, overall_acc, loss_branches, acc_list
 
