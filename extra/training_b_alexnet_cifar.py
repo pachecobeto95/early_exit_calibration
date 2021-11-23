@@ -671,7 +671,7 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, mai
 
     results.update(result_train), results.update(result_val)
     df = df.append(pd.Series(results), ignore_index=True)
-    df.to_csv(savePathResults)
+    #df.to_csv(savePathResults)
 
     if (result["val_loss"] <=  best_val_loss):
       best_val_loss = results["val_loss"]
