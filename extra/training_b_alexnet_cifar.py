@@ -651,16 +651,16 @@ def valid_model(branchynet, epoch, val_loader, device, main):
   return result
 
 
-def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, main=False):
+def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, saveHistoryPath, main=False):
   epoch = 0
   best_val_loss = np.inf
   patience = 5
-  cont = 0
+  count = 0
   df = pd.DataFrame()
   save_dict = {}
   n_exits = len(branchynet.network.exits) + 1
 
-  while (cont < patience):
+  while (count < patience):
     epoch+=1
     print("Epoch: %s"%(epoch))
 
@@ -671,7 +671,7 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, mai
 
     results.update(result_train), results.update(result_val)
     df = df.append(pd.Series(results), ignore_index=True)
-    #df.to_csv(savePathResults)
+    df.to_csv(saveHistoryPath)
 
     if (results["val_loss"] <=  best_val_loss):
       best_val_loss = results["val_loss"]
@@ -701,6 +701,8 @@ train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_re
 
 
 saveModelPath = "./main.pth"
+history_main_path = "./history_main.csv"
+history_branches_path = "./history_branches.csv"
 
-train_eval(branchynet, train_loader, test_loader, device, saveModelPath, main=True)
-train_eval(branchynet, train_loader, test_loader, device, "./branches.pth", main=False)
+#train_eval(branchynet, train_loader, test_loader, device, saveModelPath, history_main_path, main=True)
+train_eval(branchynet, train_loader, test_loader, device, "./branches.pth", history_branches_path, main=False)
