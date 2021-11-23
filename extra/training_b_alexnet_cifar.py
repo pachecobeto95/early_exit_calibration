@@ -436,7 +436,7 @@ class BranchyNet:
     overall_acc = overall_acc/np.sum(numexits)
     overall_loss = overall_loss/np.sum(numexits)
 
-    return losses, acc_branches_list, overall_loss, acc_branches_list
+    return overall_loss, overall_acc, losses, acc_branches_list
   
 
 
@@ -537,8 +537,9 @@ class BranchyNet:
     overall_acc = overall_acc/np.sum(numexits)
     overall_loss = overall_loss/np.sum(numexits)
 
-
+    print(overall_loss)
     return overall_loss, overall_acc, loss_branches, acc_list
+
 
 
 def build_b_alexnet(device, n_classes):
