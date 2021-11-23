@@ -354,6 +354,7 @@ class BranchyNet:
 
     for i in range(n_models):
       if (remainingXVar is None) or (remainingTVar is None):
+      	numexits.append(0), accuracies.append(0)
         break
 
       output_branch, class_infered_branch = self.network.forwardBranchesTrain(remainingXVar, i)
@@ -674,5 +675,5 @@ saveModelPath = "./main.pth"
 history_main_path = "./history_main.csv"
 history_branches_path = "./history_branches.csv"
 
-#train_eval(branchynet, train_loader, test_loader, device, saveModelPath, history_main_path, main=True)
+train_eval(branchynet, train_loader, test_loader, device, saveModelPath, history_main_path, main=True)
 train_eval(branchynet, train_loader, test_loader, device, "./branches.pth", history_branches_path, main=False)
