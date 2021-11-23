@@ -675,6 +675,6 @@ saveBranchesModelPath = "./branches_%s.pth"%(model_id)
 history_main_path = "./history_main_%s.csv"%(model_id)
 history_branches_path = "./history_branches_%s.csv"%(model_id)
 
-train_eval(branchynet, train_loader, test_loader, device, saveModelPath, history_main_path, main=True)
+train_eval(branchynet, train_loader, test_loader, device, saveMainModelPath, history_main_path, main=True)
 #branchynet.network.load_state_dict(torch.load("./main.pth")['model_state_dict'])
 train_eval(branchynet, train_loader, test_loader, device, saveBranchesModelPath, history_branches_path, main=False)
