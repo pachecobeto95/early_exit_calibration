@@ -40,6 +40,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
   for n_round in tqdm(range(n_rounds)):
     idx = random.choice(np.arange(len(df)))
     row = df.iloc[[idx]]
+    print(row.conf_branch_1, row.conf_branch_2)
 
     if (t < len(threshold_list)):
       action = t
@@ -63,7 +64,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
 
     inst_regret = optimal_reward - reward
 
-    print(n_actions, inst_regret, threshold, delta_conf, reward)
+    #print(n_actions, inst_regret, threshold, delta_conf, reward)
     #cum_regret += inst_regret
     inst_regret_list.append(inst_regret)
     selected_arm_list.append(threshold)
