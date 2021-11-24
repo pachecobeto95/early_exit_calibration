@@ -564,7 +564,7 @@ def experiment_context_inference(model, test_loader, classes_list, n_branches, d
   target_list, label_list, inferred_label_list = [], [], []
   correct_list, delta_confidence_list = [], []
 
-  model.eval()
+  model.testing()
   with torch.no_grad():
     for i, (data, target) in tqdm(enumerate(test_loader, 1)):
 
