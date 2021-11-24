@@ -155,14 +155,7 @@ class B_AlexNet(nn.Module):
     output = self.classifier(x)
     conf, infered_class = torch.max(self.softmax(output), 1)
     conf_list.append(conf.item()), class_list.append(infered_class)
-
-    if (conf.item() >= p_tar):
-      return conf_list, class_list
-    else:
-      max_conf = np.argmax(conf_list)
-      conf_list[-1] = conf_list[max_conf]
-      class_list[-1] = class_list[max_conf] 
-      return conf_list, class_list
+    return conf_list, class_list
 
 
   def forwardMain(self, x):
