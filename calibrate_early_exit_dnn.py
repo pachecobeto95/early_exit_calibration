@@ -1528,7 +1528,7 @@ class BranchesModelWithTemperature(nn.Module):
 
     self.model.eval()
     with torch.no_grad():
-      for (data, target), indice in tqdm(zip(val_loader, val_idx)):
+      for (data, target) in tqdm(zip(val_loader)):
           
         data, target = data.to(self.device), target.to(self.device)
         
@@ -1537,11 +1537,11 @@ class BranchesModelWithTemperature(nn.Module):
         logits_list[exit_branch].append(logits)
         labels_list[exit_branch].append(target)
 
-        idx_sample_exit_list[exit_branch].append(indice)
+        #idx_sample_exit_list[exit_branch].append(indice)
 
 
-    if (data_augmentation):
-      logits_list, labels_list = self.generate_data_augmentation(dataset, idx_sample_exit_list) 
+    #if (data_augmentation):
+    #  logits_list, labels_list = self.generate_data_augmentation(dataset, idx_sample_exit_list) 
 
     for i in range(self.n_exits):
       print("Exit: %s"%(i+1))
