@@ -230,12 +230,11 @@ class BranchyNet:
     for i in range(len(self.network.stages)):
       if(i == len(self.network.stages)-1):
         opt_branch = optim.SGD([{"params":self.network.stages.parameters()},
-                                {"params":self.network.classifier.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
+                                {"params":self.network.classifier.parameters()}], lr=self.lr_main, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
-
       else:
         opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
-                               {"params":self.network.exits.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
+                               {"params":self.network.exits.parameters()}], lr=self.lr_main, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
 
       self.optimizer_list.append(opt_branch)
@@ -584,7 +583,10 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, sav
 
     result_train = train_model(branchynet, epoch, train_loader, device, main)
     result_val = valid_model(branchynet, epoch, test_loader, device, main)
-    #[schedule.step() for schedule in branchynet.scheduler_list]
+    if(main):
+      branchynet.scheduler_main.step()
+    else:
+      [schedule.step() for schedule in branchynet.scheduler_list]
 
     results.update(result_train), results.update(result_val)
     df = df.append(pd.Series(results), ignore_index=True)
@@ -616,7 +618,7 @@ batch_size_test = 512
 input_resize, input_crop = 256, 224
 train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
 
-model_id = 3
+model_id = 2
 saveMainModelPath = "./main_%s.pth"%(model_id)
 saveBranchesModelPath = "./branches_%s.pth"%(model_id)
 history_main_path = "./history_main_%s.csv"%(model_id)
