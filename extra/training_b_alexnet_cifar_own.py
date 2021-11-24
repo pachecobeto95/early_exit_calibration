@@ -233,8 +233,11 @@ class BranchyNet:
                                 {"params":self.network.classifier.parameters()}], lr=self.lr_main, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
       else:
-        opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
-                               {"params":self.network.exits.parameters()}], lr=self.lr_main, momentum=self.momentum, 
+        #opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
+        #                       {"params":self.network.exits.parameters()}], lr=self.lr_main, momentum=self.momentum, 
+        #                      weight_decay=self.weight_decay)
+        opt_branch = optim.Adam([{"params":self.network.stages[i].parameters()},
+                               {"params":self.network.exits.parameters()}], lr=self.lr_main, 
                               weight_decay=self.weight_decay)
 
       self.optimizer_list.append(opt_branch)
@@ -408,8 +411,8 @@ class BranchyNet:
       acc_branch = 100*class_infered_branch.eq(remainingTVar.view_as(class_infered_branch)).sum().item()/remainingTVar.size(0)    
 
 
-      #if (i == n_models-1):
-      #  continue
+      if (i == n_models-1):
+        continue
       losses.append(loss_branch)
       acc_list.append(acc_branch)
       
