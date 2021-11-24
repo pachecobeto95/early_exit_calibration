@@ -570,7 +570,7 @@ def valid_model(branchynet, epoch, val_loader, device, main):
 def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, saveHistoryPath, main=False):
   epoch = 0
   best_val_loss = np.inf
-  patience = 5
+  patience = 10
   count = 0
   df = pd.DataFrame()
   save_dict = {}
