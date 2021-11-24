@@ -139,7 +139,7 @@ class B_AlexNet(nn.Module):
     This method is used to experiment of early-exit DNNs.
     """
     conf_list, class_list  = [], []
-    n_exits = self.n_branches + 1
+    n_exits = 1 + 1
 
     for i, exitBlock in enumerate(self.exits):
       x = self.stages[i](x)
