@@ -230,11 +230,11 @@ class BranchyNet:
     for i in range(len(self.network.stages)):
       if(i == len(self.network.stages)-1):
         opt_branch = optim.Adam([{"params":self.network.stages.parameters()},
-                                {"params":self.network.classifier.parameters()}], lr=self.lr_branches 
+                                {"params":self.network.classifier.parameters()}], lr=self.lr_main 
                               weight_decay=self.weight_decay)
       else:
         opt_branch = optim.Adam([{"params":self.network.stages[i].parameters()},
-                               {"params":self.network.exits.parameters()}], lr=self.lr_branches 
+                               {"params":self.network.exits.parameters()}], lr=self.lr_main 
                               weight_decay=self.weight_decay)
 
 
@@ -465,13 +465,13 @@ class BranchyNet:
         remainingTVar = None
 
 
-    #self.optimizer_main.zero_grad()
+    self.optimizer_main.zero_grad()
     [optimizer.zero_grad() for optimizer in self.optimizer_list]
     for i, (weight, loss) in enumerate(zip(self.weight_list, losses)):
       loss = weight*loss
       loss.backward()
             
-    #self.optimizer_main.step()
+    self.optimizer_main.step()
     [optimizer.step() for optimizer in self.optimizer_list]
 
     loss_branches = np.array([loss.item() for loss in losses])
