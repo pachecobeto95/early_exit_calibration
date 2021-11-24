@@ -176,7 +176,7 @@ class DNN(nn.Module):
 
 class BranchyNet:
   def __init__(self, network, device, weight_list=None, thresholdExits=None, percentTestExits=.9, percentTrainKeeps=.5, lr_main=0.001, 
-               lr_branches=1.5e-4, momentum=0.9, weight_decay=0.0001, alpha=0.001, confidence_metric="confidence", 
+               lr_branches=0.001, momentum=0.9, weight_decay=0.0001, alpha=0.001, confidence_metric="confidence", 
                opt="Adam", joint=True, verbose=False):
     
     self.network = network
@@ -611,6 +611,12 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, sav
 
     result_train = train_model(branchynet, epoch, train_loader, device, main)
     result_val = valid_model(branchynet, epoch, test_loader, device, main)
+
+    if(main):
+      branchynet.scheduler_main.step()
+    else:
+      [schedule.step() for schedule in branchynet.scheduler_list]
+
 
     results.update(result_train), results.update(result_val)
     df = df.append(pd.Series(results), ignore_index=True)
