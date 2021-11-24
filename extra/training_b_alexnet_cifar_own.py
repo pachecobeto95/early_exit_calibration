@@ -233,12 +233,10 @@ class BranchyNet:
                                 {"params":self.network.classifier.parameters()}], lr=self.lr_main, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
       else:
-        #opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
-        #                       {"params":self.network.exits.parameters()}], lr=self.lr_main, momentum=self.momentum, 
-        #                      weight_decay=self.weight_decay)
-        opt_branch = optim.Adam([{"params":self.network.stages[i].parameters()},
-                               {"params":self.network.exits.parameters()}], lr=self.lr_main, 
+        opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
+                               {"params":self.network.exits.parameters()}], lr=self.lr_main, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
+
 
       self.optimizer_list.append(opt_branch)
       scheduler_branches = optim.lr_scheduler.CosineAnnealingLR(opt_branch, steps, eta_min=0, last_epoch=-1, verbose=True)
@@ -467,13 +465,13 @@ class BranchyNet:
         remainingTVar = None
 
 
-    self.optimizer_main.zero_grad()
+    #self.optimizer_main.zero_grad()
     [optimizer.zero_grad() for optimizer in self.optimizer_list]
     for i, (weight, loss) in enumerate(zip(self.weight_list, losses)):
       loss = weight*loss
       loss.backward()
             
-    self.optimizer_main.step()
+    #self.optimizer_main.step()
     [optimizer.step() for optimizer in self.optimizer_list]
 
     loss_branches = np.array([loss.item() for loss in losses])
