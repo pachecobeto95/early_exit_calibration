@@ -138,7 +138,6 @@ class LoadDataset():
     test_set = datasets.ImageFolder(dataset_path, transform=self.transformations_test)
 
     if (os.path.exists(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))):
-      print("Entroy")
       train_idx = np.load(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       val_idx = np.load(os.path.join(savePath_idx, "validation_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       self.val_idx = val_idx
@@ -1715,7 +1714,7 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 3  
+model_id = 1  
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -1731,7 +1730,7 @@ p_tar_calib = 0.8
 distribution = "linear"
 exit_type = "bnpool"
 dataset_name = "caltech256"
-model_name = "resnet50"
+model_name = "vgg16"
 root_save_path = os.path.dirname(__file__)
 
 save_indices_path = os.path.join(root_save_path, "datasets", dataset_name, "indices")
