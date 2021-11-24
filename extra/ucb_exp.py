@@ -69,7 +69,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
     inst_regret_list.append(inst_regret)
     selected_arm_list.append(threshold)
 
-  result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, "cum_regret":cum_regret_list, 
+  result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
             "label":[label]*len(inst_regret_list), "overhead":[overhead]*len(inst_regret_list)}
   return result
 
