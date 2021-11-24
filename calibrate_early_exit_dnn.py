@@ -1739,7 +1739,7 @@ dataset_path = os.path.join(root_save_path, "datasets", dataset_name, "256_Objec
 
 model_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",
 	dataset_name, model_name, "models", 
-	"ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+	"ee_%s_branches_%s_id_%s.pth"%(model_name, 6, model_id))
 
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
