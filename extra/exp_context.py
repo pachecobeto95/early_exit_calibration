@@ -577,7 +577,7 @@ def experiment_context_inference(model, test_loader, classes_list, n_branches, d
       torch.cuda.empty_cache()
 
   conf_branches_list = np.array(conf_branches_list)
-  infered_class_branches_list = np.array(inf_class.item() for inf_class in infered_class_branches_list)
+  infered_class_branches_list = np.array([inf_class.item() for inf_class in infered_class_branches_list])
   correct_list = np.array(correct_list)
   inferred_label_list = np.array(inferred_label_list)
 
