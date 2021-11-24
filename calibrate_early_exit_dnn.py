@@ -1524,7 +1524,7 @@ class BranchesModelWithTemperature(nn.Module):
 
     error_measure_dict = {"p_tar": p_tar}
 
-    val_idx = dataset.val_idx    
+    #val_idx = dataset.val_idx    
 
     self.model.eval()
     with torch.no_grad():
