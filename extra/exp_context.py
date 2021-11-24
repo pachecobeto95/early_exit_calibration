@@ -146,7 +146,7 @@ class B_AlexNet(nn.Module):
 
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
-      conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
+      conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
 
     x = self.stages[-1](x)
     
@@ -154,7 +154,7 @@ class B_AlexNet(nn.Module):
 
     output = self.classifier(x)
     conf, infered_class = torch.max(self.softmax(output), 1)
-    conf_list.append(conf.item()), class_list.append(infered_class)
+    conf_list.append(conf.item()), class_list.append(infered_class.item())
     return conf_list, class_list
 
 
