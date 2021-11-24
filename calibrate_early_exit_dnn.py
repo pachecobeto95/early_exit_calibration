@@ -1528,7 +1528,7 @@ class BranchesModelWithTemperature(nn.Module):
 
     self.model.eval()
     with torch.no_grad():
-      for (data, target) in tqdm(zip(val_loader)):
+      for (data, target) in tqdm(val_loader):
           
         data, target = data.to(self.device), target.to(self.device)
         
