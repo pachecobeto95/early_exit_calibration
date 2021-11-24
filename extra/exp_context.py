@@ -622,5 +622,5 @@ train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_re
 
 branchynet = build_b_alexnet(device, n_classes)
 branchynet.to_device()
-
+branchynet.network.load_state_dict(torch.load("./branches_%s.pth"%(model_id))['model_state_dict'])
 experiment_context_inference(branchynet, test_loader, classes_list, n_branches, device, save_result_path_samples)
