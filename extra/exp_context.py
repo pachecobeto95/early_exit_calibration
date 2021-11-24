@@ -623,4 +623,4 @@ save_result_path_samples = os.path.join(result_path, "inference_exp_ucb_%s.csv"%
 branchynet = build_b_alexnet(device, n_classes)
 branchynet.to_device()
 
-experiment_context_inference(early_exit_model, test_loader, classes_list, n_branches, device, save_result_path_samples)
+experiment_context_inference(branchynet, test_loader, classes_list, n_branches, device, save_result_path_samples)
