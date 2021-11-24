@@ -168,8 +168,8 @@ class DNN(nn.Module):
     return inputs
 
 class BranchyNet:
-  def __init__(self, network, device, weight_list=None, thresholdExits=None, percentTestExits=.9, percentTrainKeeps=.5, lr_main=0.005, 
-               lr_branches=1.5e-4, momentum=0.9, weight_decay=0.0005, alpha=0.001, confidence_metric="confidence", 
+  def __init__(self, network, device, weight_list=None, thresholdExits=None, percentTestExits=.9, percentTrainKeeps=.5, lr_main=0.001, 
+               lr_branches=0.001, momentum=0.9, weight_decay=0.0001, alpha=0.001, confidence_metric="confidence", 
                opt="SGD", joint=True, verbose=False):
 
     self.network = network
@@ -230,11 +230,11 @@ class BranchyNet:
     for i in range(len(self.network.stages)):
       if(i == len(self.network.stages)-1):
         opt_branch = optim.Adam([{"params":self.network.stages.parameters()},
-                                {"params":self.network.classifier.parameters()}], lr=self.lr_main 
+                                {"params":self.network.classifier.parameters()}], lr=self.lr_branches,
                               weight_decay=self.weight_decay)
       else:
         opt_branch = optim.Adam([{"params":self.network.stages[i].parameters()},
-                               {"params":self.network.exits.parameters()}], lr=self.lr_main 
+                               {"params":self.network.exits.parameters()}], lr=self.lr_branches, 
                               weight_decay=self.weight_decay)
 
 
@@ -584,10 +584,10 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, sav
 
     result_train = train_model(branchynet, epoch, train_loader, device, main)
     result_val = valid_model(branchynet, epoch, test_loader, device, main)
-    #if(main):
-    #  branchynet.scheduler_main.step()
-    #else:
-    #  [schedule.step() for schedule in branchynet.scheduler_list]
+    if(main):
+      branchynet.scheduler_main.step()
+    else:
+      [schedule.step() for schedule in branchynet.scheduler_list]
 
     results.update(result_train), results.update(result_val)
     df = df.append(pd.Series(results), ignore_index=True)
@@ -619,7 +619,7 @@ batch_size_test = 512
 input_resize, input_crop = 256, 224
 train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
 
-model_id = 3
+model_id = 2
 saveMainModelPath = "./main_1.pth"
 saveBranchesModelPath = "./branches_%s.pth"%(model_id)
 history_main_path = "./history_main_%s.csv"%(model_id)
