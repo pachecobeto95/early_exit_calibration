@@ -40,7 +40,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
   for n_round in tqdm(range(n_rounds)):
     idx = random.choice(np.arange(len(df)))
     row = df.iloc[[idx]]
-    print(row.conf_branch_1, row.conf_branch_2)
+    print(row.conf_branch_1.item(), row.conf_branch_2.item())
 
     if (t < len(threshold_list)):
       action = t
