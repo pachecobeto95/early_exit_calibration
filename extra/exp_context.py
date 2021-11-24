@@ -146,7 +146,7 @@ class B_AlexNet(nn.Module):
 
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
-      conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+      conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
 
     x = self.stages[-1](x)
     
@@ -154,7 +154,7 @@ class B_AlexNet(nn.Module):
 
     output = self.classifier(x)
     conf, infered_class = torch.max(self.softmax(output), 1)
-    conf_list.append(conf.item()), class_list.append(infered_class.item())
+    conf_list.append(conf.item()), class_list.append(infered_class)
     return conf_list, class_list
 
 
@@ -577,7 +577,7 @@ def experiment_context_inference(model, test_loader, classes_list, n_branches, d
       torch.cuda.empty_cache()
 
   conf_branches_list = np.array(conf_branches_list)
-  infered_class_branches_list = np.array(infered_class_branches_list)
+  infered_class_branches_list = np.array(inf_class.item() for inf_class in infered_class_branches_list)
   correct_list = np.array(correct_list)
   inferred_label_list = np.array(inferred_label_list)
 
