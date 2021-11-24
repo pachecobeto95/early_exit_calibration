@@ -408,8 +408,8 @@ class BranchyNet:
       acc_branch = 100*class_infered_branch.eq(remainingTVar.view_as(class_infered_branch)).sum().item()/remainingTVar.size(0)    
 
 
-      if (i == n_models-1):
-        continue
+      #if (i == n_models-1):
+      #  continue
       losses.append(loss_branch)
       acc_list.append(acc_branch)
       
@@ -619,11 +619,11 @@ input_resize, input_crop = 256, 224
 train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
 
 model_id = 2
-saveMainModelPath = "./main_%s.pth"%(model_id)
+saveMainModelPath = "./main_1.pth"%(model_id)
 saveBranchesModelPath = "./branches_%s.pth"%(model_id)
 history_main_path = "./history_main_%s.csv"%(model_id)
 history_branches_path = "./history_branches_%s.csv"%(model_id)
 
-train_eval(branchynet, train_loader, test_loader, device, saveMainModelPath, history_main_path, main=True)
-#branchynet.network.load_state_dict(torch.load("./main.pth")['model_state_dict'])
+#train_eval(branchynet, train_loader, test_loader, device, saveMainModelPath, history_main_path, main=True)
+branchynet.network.load_state_dict(torch.load("./main_1.pth")['model_state_dict'])
 train_eval(branchynet, train_loader, test_loader, device, saveBranchesModelPath, history_branches_path, main=False)
