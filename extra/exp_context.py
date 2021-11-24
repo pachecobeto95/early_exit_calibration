@@ -620,6 +620,12 @@ model_path = os.path.join(result_path, "branches_%s.pth"%(model_id))
 save_result_path_samples = os.path.join(result_path, "inference_exp_ucb_%s.csv"%(model_id)) 
 
 
+batch_size_train = 512
+batch_size_test = 512
+input_resize, input_crop = 256, 224
+train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
+
+
 branchynet = build_b_alexnet(device, n_classes)
 branchynet.to_device()
 
