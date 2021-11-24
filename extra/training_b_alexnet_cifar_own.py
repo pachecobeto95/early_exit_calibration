@@ -584,10 +584,10 @@ def train_eval(branchynet, train_loader, test_loader, device, saveModelPath, sav
 
     result_train = train_model(branchynet, epoch, train_loader, device, main)
     result_val = valid_model(branchynet, epoch, test_loader, device, main)
-    if(main):
-      branchynet.scheduler_main.step()
-    else:
-      [schedule.step() for schedule in branchynet.scheduler_list]
+    #if(main):
+    #  branchynet.scheduler_main.step()
+    #else:
+    #  [schedule.step() for schedule in branchynet.scheduler_list]
 
     results.update(result_train), results.update(result_val)
     df = df.append(pd.Series(results), ignore_index=True)
