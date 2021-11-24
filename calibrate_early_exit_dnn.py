@@ -742,7 +742,7 @@ class Early_Exit_DNN(nn.Module):
     self.stage_id = 0
 
 
-    backbone_model = models.vgg16(self.pretrained)
+    backbone_model = models.vgg16_bn(self.pretrained)
     backbone_model_features = backbone_model.features
     
     self.total_flops = self.countFlops(backbone_model)
