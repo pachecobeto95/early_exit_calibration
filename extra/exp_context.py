@@ -602,7 +602,7 @@ def experiment_context_inference(model, test_loader, classes_list, n_branches, d
   df_results.to_csv(saveResultsPath)
 
 
-n_classes = len(classes_list)
+n_classes = 10
 pretrained = True
 fine_tune = True
 n_branches = 1
@@ -616,6 +616,11 @@ model_name = "alexnet"
 model_id = 3
 
 result_path = os.path.join(".")
-model_path = os.path.join(result_path, "models", "branches_%s.pth"%(model_id))
+model_path = os.path.join(result_path, "branches_%s.pth"%(model_id))
 save_result_path_samples = os.path.join(result_path, "inference_exp_ucb_%s.csv"%(model_id)) 
 
+
+branchynet = build_b_alexnet(device, n_classes)
+branchynet.to_device()
+
+experiment_context_inference(early_exit_model, test_loader, classes_list, n_branches, device, save_result_path_samples)
