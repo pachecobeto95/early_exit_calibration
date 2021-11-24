@@ -606,7 +606,7 @@ distribution = "linear"
 exit_type = "bnpool"
 dataset_name = "cifar_10"
 model_name = "alexnet"
-model_id = 3
+model_id = 4
 
 classes_list = ['plane', 'car', 'bird', 'cat','deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 
