@@ -649,7 +649,7 @@ input_resize, input_crop = 256, 224
 train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
 
 model_id = 3
-saveMainModelPath = "./main_1.pth"%
+saveMainModelPath = "./main_%s.pth"%(model_id)
 saveBranchesModelPath = "./branches_%s.pth"%(model_id)
 history_main_path = "./history_main_%s.csv"%(model_id)
 history_branches_path = "./history_branches_%s.csv"%(model_id)
