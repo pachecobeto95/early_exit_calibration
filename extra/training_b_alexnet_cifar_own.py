@@ -230,11 +230,11 @@ class BranchyNet:
     for i in range(len(self.network.stages)):
       if(i == len(self.network.stages)-1):
         opt_branch = optim.SGD([{"params":self.network.stages.parameters()},
-                                {"params":self.network.classifier.parameters()}], lr=self.lr_main, momentum=self.momentum, 
+                                {"params":self.network.classifier.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
       else:
         opt_branch = optim.SGD([{"params":self.network.stages[i].parameters()},
-                               {"params":self.network.exits.parameters()}], lr=self.lr_main, momentum=self.momentum, 
+                               {"params":self.network.exits.parameters()}], lr=self.lr_branches, momentum=self.momentum, 
                               weight_decay=self.weight_decay)
 
 
