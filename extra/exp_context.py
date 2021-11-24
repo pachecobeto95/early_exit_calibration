@@ -615,7 +615,7 @@ dataset_name = "cifar_10"
 model_name = "alexnet"
 model_id = 3
 
-classes = ['plane', 'car', 'bird', 'cat','deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+classes_list = ['plane', 'car', 'bird', 'cat','deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 
 result_path = os.path.join(".")
 model_path = os.path.join(result_path, "branches_%s.pth"%(model_id))
