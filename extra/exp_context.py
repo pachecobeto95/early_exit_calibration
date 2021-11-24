@@ -623,7 +623,7 @@ save_result_path_samples = os.path.join(result_path, "inference_exp_ucb_%s.csv"%
 
 
 batch_size_train = 512
-batch_size_test = 512
+batch_size_test = 1
 input_resize, input_crop = 256, 224
 train_loader, test_loader = cifar_10(batch_size_train, batch_size_test, input_resize, input_crop)
 
