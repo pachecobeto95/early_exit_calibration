@@ -63,9 +63,9 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
 
     inst_regret = optimal_reward - reward
 
-    print(n_actions, inst_regret, threshold, row.delta_conf, reward)
-    cum_regret += inst_regret
-    inst_regret_list.append(inst_regret), cum_regret_list.append(cum_regret)
+    print(n_actions, inst_regret, threshold, delta_conf, reward)
+    #cum_regret += inst_regret
+    inst_regret_list.append(inst_regret)
     selected_arm_list.append(threshold)
 
   result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, "cum_regret":cum_regret_list, 
