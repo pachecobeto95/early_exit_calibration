@@ -566,7 +566,7 @@ def experiment_context_inference(model, test_loader, classes_list, n_branches, d
       conf_branches, infered_class_branches = model.network.forwardEval(data)
       delta_confidence = conf_branches[-1] - conf_branches[0] 
       
-      conf_branches_list.append(conf_branches), infered_class_branches_list.append(infered_class_branches)     
+      conf_branches_list.append(conf_branches), infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])     
       delta_confidence_list.append(delta_confidence)
       target_list.append(target.item()), label_list.append(classes_list[int(target.item())])      
       inferred_label_list.append([classes_list[int(infered_class_branches[i].item())] for i in range(n_exits)])
@@ -577,7 +577,7 @@ def experiment_context_inference(model, test_loader, classes_list, n_branches, d
       torch.cuda.empty_cache()
 
   conf_branches_list = np.array(conf_branches_list)
-  infered_class_branches_list = np.array([inf_class.item() for inf_class in infered_class_branches_list])
+  infered_class_branches_list = np.array(infered_class_branches_list)
   correct_list = np.array(correct_list)
   inferred_label_list = np.array(inferred_label_list)
 
