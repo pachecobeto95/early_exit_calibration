@@ -1180,7 +1180,7 @@ def save_all_results(no_calib_result, calib_overall_result, calib_branches_resul
   save_result(calib_all_samples_result, saveResultsDict["calib_branches_all_samples"])
 
 
-def extract_confidence_data(model, test_loader, val_loader, tempDict, dataset, p_tar_list, n_branches, device, saveTempBranchesPath, saveResultsDict):
+def extract_confidence_data(model, test_loader, val_loader, tempDict, dataset, p_tar_list, n_branches, device, saveResultsDict):
 
   for p_tar in p_tar_list:
     print("P_tar: %s"%(p_tar))
