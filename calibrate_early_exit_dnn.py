@@ -1293,6 +1293,7 @@ class BranchesModelWithTemperature(nn.Module):
       print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()))
 
       temperature_branch_list.append(self.temperature_branch.item())
+      self.temperature_branches[i] = self.temperature_branch.item()
     
     for i in range(self.n_exits):
 
@@ -1392,7 +1393,7 @@ class BranchesModelWithTemperature(nn.Module):
       weight_list = np.linspace(1, 0.3, self.n_exits)
       def eval():
         optimizer.zero_grad()
-        loss = weight_list[i]*nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
+        loss = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
         loss.backward()
         return loss
       
@@ -1404,7 +1405,9 @@ class BranchesModelWithTemperature(nn.Module):
       after_ece = ece(self.temperature_scale_branches(logit_branch), label_branch).item()
       after_ece_list.append(after_ece)
 
-      temperature_branch_list.append(self.temperature_branch.item())
+      
+      self.temperature_branches[i] = self.temperature_branch.item()
+      #temperature_branch_list.append(self.temperature_branch.item())
 
       print("Branch: %s, Before NLL: %s, After NLL: %s"%(i+1, before_temperature_nll, after_temperature_nll))
       print("Branch: %s, Before ECE: %s, After ECE: %s"%(i+1, before_ece, after_ece))
