@@ -1149,7 +1149,8 @@ class BranchesModelWithTemperature(nn.Module):
   def save_temperature_branches(self, error_measure_dict, save_branches_path):
 
 
-    df = pd.DataFrame()
+    df = pd.read_csv(save_branches_path) if (os.path.exists(save_branches_path)) else pd.DataFrame()
+
             
     df = df.append(pd.Series(error_measure_dict), ignore_index=True)
     df.to_csv(save_branches_path)
@@ -1165,7 +1166,7 @@ class BranchesModelWithTemperature(nn.Module):
                  
     """
 
-    df = pd.DataFrame()
+    df = pd.read_csv(save_overall_path) if (os.path.exists(save_overall_path)) else pd.DataFrame()
     
     df = df.append(pd.Series(error_measure_dict), ignore_index=True)
     df.to_csv(save_overall_path)
