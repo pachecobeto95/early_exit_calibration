@@ -1394,7 +1394,7 @@ class BranchesModelWithTemperature(nn.Module):
       weight_list = np.linspace(1, 0.3, self.n_exits)
       def eval():
         optimizer.zero_grad()
-        loss = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
+        loss = weight_list[i]*nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
         loss.backward()
         return loss
       
