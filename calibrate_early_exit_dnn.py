@@ -1292,7 +1292,6 @@ class BranchesModelWithTemperature(nn.Module):
 
       print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()))
 
-      temperature_branch_list.append(self.temperature_branch.item())
       self.temperature_branches[i] = self.temperature_branch.item()
     
     for i in range(self.n_exits):
@@ -1301,7 +1300,7 @@ class BranchesModelWithTemperature(nn.Module):
                                  "before_ece_branch_%s"%(i+1): before_ece_list[i],
                                  "after_nll_branch_%s"%(i+1): after_temperature_nll_list[i],
                                  "after_ece_branch_%s"%(i+1): after_ece_list[i],
-                                 "temperature_branch_%s"%(i+1): temperature_branch_list[i]})
+                                 "temperature_branch_%s"%(i+1): self.temperature_branches[i]})
 
     
     # This saves the parameter to save the temperature parameter for each side branch
@@ -1419,7 +1418,7 @@ class BranchesModelWithTemperature(nn.Module):
                                  "before_ece_branch_%s"%(i+1): before_ece_list[i],
                                  "after_nll_branch_%s"%(i+1): after_temperature_nll_list[i],
                                  "after_ece_branch_%s"%(i+1): after_ece_list[i],
-                                 "temperature_branch_%s"%(i+1): temperature_branch_list[i]})
+                                 "temperature_branch_%s"%(i+1): self.temperature_branches[i]})
     
     # This saves the parameter to save the temperature parameter for each side branch
 
