@@ -1190,7 +1190,7 @@ def extract_confidence_data(model, test_loader, val_loader, tempDict, dataset, p
     model.temp_branches = tempDict["temp_branches"].loc[p_tar].values
     model.temp_all_samples = tempDict["temp_all_samples"].loc[p_tar].values
 
-    no_calib_result = experiment_early_exit_inference(model, test_loader, n_branches, device, model_type="no_calib")
+    no_calib_result = experiment_early_exit_inference(model, test_loader, n_branches, p_tar, device, model_type="no_calib")
     
     calib_overall_result = experiment_early_exit_inference(model, test_loader, n_branches, p_tar, device, 
                                                            model_type="calib_overall")
