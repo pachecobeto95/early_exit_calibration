@@ -961,7 +961,7 @@ class Early_Exit_DNN(nn.Module):
 
     return output_list, conf_list, class_list
 
-  def forwardBranchesCalibration(self, x:
+  def forwardBranchesCalibration(self, x):
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
 
