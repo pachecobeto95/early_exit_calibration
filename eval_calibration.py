@@ -1274,5 +1274,5 @@ tempDictPath = {"calib_overall": tempOverallPath, "calib_branches": tempBranches
 
 tempDict = readTemperature(tempDictPath)
 
-p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 0.95]
+p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
 extract_confidence_data(early_exit_dnn, test_loader, val_loader, tempDict, dataset, p_tar_list, n_branches, device, saveResultsDict)
