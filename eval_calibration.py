@@ -1185,6 +1185,9 @@ def extract_confidence_data(model, test_loader, val_loader, tempDict, dataset, p
   for p_tar in p_tar_list:
     print("P_tar: %s"%(p_tar))
 
+    print(tempDict["temp_overall"])
+    sys.exit()
+
     model.temp_overall = tempDict["temp_overall"].loc[p_tar].item()
     model.temp_branches = tempDict["temp_branches"].loc[p_tar].values
     model.temp_all_samples = tempDict["temp_all_samples"].loc[p_tar].values
