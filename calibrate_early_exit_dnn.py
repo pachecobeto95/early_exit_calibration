@@ -1538,8 +1538,8 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 
 
 
-    #save_all_results(no_calib_result, calib_overall_result, calib_branches_result, 
-    #                 calib_all_samples_result, saveResultsDict)
+    save_all_results(no_calib_result, calib_overall_result, calib_branches_result, 
+                     calib_all_samples_result, saveResultsDict)
 
 
 input_dim = 224
