@@ -933,7 +933,7 @@ class Early_Exit_DNN(nn.Module):
     return output_list, conf_list, infered_class_list
 
 
-  def forwardOverallCalibration(self, x, temp_overall):
+  def forwardOverallCalibration(self, x):
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
 
@@ -961,7 +961,7 @@ class Early_Exit_DNN(nn.Module):
 
     return output_list, conf_list, class_list
 
-  def forwardBranchesCalibration(self, x, temp_branches):
+  def forwardBranchesCalibration(self, x:
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
 
@@ -988,7 +988,7 @@ class Early_Exit_DNN(nn.Module):
 
     return output_list, conf_list, class_list
 
-  def forwardAllSamplesCalibration(self, x, temp_all_samples):
+  def forwardAllSamplesCalibration(self, x):
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
 
