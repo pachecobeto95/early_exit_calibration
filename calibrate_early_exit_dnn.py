@@ -1463,12 +1463,12 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   with torch.no_grad():
     for i, (data, target) in tqdm(enumerate(test_loader, 1)):
       
-      print(model_type)
+      #print(model_type)
       data, target = data.to(device), target.to(device)
 
       if (model_type == "no_calib"):
         _, conf_branches, infered_class_branches = model.forwardAllExits(data)
-        print([conf.item() for conf in conf_branches])
+        #print([conf.item() for conf in conf_branches])
 
       elif(model_type == "calib_overall"):
         _, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
@@ -1476,8 +1476,8 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
 
       elif(model_type == "calib_branches"):
         _, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
-        print([conf.item() for conf in conf_branches])
-        print(model.temperature_branches)
+        #print([conf.item() for conf in conf_branches])
+        #print(model.temperature_branches)
 
       else:
         _, conf_branches, infered_class_branches = model.forwardAllSamplesCalibration(data)
@@ -1491,7 +1491,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
 
       del data, target
       torch.cuda.empty_cache()
-      break    
+      #break    
 
   conf_branches_list = np.array(conf_branches_list)
   infered_class_branches_list = np.array(infered_class_branches_list)
@@ -1540,8 +1540,8 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 
 
 
-    #save_all_results(no_calib_result, calib_overall_result, calib_branches_result, 
-    #                 calib_all_samples_result, saveResultsDict)
+    save_all_results(no_calib_result, calib_overall_result, calib_branches_result, 
+                     calib_all_samples_result, saveResultsDict)
 
 
 input_dim = 224
