@@ -1165,6 +1165,7 @@ def readTemperature(tempDictPath):
   temp_dict = {"temp_overall": df_temp_overall.temperature, "temp_branches": df_temp_branches, 
                "temp_all_samples": df_temp_all_samples}
 
+  return temp_dict
 
 def save_result(result, save_path):
   df_result = pd.read_csv(save_path) if (os.path.exists(save_path)) else pd.DataFrame()
