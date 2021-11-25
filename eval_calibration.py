@@ -1101,7 +1101,7 @@ class ECE(nn.Module):
     return ece
 
 
-def experiment_early_exit_inference(model, test_loader, n_branches, device, model_type="no_calib"):
+def experiment_early_exit_inference(model, test_loader, n_branches, p_tar, device, model_type="no_calib"):
   df_result = pd.DataFrame()
 
   n_exits = n_branches + 1
@@ -1192,14 +1192,14 @@ def extract_confidence_data(model, test_loader, val_loader, tempDict, dataset, p
 
     no_calib_result = experiment_early_exit_inference(model, test_loader, n_branches, device, model_type="no_calib")
     
-    calib_overall_result = experiment_early_exit_inference(model, test_loader, n_branches, device, 
+    calib_overall_result = experiment_early_exit_inference(model, test_loader, n_branches, p_tar, device, 
                                                            model_type="calib_overall")
     
-    calib_branches_result = experiment_early_exit_inference(model, test_loader, n_branches, device, 
+    calib_branches_result = experiment_early_exit_inference(model, test_loader, n_branches, p_tar, device, 
                                                             model_type="calib_branches")
     
     calib_all_samples_result = experiment_early_exit_inference(model, test_loader, 
-                                                               n_branches, device, model_type="all_samples")
+                                                               n_branches, p_tar, device, model_type="all_samples")
 
 
 
