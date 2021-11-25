@@ -1292,7 +1292,9 @@ class BranchesModelWithTemperature(nn.Module):
 
       print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()))
 
-      self.temperature_branches[i] = self.temperature_branch.item()
+      self.temperature_branches[i] = self.temperature_branch
+
+    self.temperature_branches = [temp_branch.item() for temp_branch in self.temperature_branches]
     
     for i in range(self.n_exits):
 
@@ -1405,13 +1407,15 @@ class BranchesModelWithTemperature(nn.Module):
       after_ece_list.append(after_ece)
 
       
-      self.temperature_branches[i] = self.temperature_branch.item()
+      self.temperature_branches[i] = self.temperature_branch
       #temperature_branch_list.append(self.temperature_branch.item())
 
       print("Branch: %s, Before NLL: %s, After NLL: %s"%(i+1, before_temperature_nll, after_temperature_nll))
       print("Branch: %s, Before ECE: %s, After ECE: %s"%(i+1, before_ece, after_ece))
 
       print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()))
+
+    self.temperature_branches = [temp_branch.item() for temp_branch in self.temperature_branches]
 
     for i in range(self.n_exits):
       error_measure_dict.update({"before_nll_branch_%s"%(i+1): before_temperature_nll_list[i], 
