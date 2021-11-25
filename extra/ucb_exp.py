@@ -16,11 +16,11 @@ def get_row_data(row, threshold):
   conf_branch = row.conf_branch_1.item()
   conf_final = row.conf_branch_2.item()
   if(conf_final >= threshold):
-    print("Early-Exit")
+    #print("Early-Exit")
     delta_conf = conf_final - conf_branch
     return conf_branch, delta_conf
   else:
-    print("Not")
+    #print("Not")
     conf_list = [conf_branch, conf_final]
     delta_conf = max(conf_list) - conf_branch 
     return conf_branch, delta_conf
@@ -66,7 +66,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
 
     inst_regret = optimal_reward - reward
 
-    print(n_actions, inst_regret, threshold, optimal_reward, reward)
+    #print(n_actions, inst_regret, threshold, optimal_reward, reward)
     #cum_regret += inst_regret
     inst_regret_list.append(inst_regret)
     selected_arm_list.append(threshold)
