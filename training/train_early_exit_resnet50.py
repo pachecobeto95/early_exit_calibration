@@ -1253,7 +1253,7 @@ dataset_save_path = os.path.join(root_save_path, dataset_name)
 save_indices_path = os.path.join(dataset_save_path, "indices")
 #create_save_dir(dataset_save_path, model_name, save_indices_path)
 
-dataset_path = "./datasets/256_ObjectCategories/"
+dataset_path = "./datasets/caltech256/256_ObjectCategories/"
 
 model_save_path = os.path.join(dataset_save_path, model_name, "models", "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
 history_save_path = os.path.join(dataset_save_path, model_name, "history", "history_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
