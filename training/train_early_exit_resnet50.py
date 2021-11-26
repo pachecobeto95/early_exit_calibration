@@ -1249,16 +1249,18 @@ dataset_name = "caltech256"
 model_name = "resnet50"
 root_save_path = "."
 
-dataset_save_path = os.path.join(root_save_path, dataset_name)
+dataset_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name)
 save_indices_path = os.path.join(dataset_save_path, "indices")
 #create_save_dir(dataset_save_path, model_name, save_indices_path)
 
 dataset_path = "./datasets/caltech256/256_ObjectCategories/"
 
-model_save_path = os.path.join(dataset_save_path, model_name, "models", "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
-history_save_path = os.path.join(dataset_save_path, model_name, "history", "history_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
-save_temp_overall_path = os.path.join(dataset_save_path, model_name, "temperature", 
-                                      "temp_overall_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
+model_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name, 
+  "models", "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+history_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name,
+ "history", "history_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
+save_temp_overall_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name,
+ "temperature", "temp_overall_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
 
 save_temp_branches_path = os.path.join(dataset_save_path, model_name, "temperature", 
                                        "temp_branches_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
