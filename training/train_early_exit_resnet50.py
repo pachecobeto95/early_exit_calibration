@@ -273,7 +273,7 @@ class EarlyExitBlock(nn.Module):
       self.layers.append(nn.BatchNorm2d(channel))
 
     if (exit_type != 'plain'):
-      self.layers.append(nn.AdaptiveAvgPool2d(pool_size))
+      self.layers.append(nn.AdaptiveAvgPool2d(7))
     
     #This line defines the data shape that fully-connected layer receives.
     current_channel, current_width, current_height = self.get_current_data_shape()
@@ -1230,7 +1230,7 @@ def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
 input_dim = 224
 batch_size_train = 32
 batch_size_test = 1
-model_id = 7
+model_id = 10
 split_ratio = 0.2
 n_classes = 258
 pretrained = True
@@ -1282,9 +1282,9 @@ criterion = nn.CrossEntropyLoss()
 #                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
 #                       {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[1]}], weight_decay=weight_decay)
 
-optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': 0.005}, 
+optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': 0.01}, 
                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-                      {'params': early_exit_dnn.classifier.parameters(), 'lr': 0.005}], momentum=0, weight_decay=0)
+                      {'params': early_exit_dnn.classifier.parameters(), 'lr': 0.01}], momentum=0, weight_decay=0)
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 
