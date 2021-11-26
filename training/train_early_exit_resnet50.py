@@ -1290,7 +1290,7 @@ optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 
 n_exits = n_branches + 1
-loss_weights = np.linspace(0.3, 1, n_exits)
+loss_weights = np.linspace(1, 0.3, n_exits)
 #loss_weights = np.ones(n_exits)
 #loss_weights = np.linspace(1, 0.3, n_exits)
 
