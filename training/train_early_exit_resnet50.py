@@ -1254,15 +1254,15 @@ save_indices_path = os.path.join(dataset_save_path, "indices")
 
 dataset_path = "./datasets/caltech256/256_ObjectCategories/"
 
-model_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name, 
+model_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name, model_name, 
   "models", "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
-history_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name,
+history_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name,model_name,
  "history", "history_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
-save_temp_overall_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name,
+save_temp_overall_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name,model_name,
  "temperature", "temp_overall_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
 
-save_temp_branches_path = os.path.join(dataset_save_path, model_name, "temperature", 
-                                       "temp_branches_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
+save_temp_branches_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name,model_name,
+ "temperature", "temp_branches_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
 
 
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
