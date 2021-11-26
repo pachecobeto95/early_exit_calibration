@@ -1283,9 +1283,9 @@ criterion = nn.CrossEntropyLoss()
 #                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
 #                       {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[1]}], weight_decay=weight_decay)
 
-optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': 0.01}, 
+optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-                      {'params': early_exit_dnn.classifier.parameters(), 'lr': 0.01}], momentum=0, weight_decay=0)
+                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], momentum=0.9, weight_decay=weight_decay)
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 
