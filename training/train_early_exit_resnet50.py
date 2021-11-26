@@ -151,7 +151,6 @@ class LoadDataset():
 
       # This line mounts the training and test dataset, selecting the samples according indices. 
       train_data = torch.utils.data.Subset(train_set, indices=train_idx)
-      ##essa linha parecia estar faltando. copiei da versão anterior##
 
       # This line gets the indices to split the train dataset into training dataset and validation dataset.
       train_idx, val_idx = self.get_indices(train_data, split_ratio)
@@ -1249,7 +1248,7 @@ dataset_name = "caltech256"
 model_name = "resnet50"
 root_save_path = "."
 
-dataset_save_path = os.path.join(root_save_path,dataset_name)
+dataset_save_path = os.path.join(root_save_path, dataset_name)
 save_indices_path = os.path.join(dataset_save_path, "indices")
 #create_save_dir(dataset_save_path, model_name, save_indices_path)
 
