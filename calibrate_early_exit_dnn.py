@@ -187,7 +187,7 @@ class EarlyExitBlock(nn.Module):
       self.layers.append(nn.BatchNorm2d(channel))
 
     if (exit_type != 'plain'):
-      self.layers.append(nn.AdaptiveAvgPool2d(1))
+      self.layers.append(nn.AdaptiveAvgPool2d(7))
     
     #This line defines the data shape that fully-connected layer receives.
     current_channel, current_width, current_height = self.get_current_data_shape()
@@ -1547,7 +1547,7 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 1
+model_id = 10
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -1563,7 +1563,7 @@ p_tar_calib = 0.8
 distribution = "linear"
 exit_type = "bnpool"
 dataset_name = "caltech256"
-model_name = "mobilenet"
+model_name = "resnet50"
 root_save_path = os.path.dirname(__file__)
 
 save_indices_path = os.path.join(root_save_path, "datasets", dataset_name, "indices")
