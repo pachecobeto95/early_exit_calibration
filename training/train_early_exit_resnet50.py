@@ -1249,7 +1249,7 @@ dataset_name = "caltech256"
 model_name = "resnet50"
 root_save_path = "."
 
-dataset_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",model_name)
+dataset_save_path = os.path.join(root_save_path,dataset_name)
 save_indices_path = os.path.join(dataset_save_path, "indices")
 #create_save_dir(dataset_save_path, model_name, save_indices_path)
 
