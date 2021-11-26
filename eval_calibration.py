@@ -1206,7 +1206,6 @@ def extract_confidence_data(model, test_loader, val_loader, tempDict, dataset, p
     save_all_results(no_calib_result, calib_overall_result, calib_branches_result, 
                      calib_all_samples_result, saveResultsDict)
 
-
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
@@ -1250,10 +1249,10 @@ result_path = os.path.join(root_save_path, "appEdge", "api", "services", "models
 if (not os.path.exists(result_path)):
   os.makedirs(result_path)
 
-save_no_calib_path =  os.path.join(result_path, "no_calib_exp_data_%s_2.csv"%(model_id))
-save_calib_overall_path =  os.path.join(result_path, "calib_overall_exp_data_%s_2.csv"%(model_id))
-save_calib_branches_path =  os.path.join(result_path, "calib_branches_exp_data_%s_2.csv"%(model_id))
-save_calib_all_samples_path =  os.path.join(result_path, "calib_all_samples_branches_exp_data_%s_2.csv"%(model_id))
+save_no_calib_path =  os.path.join(result_path, "no_calib_exp_data_%s_testing.csv"%(model_id))
+save_calib_overall_path =  os.path.join(result_path, "calib_overall_exp_data_%s_testing.csv"%(model_id))
+save_calib_branches_path =  os.path.join(result_path, "calib_branches_exp_data_%s_testing.csv"%(model_id))
+save_calib_all_samples_path =  os.path.join(result_path, "calib_all_samples_branches_exp_data_%s_testing.csv"%(model_id))
 
 
 saveResultsDict = {"no_calib": save_no_calib_path, "calib_overall": save_calib_overall_path, "calib_branches": save_calib_branches_path,
@@ -1274,5 +1273,5 @@ tempDictPath = {"calib_overall": tempOverallPath, "calib_branches": tempBranches
 
 tempDict = readTemperature(tempDictPath)
 
-p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
+p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 0.95]
 extract_confidence_data(early_exit_dnn, test_loader, val_loader, tempDict, dataset, p_tar_list, n_branches, device, saveResultsDict)
