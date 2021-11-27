@@ -218,6 +218,8 @@ def run_epoch(loader, model, criterion, optimizer, epoch=0, n_epochs=0, train=Tr
         print('Evaluating')
 
     end = time.time()
+    softmax = nn.Softmax(dim=1)
+
     for i, (input, target) in enumerate(loader):
         if train:
             model.zero_grad()
