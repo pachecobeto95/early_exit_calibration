@@ -535,12 +535,12 @@ if __name__ == '__main__':
 
     valid_set = tv.datasets.CIFAR100("./", train=True, transform=test_transforms, download=False)
 
-    valid_indices = torch.load("./valid_indices.pth", map_location=device) 
+    valid_indices = torch.load("./valid_indices.pth") 
     valid_loader = torch.utils.data.DataLoader(valid_set, pin_memory=True, batch_size=batch_size,
                                                sampler=SubsetRandomSampler(valid_indices))
 
 
-    model.load_state_dict(torch.load("./model.pth", map_location=device))
+    model.load_state_dict(torch.load("./model.pth"))
 
     scaled_model = ModelWithTemperature(model)
     scaled_model.set_temperature(valid_loader)
