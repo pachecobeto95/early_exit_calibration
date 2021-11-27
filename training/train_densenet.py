@@ -391,4 +391,4 @@ if __name__ == '__main__':
         --valid_size (int) - size of validation set
         --seed (int) - manually set the random seed (default None)
     """
-    train()
+    train("./", "./")
