@@ -16,6 +16,8 @@ import torchvision.models as models
 import torch
 from torch import nn, optim
 from torch.nn import functional as F
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def _bn_function_factory(norm, relu, conv):
     def bn_function(*inputs):
