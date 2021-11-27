@@ -1141,7 +1141,7 @@ def experiment_early_exit_inference(model, test_loader, n_branches, p_tar, devic
   infered_class_branches_list = np.array(infered_class_branches_list)
   correct_list = np.array(correct_list)
 
-  results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
+  results = {"p_tar": [round(p_tar, 2)]*len(target_list), "target": target_list, "id": id_list}
   for i in range(n_exits):
     results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
                     "infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
@@ -1273,5 +1273,6 @@ tempDictPath = {"calib_overall": tempOverallPath, "calib_branches": tempBranches
 
 tempDict = readTemperature(tempDictPath)
 
-p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 0.95]
+#p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 0.95]
+p_tar_list = np.arange(0.5, 1, 0.05)
 extract_confidence_data(early_exit_dnn, test_loader, val_loader, tempDict, dataset, p_tar_list, n_branches, device, saveResultsDict)
