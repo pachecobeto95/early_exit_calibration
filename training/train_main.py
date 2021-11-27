@@ -354,7 +354,9 @@ model = models.resnet152(pretrained=True).to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.Adam(model.parameters(), 0.1, weight_decay=weight_decay)
+#optimizer = optim.Adam(model.parameters(), 0.1, weight_decay=weight_decay)
+
+optimizer = optim.SGD(model.parameters(), momentum=0.9, weight_decay=weight_decay)
 
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
