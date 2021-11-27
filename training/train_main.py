@@ -312,7 +312,7 @@ def evalMain(model, val_loader, criterion, epoch, device):
 input_dim = 224
 batch_size_train = 32
 batch_size_test = 1
-model_id = 11
+model_id = 12
 split_ratio = 0.2
 n_classes = 258
 pretrained = True
@@ -354,9 +354,9 @@ model = models.resnet152(pretrained=True).to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-#optimizer = optim.Adam(model.parameters(), 0.1, weight_decay=weight_decay)
+optimizer = optim.Adam(model.parameters(), 0.1, weight_decay=weight_decay)
 
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=weight_decay)
+#optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=weight_decay)
 
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
