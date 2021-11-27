@@ -336,7 +336,7 @@ save_indices_path = os.path.join(dataset_save_path, "indices")
 dataset_path = "./datasets/caltech256/256_ObjectCategories/"
 
 model_save_path = os.path.join(root_save_path, "%s_id_%s.pth"%(model_name, model_id))
-history_save_path = os.path.join(root_save_path, "history_%s_branches_%s_id_%s.csv"%(model_name, model_id))
+history_save_path = os.path.join(root_save_path, "history_%s_id_%s.csv"%(model_name, model_id))
 
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
