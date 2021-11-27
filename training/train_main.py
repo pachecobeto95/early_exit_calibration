@@ -43,10 +43,8 @@ class LoadDataset():
     std =  [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
     # Note that we apply data augmentation in the training dataset.
-    self.transformations_train = transforms.Compose([transforms.Resize((input_dim, input_dim)),
-                                                     transforms.RandomChoice([
-                                                                              transforms.ColorJitter(brightness=(0.80, 1.20)),
-                                                                              transforms.RandomGrayscale(p = 0.25)]),
+    self.transformations_train = transforms.Compose([transforms.Resize((256, 256)),
+    	                                             transforms.CenterCrop((224, 224)),
                                                      transforms.RandomHorizontalFlip(p = 0.25),
                                                      transforms.RandomRotation(25),
                                                      transforms.ToTensor(), 
@@ -55,7 +53,8 @@ class LoadDataset():
 
     # Note that we do not apply data augmentation in the test dataset.
     self.transformations_test = transforms.Compose([
-                                                     transforms.Resize(input_dim), 
+                                                     transforms.Resize(256),
+                                                     transforms.CenterCrop((224, 224)), 
                                                      transforms.ToTensor(), 
                                                      transforms.Normalize(mean = mean, std = std),
                                                      ])
@@ -354,9 +353,9 @@ model = models.resnet152(pretrained=True).to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.Adam(model.parameters(), 0.01, weight_decay=weight_decay)
+#optimizer = optim.Adam(model.parameters(), 0.01, weight_decay=weight_decay)
 
-#optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=weight_decay)
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=0)
 
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
