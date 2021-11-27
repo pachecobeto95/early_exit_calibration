@@ -264,10 +264,12 @@ def trainMain(model, train_loader, optimizer, criterion, epoch, device):
     torch.cuda.empty_cache()
 
   loss = round(np.average(running_loss), 4)
-  print("Epoch: %s"%(epoch))
-  print("Train Loss: %s, train Acc: %s"%(loss, train_acc))
+  train_avg_acc = round(np.average(train_acc), 4)
 
-  result_dict = {"epoch":epoch, "train_loss": loss, "train_acc": train_acc}
+  print("Epoch: %s"%(epoch))
+  print("Train Loss: %s, train Acc: %s"%(loss, train_avg_acc))
+
+  result_dict = {"epoch":epoch, "train_loss": loss, "train_acc": train_avg_acc}
   
   return result_dict
 
