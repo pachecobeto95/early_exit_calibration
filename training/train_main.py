@@ -298,12 +298,12 @@ def evalMain(model, val_loader, criterion, epoch, device):
       torch.cuda.empty_cache()
 
   loss = round(np.average(running_loss), 4)
-  val_acc = round(np.average(val_acc), 4)
+  avg_val_acc = round(np.average(val_acc), 4)
 
   print("Epoch: %s"%(epoch))
-  print("Val Loss: %s, Val Acc: %s"%(loss, val_acc))
+  print("Val Loss: %s, Val Acc: %s"%(loss, avg_val_acc))
 
-  result_dict = {"epoch":epoch, "val_loss": loss, "val_acc": val_acc}
+  result_dict = {"epoch":epoch, "val_loss": loss, "val_acc": avg_val_acc}
   
   return result_dict
 
@@ -354,7 +354,7 @@ model = models.resnet152(pretrained=True).to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.Adam(model.parameters(), lr[-1], weight_decay=weight_decay)
+optimizer = optim.Adam(model.parameters(), 0.1, weight_decay=weight_decay)
 
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
