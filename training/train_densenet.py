@@ -11,6 +11,7 @@ import torchvision as tv
 from torch import nn, optim
 from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
+import torchvision.models as models
 
 import torch
 from torch import nn, optim
