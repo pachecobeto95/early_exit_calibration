@@ -1209,7 +1209,7 @@ def extract_confidence_data(model, test_loader, val_loader, tempDict, dataset, p
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 5
+model_id = 2
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -1225,7 +1225,7 @@ p_tar_calib = 0.8
 distribution = "linear"
 exit_type = "bnpool"
 dataset_name = "caltech256"
-model_name = "vgg16"
+model_name = "resnet18"
 root_save_path = os.path.dirname(__file__)
 
 save_indices_path = os.path.join(root_save_path, "datasets", dataset_name, "indices")
