@@ -533,7 +533,7 @@ if __name__ == '__main__':
         block_config=block_config,
         num_classes=100)
 
-    valid_set = tv.datasets.CIFAR100(data, train=True, transform=test_transforms, download=False)
+    valid_set = tv.datasets.CIFAR100("./", train=True, transform=test_transforms, download=False)
 
     valid_indices = torch.load("./valid_indices.pth", map_location=device) 
     valid_loader = torch.utils.data.DataLoader(valid_set, pin_memory=True, batch_size=batch_size,
