@@ -356,7 +356,7 @@ criterion = nn.CrossEntropyLoss()
 
 #optimizer = optim.Adam(model.parameters(), 0.1, weight_decay=weight_decay)
 
-optimizer = optim.SGD(model.parameters(), momentum=0.9, weight_decay=weight_decay)
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=weight_decay)
 
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
