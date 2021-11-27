@@ -526,7 +526,7 @@ if __name__ == '__main__':
 
     depth = 40
     block_config = [(depth - 4) // 6 for _ in range(3)]
-    block_config = 12
+    growth_rate = 12
 
     model = DenseNet(
         growth_rate=growth_rate,
