@@ -348,7 +348,7 @@ weight_decay = 0.0005
 #weight_decay = 0.001
 
 
-model = models.resnet152(pretrained=True) 
+model = models.resnet152(pretrained=True).to(device)
 
 criterion = nn.CrossEntropyLoss()
 
