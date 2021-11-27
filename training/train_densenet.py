@@ -346,7 +346,8 @@ def train(data, save, valid_size=5000, seed=None,
     #    block_config=block_config,
     #    num_classes=100
     #)
-    model = models.densenet(pretrained=True)
+    model = models.densenet161(pretrained=True)
+
     # Wrap model if multiple gpus
     if torch.cuda.device_count() > 1:
         model_wrapper = torch.nn.DataParallel(model).cuda()
