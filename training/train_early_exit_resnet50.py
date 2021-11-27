@@ -1227,7 +1227,7 @@ def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
 
 
 input_dim = 224
-batch_size_train = 32
+batch_size_train = 64
 batch_size_test = 1
 model_id = 11
 split_ratio = 0.2
@@ -1279,13 +1279,13 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]},
-                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-                       {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[1]}], weight_decay=weight_decay)
+#optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]},
+#                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
+#                       {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[1]}], weight_decay=weight_decay)
 
-#optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
-#                      {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-#                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], momentum=0.9, weight_decay=weight_decay)
+optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
+                      {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
+                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}])
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 
