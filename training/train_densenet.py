@@ -10,7 +10,6 @@ import torch
 import torchvision as tv
 from torch import nn, optim
 from torch.utils.data.sampler import SubsetRandomSampler
-from models import DenseNet
 
 def _bn_function_factory(norm, relu, conv):
     def bn_function(*inputs):
