@@ -308,7 +308,7 @@ def evalMain(model, val_loader, criterion, epoch, device):
 
 
 input_dim = 224
-batch_size_train = 64
+batch_size_train = 32
 batch_size_test = 1
 model_id = 11
 split_ratio = 0.2
