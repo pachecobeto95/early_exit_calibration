@@ -524,6 +524,10 @@ if __name__ == '__main__':
         tv.transforms.ToTensor(),
         tv.transforms.Normalize(mean=mean, std=stdv)])
 
+    depth = 40
+    block_config = [(depth - 4) // 6 for _ in range(3)]
+    block_config = 12
+
     model = DenseNet(
         growth_rate=growth_rate,
         block_config=block_config,
