@@ -312,12 +312,13 @@ def train(data, save, valid_size=5000, seed=None,
     mean = [0.5071, 0.4867, 0.4408]
     stdv = [0.2675, 0.2565, 0.2761]
     train_transforms = tv.transforms.Compose([
-        tv.transforms.RandomCrop(32, padding=4),
+        tv.transforms.Resize(224),
         tv.transforms.RandomHorizontalFlip(),
         tv.transforms.ToTensor(),
         tv.transforms.Normalize(mean=mean, std=stdv),
     ])
     test_transforms = tv.transforms.Compose([
+        tv.transforms.Resize(224),
         tv.transforms.ToTensor(),
         tv.transforms.Normalize(mean=mean, std=stdv),
     ])
@@ -339,11 +340,12 @@ def train(data, save, valid_size=5000, seed=None,
                                                sampler=SubsetRandomSampler(valid_indices))
 
     # Make model, criterion, and optimizer
-    model = DenseNet(
-        growth_rate=growth_rate,
-        block_config=block_config,
-        num_classes=100
-    )
+    #model = DenseNet(
+    #    growth_rate=growth_rate,
+    #    block_config=block_config,
+    #    num_classes=100
+    #)
+    model = models.densenet(pretrained=True)
     # Wrap model if multiple gpus
     if torch.cuda.device_count() > 1:
         model_wrapper = torch.nn.DataParallel(model).cuda()
@@ -515,7 +517,7 @@ if __name__ == '__main__':
         --valid_size (int) - size of validation set
         --seed (int) - manually set the random seed (default None)
     """
-    #train("./", "./")
+    train("./", "./")
 
     mean = [0.5071, 0.4867, 0.4408]
     stdv = [0.2675, 0.2565, 0.2761]
