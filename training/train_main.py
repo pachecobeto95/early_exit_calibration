@@ -286,7 +286,7 @@ def evalMain(model, val_loader, criterion, epoch, device):
       conf, infered_class = torch.max(softmax(output), 1)
 
 
-      loss = 0
+      loss = criterion(output, target)
       val_acc.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
 
       running_loss.append(float(loss.item()))    
