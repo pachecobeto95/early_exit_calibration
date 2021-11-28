@@ -187,7 +187,7 @@ class EarlyExitBlock(nn.Module):
       self.layers.append(nn.BatchNorm2d(channel))
 
     if (exit_type != 'plain'):
-      self.layers.append(nn.AdaptiveAvgPool2d(1))
+      self.layers.append(nn.AdaptiveAvgPool2d(7))
     
     #This line defines the data shape that fully-connected layer receives.
     current_channel, current_width, current_height = self.get_current_data_shape()
@@ -1587,10 +1587,10 @@ result_path = os.path.join(root_save_path, "appEdge", "api", "services", "models
 if (not os.path.exists(result_path)):
   os.makedirs(result_path)
 
-save_no_calib_path =  os.path.join(result_path, "no_calib_exp_data_%s.csv"%(model_id))
-save_calib_overall_path =  os.path.join(result_path, "calib_overall_exp_data_%s.csv"%(model_id))
-save_calib_branches_path =  os.path.join(result_path, "calib_branches_exp_data_%s.csv"%(model_id))
-save_calib_all_samples_path =  os.path.join(result_path, "calib_all_samples_branches_exp_data_%s.csv"%(model_id))
+save_no_calib_path =  os.path.join(result_path, "no_calib_exp_data_%s_testing_2.csv"%(model_id))
+save_calib_overall_path =  os.path.join(result_path, "calib_overall_exp_data_%s_testing_2.csv"%(model_id))
+save_calib_branches_path =  os.path.join(result_path, "calib_branches_exp_data_%s_testing_2.csv"%(model_id))
+save_calib_all_samples_path =  os.path.join(result_path, "calib_all_samples_branches_exp_data_%s_testing_2.csv"%(model_id))
 
 
 saveResultsDict = {"no_calib": save_no_calib_path, "calib_overall": save_calib_overall_path, 
