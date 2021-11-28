@@ -278,7 +278,7 @@ def run_epoch(loader, model, criterion, optimizer, epoch=0, n_epochs=0, train=Tr
 
 
 def train(data, save, valid_size=5000, seed=None,
-          depth=40, growth_rate=12, n_epochs=300, batch_size=32,
+          depth=40, growth_rate=12, n_epochs=300, batch_size=16,
           lr=0.1, wd=0.0001, momentum=0.9):
     """
     A function to train a DenseNet-BC on CIFAR-100.
