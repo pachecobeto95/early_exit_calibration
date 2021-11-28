@@ -265,13 +265,13 @@ def run_epoch(loader, model, criterion, optimizer, epoch=0, n_epochs=0, train=Tr
         error_meter.update(error)
         acc_list.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
 
-        #print('  '.join([
-        #    '%s: (Epoch %d of %d) [%04d/%04d]' % ('Train' if train else 'Eval',
-        #        epoch, n_epochs, i + 1, len(loader)),
-        #    str(time_meter),
-        #    str(loss_meter),
-        #    str(error_meter),
-        #]))
+        print('  '.join([
+            '%s: (Epoch %d of %d) [%04d/%04d]' % ('Train' if train else 'Eval',
+                epoch, n_epochs, i + 1, len(loader)),
+            str(time_meter),
+            str(loss_meter),
+            str(error_meter),
+        ]))
     print("%s: %s"%('Train' if train else 'Eval', np.mean(acc_list)))
 
     return time_meter.value(), loss_meter.value(), error_meter.value()
