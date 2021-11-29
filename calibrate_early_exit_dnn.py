@@ -187,7 +187,7 @@ class EarlyExitBlock(nn.Module):
       self.layers.append(nn.BatchNorm2d(channel))
 
     if (exit_type != 'plain'):
-      self.layers.append(nn.AdaptiveAvgPool2d(1))
+      self.layers.append(nn.AdaptiveAvgPool2d(7))
     
     #This line defines the data shape that fully-connected layer receives.
     current_channel, current_width, current_height = self.get_current_data_shape()
