@@ -421,14 +421,14 @@ model = models.resnet152(pretrained=True).to(device)
 print(model.fc)
 model.fc = nn.Linear(2048, n_classes).to(device)
 
-#model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
+model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
 criterion = nn.CrossEntropyLoss()
 
 optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay, nesterov=True)
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 
-
+"""
 best_val_loss = np.inf
 patience = 10
 count = 0
@@ -464,6 +464,6 @@ while (epoch < n_epochs and count <= patience):
     count += 1
 
 print("Stop! Patience is finished")
-
+"""
 scaled_model = ModelWithTemperature(model)
 scaled_model.set_temperature(val_loader)
