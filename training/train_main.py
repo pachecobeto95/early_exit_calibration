@@ -230,7 +230,7 @@ class LoadDataset():
     return train_loader, val_loader, test_loader
 
 
-def runTrainMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
+def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
   if(train):
   	model.train()
   else:
@@ -319,10 +319,10 @@ while (epoch < n_epochs):
   epoch+=1
   print("Epoch: %s"%(epoch))
   result = {}
-  train_results = runTrain(dataLoader=train_loader, 
+  train_results = runMain(dataLoader=train_loader, 
   	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs=n_epochs, train=True)
 
-  valid_results = runTrain(dataLoader=val_loader, 
+  valid_results = runMain(dataLoader=val_loader, 
   	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs=n_epochs, train=False)
 
   result.update(train_results), result.update(valid_results)
