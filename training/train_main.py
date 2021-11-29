@@ -230,104 +230,62 @@ class LoadDataset():
     return train_loader, val_loader, test_loader
 
 
-def trainMain(model, train_loader, optimizer, criterion, epoch, device):
-  running_loss = []
-  n_exits = n_branches + 1
-  train_acc = []
-  softmax = nn.Softmax(dim=1)
+def runTrainMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train)
+  if(train):
+  	model.train()
+  else:
+  	model.eval()
 
-  model.train()
-
-  for (data, target) in tqdm(train_loader):
-    
+  acc_list, loss_list = [], []
+  for (data, target) in tqdm(loader):
     data, target = data.to(device), target.to(device)
 
-    output = model(data)
-    conf, infered_class = torch.max(softmax(output), 1)
-
-
-    optimizer.zero_grad()
-    
-    loss = criterion(output, target)
-
-    running_loss.append(float(loss.item()))
-    train_acc.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
-
-
-
-    loss.backward()
-    optimizer.step()
-   
-    # clear variables
-    del data, target, output
-    torch.cuda.empty_cache()
-
-  loss = round(np.average(running_loss), 4)
-  train_avg_acc = round(np.average(train_acc), 4)
-
-  print("Epoch: %s"%(epoch))
-  print("Train Loss: %s, train Acc: %s"%(loss, train_avg_acc))
-
-  result_dict = {"epoch":epoch, "train_loss": loss, "train_acc": train_avg_acc}
-  
-  return result_dict
-
-def evalMain(model, val_loader, criterion, epoch, device):
-  running_loss = []
-  val_acc = []
-  model.eval()
-  softmax = nn.Softmax(dim=1)
-
-  with torch.no_grad():
-    for (data, target) in tqdm(val_loader):
-
-      data, target = data.to(device), target.long().to(device)
-
-      output  = model(data)
-      conf, infered_class = torch.max(softmax(output), 1)
-
-
+    if (main):
+      optimizer.zero_grad()
+      output = model(input)
       loss = criterion(output, target)
-      val_acc.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
+      loss.backward()
+      optimizer.step()
 
-      running_loss.append(float(loss.item()))    
+    else:
+      with torch.no_grad():
+        output = model(input)
+        loss = criterion(output, target)
 
-      # clear variables
-      del data, target, output
-      torch.cuda.empty_cache()
-
-  loss = round(np.average(running_loss), 4)
-  avg_val_acc = round(np.average(val_acc), 4)
-
-  print("Epoch: %s"%(epoch))
-  print("Val Loss: %s, Val Acc: %s"%(loss, avg_val_acc))
-
-  result_dict = {"epoch":epoch, "val_loss": loss, "val_acc": avg_val_acc}
+    _, infered_class = torch.max(softmax(output), 1)
+    acc_list.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
+    loss_list.append(loss.item())
   
-  return result_dict
+
+  avg_acc = np.mean(acc_list)
+  avg_loss = np.mean(loss_list)
+
+  print("%s: %s"%('Train' if train else 'Eval', np.mean(acc_list)))
+  mode = "train" if(main) else "val"
+  return {"%s_loss"%(mode): avg_loss, "%s_acc"%(mode): avg_acc}
 
 
 
-input_dim = 224
+
+input_resize, input_dim = 256, 224
 batch_size_train = 32
 batch_size_test = 1
-model_id = 12
+model_id = 1
 split_ratio = 0.2
 n_classes = 258
 pretrained = True
 n_branches = 5
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_shape = (3, input_dim, input_dim)
-learning_rate = 0.005
-weight_decay = 0
-momentum = 0
-steps = 10
-p_tar_calib = 0.8
+lr = 0.01
+weight_decay = 0.0001
+seed = 42
+momentum = 0.9
+pretrained = True
+n_epochs = 200
 
-distribution = "linear"
-exit_type = "bnpool"
 dataset_name = "caltech256"
-model_name = "resnet50"
+model_name = "resnet110"
 root_save_path = "."
 
 dataset_save_path = os.path.join(root_save_path, dataset_name)
@@ -343,36 +301,32 @@ dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
 
-lr = [1.5e-4, 0.005]
-
-weight_decay = 0.0005
-#weight_decay = 0.001
-
-
-model = models.resnet152(pretrained=True).to(device)
+model = models.resnet152(pretrained=pretrained).to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-#optimizer = optim.Adam(model.parameters(), 0.01, weight_decay=weight_decay)
-
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=0)
-
-
-scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
+optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay, nesterov=True)
+scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[0.5 * n_epochs, 0.75 * n_epochs], gamma=0.1)
 
 
-epoch = 0
 best_val_loss = np.inf
 patience = 10
 count = 0
 df = pd.DataFrame()
+epoch = 0
 
-while (count < patience):
+while (epoch < n_epochs):
   epoch+=1
   print("Epoch: %s"%(epoch))
   result = {}
-  result.update(trainMain(model, train_loader, optimizer, criterion, epoch, device))
-  result.update(evalMain(model, val_loader, criterion, epoch, device))
+  train_results = runTrain(dataLoader=train_loader, 
+  	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs, train=True)
+
+  valid_results = runTrain(dataLoader=val_loader, 
+  	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs, train=False)
+
+  result.update(train_results), result.update(valid_results)
+
   scheduler.step()
 
   df = df.append(pd.Series(result), ignore_index=True)
@@ -384,7 +338,6 @@ while (count < patience):
     save_dict = {"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(),
                  "epoch": epoch, "val_loss": result["val_loss"]}
     
-
     torch.save(save_dict, model_save_path)
 
   else:
