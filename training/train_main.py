@@ -242,14 +242,14 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
 
     if (train):
       optimizer.zero_grad()
-      output = model(input)
+      output = model(data)
       loss = criterion(output, target)
       loss.backward()
       optimizer.step()
 
     else:
       with torch.no_grad():
-        output = model(input)
+        output = model(data)
         loss = criterion(output, target)
 
     _, infered_class = torch.max(softmax(output), 1)
