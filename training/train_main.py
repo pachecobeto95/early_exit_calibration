@@ -383,7 +383,7 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
 
 
 
-input_resize, input_dim = 256, 224
+input_resize, input_dim = 300, 299
 batch_size_train = 32
 batch_size_test = 1
 model_id = 2
@@ -423,7 +423,6 @@ model = models.inception_v3(pretrained=True).to(device)
 criterion = nn.CrossEntropyLoss()
 
 optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay, nesterov=True)
-scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[0.5 * n_epochs, 0.75 * n_epochs], gamma=0.1)
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 
 
