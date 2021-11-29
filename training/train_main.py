@@ -401,7 +401,7 @@ pretrained = True
 n_epochs = 200
 
 dataset_name = "caltech256"
-model_name = "resnet110"
+model_name = "inception_v3"
 root_save_path = "."
 
 dataset_save_path = os.path.join(root_save_path, dataset_name)
@@ -417,7 +417,7 @@ dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
 
-model = models.resnet152(pretrained=False).to(device)
+model = models.inception_v3(pretrained=True).to(device)
 #model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
 criterion = nn.CrossEntropyLoss()
