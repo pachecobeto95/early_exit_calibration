@@ -1549,7 +1549,7 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 11
+model_id = 1
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -1590,10 +1590,10 @@ result_path = os.path.join(root_save_path, "appEdge", "api", "services", "models
 if (not os.path.exists(result_path)):
   os.makedirs(result_path)
 
-save_no_calib_path =  os.path.join(result_path, "no_calib_exp_data_%s_testing_2.csv"%(model_id))
-save_calib_overall_path =  os.path.join(result_path, "calib_overall_exp_data_%s_testing_2.csv"%(model_id))
-save_calib_branches_path =  os.path.join(result_path, "calib_branches_exp_data_%s_testing_2.csv"%(model_id))
-save_calib_all_samples_path =  os.path.join(result_path, "calib_all_samples_branches_exp_data_%s_testing_2.csv"%(model_id))
+save_no_calib_path =  os.path.join(result_path, "no_calib_exp_data_%s_1.csv"%(model_id))
+save_calib_overall_path =  os.path.join(result_path, "calib_overall_exp_data_%s_1.csv"%(model_id))
+save_calib_branches_path =  os.path.join(result_path, "calib_branches_exp_data_%s_1.csv"%(model_id))
+save_calib_all_samples_path =  os.path.join(result_path, "calib_all_samples_branches_exp_data_%s_1.csv"%(model_id))
 
 
 saveResultsDict = {"no_calib": save_no_calib_path, "calib_overall": save_calib_overall_path, 
