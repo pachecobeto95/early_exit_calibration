@@ -374,8 +374,8 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
   avg_acc = np.mean(acc_list)
   avg_loss = np.mean(loss_list)
 
-  print("%s: %s"%('Train' if train else 'Eval', np.mean(acc_list)))
-  print("%s: %s"%('Train' if train else 'Eval', np.mean(acc_list)))
+  print("%s Loss: %s Loss"%('Train' if train else 'Eval', np.mean(avg_loss)))
+  print("%s Acc: %s Acc"%('Train' if train else 'Eval', np.mean(acc_list)))
 
   mode = "train" if(train) else "val"
   return {"%s_loss"%(mode): avg_loss, "%s_acc"%(mode): avg_acc}
