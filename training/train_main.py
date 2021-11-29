@@ -320,7 +320,7 @@ while (epoch < n_epochs):
   print("Epoch: %s"%(epoch))
   result = {}
   train_results = runTrain(dataLoader=train_loader, 
-  	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs, train=True)
+  	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs=n_epochs, train=True)
 
   valid_results = runTrain(dataLoader=val_loader, 
   	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs, train=False)
