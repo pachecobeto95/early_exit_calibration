@@ -1093,7 +1093,7 @@ def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
   return result_dict
 
 input_dim = 224
-batch_size_train = 64
+batch_size_train = 32
 batch_size_test = 1
 model_id = 1
 split_ratio = 0.2
