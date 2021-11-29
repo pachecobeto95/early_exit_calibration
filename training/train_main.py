@@ -240,7 +240,7 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
   for (data, target) in tqdm(dataLoader):
     data, target = data.to(device), target.to(device)
 
-    if (main):
+    if (train):
       optimizer.zero_grad()
       output = model(input)
       loss = criterion(output, target)
@@ -261,7 +261,7 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
   avg_loss = np.mean(loss_list)
 
   print("%s: %s"%('Train' if train else 'Eval', np.mean(acc_list)))
-  mode = "train" if(main) else "val"
+  mode = "train" if(train) else "val"
   return {"%s_loss"%(mode): avg_loss, "%s_acc"%(mode): avg_acc}
 
 
