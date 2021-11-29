@@ -237,6 +237,7 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
   	model.eval()
 
   acc_list, loss_list = [], []
+  softmax = nn.Softmax(dim=1)
   for (data, target) in tqdm(dataLoader):
     data, target = data.to(device), target.to(device)
 
