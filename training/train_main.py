@@ -386,7 +386,7 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
 input_resize, input_dim = 256, 224
 batch_size_train = 32
 batch_size_test = 1
-model_id = 1
+model_id = 2
 split_ratio = 0.2
 n_classes = 258
 pretrained = True
