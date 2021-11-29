@@ -420,11 +420,11 @@ train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_
 model = models.resnet152(pretrained=pretrained).to(device)
 model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
-criterion = nn.CrossEntropyLoss()
+#criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay, nesterov=True)
+#optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay, nesterov=True)
 #scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[0.5 * n_epochs, 0.75 * n_epochs], gamma=0.1)
-scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
+#scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 
 
 best_val_loss = np.inf
