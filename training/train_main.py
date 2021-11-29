@@ -237,7 +237,7 @@ def runMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
   	model.eval()
 
   acc_list, loss_list = [], []
-  for (data, target) in tqdm(loader):
+  for (data, target) in tqdm(dataLoader):
     data, target = data.to(device), target.to(device)
 
     if (main):
