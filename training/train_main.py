@@ -230,7 +230,7 @@ class LoadDataset():
     return train_loader, val_loader, test_loader
 
 
-def runTrainMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train)
+def runTrainMain(dataLoader, model, criterion, optimizer, epoch, n_epochs, train):
   if(train):
   	model.train()
   else:
