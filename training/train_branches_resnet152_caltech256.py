@@ -1132,7 +1132,7 @@ dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
 
-lr = [1.5e-4, 0.01]
+lr = [1.5e-4, 0.005]
 
 early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution=distribution)
 early_exit_dnn = early_exit_dnn.to(device)
