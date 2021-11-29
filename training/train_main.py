@@ -418,7 +418,7 @@ train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_
 
 
 model = models.resnet152(pretrained=True).to(device)
-model.fc = nn.Linear(512, n_classes)
+model.fc = nn.Linear(512, n_classes).to(device)
 
 #model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
