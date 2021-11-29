@@ -156,8 +156,8 @@ class LoadDataset():
     std =  [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
     # Note that we apply data augmentation in the training dataset.
-    self.transformations_train = transforms.Compose([transforms.Resize((300, 300)),
-    	                                             transforms.CenterCrop((299, 299)),
+    self.transformations_train = transforms.Compose([transforms.Resize((256, 256)),
+    	                                             transforms.CenterCrop((224, 224)),
                                                      transforms.RandomHorizontalFlip(p = 0.25),
                                                      transforms.RandomRotation(25),
                                                      transforms.ToTensor(), 
@@ -166,8 +166,8 @@ class LoadDataset():
 
     # Note that we do not apply data augmentation in the test dataset.
     self.transformations_test = transforms.Compose([
-                                                     transforms.Resize((300, 300)),
-                                                     transforms.CenterCrop((299, 299)), 
+                                                     transforms.Resize((256, 256)),
+                                                     transforms.CenterCrop((224, 224)), 
                                                      transforms.ToTensor(), 
                                                      transforms.Normalize(mean = mean, std = std),
                                                      ])
