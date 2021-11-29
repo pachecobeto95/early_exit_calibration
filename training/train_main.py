@@ -323,7 +323,7 @@ while (epoch < n_epochs):
   	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs=n_epochs, train=True)
 
   valid_results = runTrain(dataLoader=val_loader, 
-  	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs, train=False)
+  	model=model, criterion=criterion, optimizer=optimizer, epoch=epoch, n_epochs=n_epochs, train=False)
 
   result.update(train_results), result.update(valid_results)
 
