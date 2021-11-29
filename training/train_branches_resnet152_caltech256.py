@@ -1119,10 +1119,8 @@ save_indices_path = os.path.join(dataset_save_path, "indices")
 
 dataset_path = "./datasets/caltech256/256_ObjectCategories/"
 
-model_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name, model_name, 
-  "models", "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
-history_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name,model_name,
- "history", "history_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
+model_save_path = os.path.join(root_save_path, "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+history_save_path = os.path.join(root_save_path, "history_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
 save_temp_overall_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name,model_name,
  "temperature", "temp_overall_%s_branches_%s_id_%s.csv"%(model_name, n_branches, model_id))
 
@@ -1169,8 +1167,8 @@ while (count < patience):
   result.update(evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device))
   scheduler.step()
 
-  df = df.append(pd.Series(result), ignore_index=True)
-  df.to_csv(history_save_path)
+  #df = df.append(pd.Series(result), ignore_index=True)
+  #df.to_csv(history_save_path)
 
   if (result["val_loss"] < best_val_loss):
     best_val_loss = result["val_loss"]
