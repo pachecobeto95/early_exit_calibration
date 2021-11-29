@@ -417,7 +417,7 @@ dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
 
-model = models.resnet110(pretrained=pretrained).to(device)
+model = models.resnet152(pretrained=False).to(device)
 #model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
 criterion = nn.CrossEntropyLoss()
@@ -428,7 +428,7 @@ scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_
 
 
 best_val_loss = np.inf
-patience = 5
+patience = 10
 count = 0
 df = pd.DataFrame()
 epoch = 0
