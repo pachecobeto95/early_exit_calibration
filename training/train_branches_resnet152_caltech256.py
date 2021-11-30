@@ -1150,8 +1150,8 @@ scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, la
 
 n_exits = n_branches + 1
 #loss_weights = np.linspace(1, 0.3, n_exits)
-loss_weights = np.ones(n_exits)
-#loss_weights = np.linspace(0.3, 1, n_exits)
+#loss_weights = np.ones(n_exits)
+loss_weights = np.linspace(0.3, 1, n_exits)
 
 epoch = 0
 best_val_loss = np.inf
