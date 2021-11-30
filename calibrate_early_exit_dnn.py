@@ -1479,6 +1479,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
       elif(model_type == "calib_branches"):
         _, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
         print([conf.item() for conf in conf_branches])
+
         #print(model.temperature_branches)
 
       else:
@@ -1491,8 +1492,10 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
       target_list.append(target.item())
 
 
+
       del data, target
       torch.cuda.empty_cache()
+      break
 
   conf_branches_list = np.array(conf_branches_list)
   infered_class_branches_list = np.array(infered_class_branches_list)
