@@ -1500,7 +1500,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   
 
   print("Acc:")
-  print([sum(correct)/len(correct) for correct in correct_list])
+  print([sum(correct_list[:, i])/len(correct_list[:, i]) for i in range(n_exits)])
 
   results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
   for i in range(n_exits):
