@@ -1465,23 +1465,23 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   with torch.no_grad():
     for i, (data, target) in tqdm(enumerate(test_loader, 1)):
       
-      print(model_type)
+      #print(model_type)
       data, target = data.to(device), target.to(device)
 
       if (model_type == "no_calib"):
         _, conf_branches, infered_class_branches = model.forwardAllExits(data)
-        print([conf.item() for conf in conf_branches])
+        #print([conf.item() for conf in conf_branches])
 
       elif(model_type == "calib_overall"):
         _, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
-        print([conf.item() for conf in conf_branches])
-        print(model.temperature_overall)
+        #print([conf.item() for conf in conf_branches])
+        #print(model.temperature_overall)
 
       elif(model_type == "calib_branches"):
         _, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
-        print([conf.item() for conf in conf_branches])
+        #print([conf.item() for conf in conf_branches])
 
-        print(model.temperature_branches)
+        #print(model.temperature_branches)
 
       else:
         _, conf_branches, infered_class_branches = model.forwardAllSamplesCalibration(data)
