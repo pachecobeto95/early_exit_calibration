@@ -170,7 +170,7 @@ class LoadDataset():
     val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=4)
     test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
 
-    return train_loader, val_loader, test_loader 
+    return train_loader, val_loader, val_loader 
 
 class EarlyExitBlock(nn.Module):
   """
