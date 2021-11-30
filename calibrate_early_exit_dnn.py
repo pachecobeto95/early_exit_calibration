@@ -1498,7 +1498,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
   infered_class_branches_list = np.array(infered_class_branches_list)
   correct_list = np.array(correct_list)
   
-
+  print(model_type)
   print("Acc:")
   print([sum(correct_list[:, i])/len(correct_list[:, i]) for i in range(n_exits)])
 
