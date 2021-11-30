@@ -1493,11 +1493,12 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
 
       del data, target
       torch.cuda.empty_cache()
-      #break    
 
   conf_branches_list = np.array(conf_branches_list)
   infered_class_branches_list = np.array(infered_class_branches_list)
   correct_list = np.array(correct_list)
+  print(model_type)
+  print("Acc: %s"%(correct_list/len(correct_list)))
 
   results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
   for i in range(n_exits):
