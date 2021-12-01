@@ -1665,5 +1665,5 @@ saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTemp
 
 
 #p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
-p_tar_list = [0.8]
+p_tar_list = [0.5]
 extract_confidence_data(early_exit_dnn, test_loader, val_loader, dataset, p_tar_list, n_branches, device, saveTempDict, saveResultsDict)
