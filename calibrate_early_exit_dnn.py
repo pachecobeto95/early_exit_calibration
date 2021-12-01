@@ -1149,7 +1149,7 @@ class ECE(nn.Module):
 
 
 class BranchesModelWithTemperature(nn.Module):
-  def __init__(self, model, n_branches, device, lr=0.001, max_iter=1000):
+  def __init__(self, model, n_branches, device, lr=0.01, max_iter=50):
     super(BranchesModelWithTemperature, self).__init__()
     """
     This method calibrates a early-exit DNN. The calibration goal is to turn the classification confidencer closer to the real model's accuracy.
@@ -1169,11 +1169,11 @@ class BranchesModelWithTemperature(nn.Module):
     self.max_iter = max_iter      #defines the number of iteractions to train the calibration process
     
     # This line initiates a parameters list of the temperature 
-    self.temperature_branches = [nn.Parameter(1*torch.ones(1).to(self.device)) for i in range(self.n_exits)]
+    self.temperature_branches = [nn.Parameter(1.5*torch.ones(1).to(self.device)) for i in range(self.n_exits)]
     self.softmax = nn.Softmax(dim=1)
     
     # This line initiates a single temperature parameter for the entire early-exit DNN model
-    self.temperature_overall = nn.Parameter(1*torch.ones(1).to(self.device))
+    self.temperature_overall = nn.Parameter(1.5*torch.ones(1).to(self.device))
 
 
   def forwardAllSamplesCalibration(self, x):
@@ -1425,7 +1425,7 @@ class BranchesModelWithTemperature(nn.Module):
         temperature_branch_list.append(None)
         continue
 
-      self.temperature_branch = nn.Parameter((torch.ones(1)*1.0).to(self.device))
+      self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
       
       optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
 
