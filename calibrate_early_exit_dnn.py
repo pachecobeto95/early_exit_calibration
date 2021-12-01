@@ -1338,7 +1338,7 @@ class BranchesModelWithTemperature(nn.Module):
   def calibrate_branches_all_samples(self, val_loader, p_tar, save_branches_path):
 
     nll_criterion = nn.CrossEntropyLoss().to(self.device)
-    ece = ECE()
+    ece = _ECELoss()
 
     logits_list = [[] for i in range(self.n_exits)]
     labels_list = [[] for i in range(self.n_exits)]
@@ -1429,7 +1429,7 @@ class BranchesModelWithTemperature(nn.Module):
     """
 
     nll_criterion = nn.CrossEntropyLoss().to(self.device)
-    ece = ECE()
+    ece = _ECELoss()
     temperature_branch_list = []
 
     logits_list = [[] for i in range(self.n_exits)]
