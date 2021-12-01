@@ -167,7 +167,7 @@ class LoadDataset():
     val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=4)
     #test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
 
-    return train_loader, val_loader, 0
+    return train_loader, val_loader, val_loader
 
   def simple_caltech256(self, dataset_path, split_ratio, dataset_name, savePath_idx):
 
@@ -1548,9 +1548,6 @@ saveTempBranchesAllSamplesPath = os.path.join(root_save_path, "appEdge", "api", 
 saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTempBranchesPath,
                 "calib_branches_all_samples": saveTempBranchesAllSamplesPath}
 
-
-lr = [1.5e-4, 0.01]
-
 early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution=distribution)
 early_exit_dnn = early_exit_dnn.to(device)
 early_exit_dnn.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
@@ -1565,6 +1562,7 @@ epoch = 0
 result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device)
 
 p_tar_list = [0.8]
+
 
     
 for p_tar in p_tar_list:
