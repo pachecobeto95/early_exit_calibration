@@ -1255,7 +1255,7 @@ class BranchesModelWithTemperature(nn.Module):
     with torch.no_grad():
       for data, label in val_loader:
         data, label = data.to(self.device), label.to(self.device)
-        logits = self.model(data, p_tar, training=False)
+        logits, _, _, exit_branch = self.model(data, p_tar, training=False)
         logits_list.append(logits)
         labels_list.append(label)
       
@@ -1613,14 +1613,14 @@ n_exits = n_branches + 1
 
 epoch = 0
 
-result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device)
+#result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device)
 
 p_tar_list = [0.8]
 
 
     
 for p_tar in p_tar_list:
-  no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
+  #no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
   overall_calibrated_model = BranchesModelWithTemperature(early_exit_dnn, n_branches, device)
   overall_calibrated_model.calibrate_overall(val_loader, p_tar, saveTempDict["calib_overall"])
