@@ -1599,7 +1599,7 @@ def extract_confidence_data(model, test_loader, val_loader, dataset, p_tar_list,
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 2
+model_id = 3
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -1665,5 +1665,5 @@ saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTemp
 
 
 #p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
-p_tar_list = [0.5]
+p_tar_list = [0.8]
 extract_confidence_data(early_exit_dnn, test_loader, val_loader, dataset, p_tar_list, n_branches, device, saveTempDict, saveResultsDict)
