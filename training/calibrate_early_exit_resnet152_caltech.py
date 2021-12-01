@@ -1160,6 +1160,7 @@ class BranchesModelWithTemperature(nn.Module):
         labels_list.append(label)
 
         print(conf)
+        print(id(self.model))
         break
 
       
