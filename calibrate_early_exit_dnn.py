@@ -1299,7 +1299,7 @@ class BranchesModelWithTemperature(nn.Module):
     logits_list = []
     labels_list = []
     with torch.no_grad():
-      for data, label in val_loader:
+      for data, label in tqdm(val_loader):
         data, label = data.to(self.device), label.to(self.device)
 
         logits, _, _, exit_branch = self.model(data, p_tar, training=False)
@@ -1700,6 +1700,6 @@ saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTemp
                 "calib_branches_all_samples": saveTempBranchesAllSamplesPath}
 
 
-#p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
-p_tar_list = [0.8]
+p_tar_list = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
+#p_tar_list = [0.8]
 extract_confidence_data(early_exit_dnn, test_loader, val_loader, dataset, p_tar_list, n_branches, device, saveTempDict, saveResultsDict)
