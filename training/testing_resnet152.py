@@ -1032,8 +1032,8 @@ def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
 
       output_list, conf_list, class_list = model(data)
       loss = 0
-      for j, (output, inf_class, weight) in enumerate(zip(output_list, class_list, loss_weights), 1):
-        loss += weight*criterion(output, target)
+      for j, (output, inf_class) in enumerate(zip(output_list, class_list), 1):
+        #loss += weight*criterion(output, target)
         val_acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
 
 
