@@ -1416,6 +1416,8 @@ class BranchesModelWithTemperature(nn.Module):
         logits_list[exit_branch].append(logits)
         labels_list[exit_branch].append(target)
 
+
+    print([len(logits_list[i]) for i in range(self.n_exits)])
     for i in range(self.n_exits):
       print("Exit: %s"%(i+1))
 
