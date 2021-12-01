@@ -1298,13 +1298,13 @@ class BranchesModelWithTemperature(nn.Module):
 
   def calibrate_overall(self, val_loader, p_tar, save_overall_path):
 
-    self.cuda()
     nll_criterion = nn.CrossEntropyLoss().to(self.device)
     ece_criterion = _ECELoss().to(self.device)
 
     # First: collect all the logits and labels for the validation set
     logits_list = []
     labels_list = []
+    print("Calibrating")
     with torch.no_grad():
       for data, label in tqdm(val_loader):
         data, label = data.to(self.device), label.to(self.device)
@@ -1518,7 +1518,6 @@ class BranchesModelWithTemperature(nn.Module):
     self.save_temperature_branches(error_measure_dict, save_branches_path)
 
     return self
-
 
 def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib"):
   df_result = pd.DataFrame()
