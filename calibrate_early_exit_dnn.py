@@ -167,7 +167,7 @@ class LoadDataset():
     test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=self.batch_size_train, shuffle=True, num_workers=4)
-    val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=4)
+    val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=2)
     test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
 
     return train_loader, val_loader, val_loader 
@@ -1588,9 +1588,6 @@ pretrained = False
 n_branches = 5
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_shape = (3, input_dim, input_dim)
-learning_rate = 0.005
-weight_decay = 0
-momentum = 0
 steps = 10
 p_tar_calib = 0.8
 
