@@ -1025,29 +1025,20 @@ def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
 
   with torch.no_grad():
     for (data, target) in tqdm(val_loader):
-    #for i, (data, target) in enumerate(val_loader, 1):
-      #if (i%100 == 0):
-        #print("Batch: %s / %s"%(i, len(val_loader)))
+
       data, target = data.to(device), target.long().to(device)
 
       output_list, conf_list, class_list = model(data)
       loss = 0
       for j, (output, inf_class) in enumerate(zip(output_list, class_list), 1):
-        #loss += weight*criterion(output, target)
         val_acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
 
-
-      running_loss.append(float(loss.item()))    
 
       # clear variables
       del data, target, output_list, conf_list, class_list
       torch.cuda.empty_cache()
 
-  loss = round(np.average(running_loss), 4)
-  print("Epoch: %s"%(epoch))
-  print("Val Loss: %s"%(loss))
-
-  result_dict = {"epoch":epoch, "val_loss": loss}
+  result_dict = {"epoch":epoch}
   for key, value in val_acc_dict.items():
     result_dict.update({"val_acc_branch_%s"%(key): round(np.average(val_acc_dict[key]), 4)})    
     print("Val Acc Branch %s: %s"%(key, result_dict["val_acc_branch_%s"%(key)]))
