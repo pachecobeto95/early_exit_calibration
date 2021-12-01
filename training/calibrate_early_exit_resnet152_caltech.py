@@ -1253,7 +1253,7 @@ class BranchesModelWithTemperature(nn.Module):
     logits_list = []
     labels_list = []
     with torch.no_grad():
-      for data, label in valid_loader:
+      for data, label in val_loader:
         data, label = data.to(self.device), label.to(self.device)
         logits = self.model(data, p_tar, training=False)
         logits_list.append(logits)
@@ -1284,8 +1284,6 @@ class BranchesModelWithTemperature(nn.Module):
       print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
 
       return self
-
-
 
   def calibrate_branches_all_samples(self, val_loader, p_tar, save_branches_path):
 
