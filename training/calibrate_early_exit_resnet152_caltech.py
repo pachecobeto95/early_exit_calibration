@@ -1576,6 +1576,8 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
     result_dict.update({"val_acc_branch_%s"%(key): round(np.average(val_acc_dict[key]), 4)})    
     print("Val Acc Branch %s: %s"%(key, result_dict["val_acc_branch_%s"%(key)]))
 
+  print("Acc:")
+  print([sum(correct_list[:, i])/len(correct_list[:, i]) for i in range(n_exits)])
 
 
   results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
