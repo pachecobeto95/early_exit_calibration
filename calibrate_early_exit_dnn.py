@@ -46,13 +46,11 @@ class LoadDataset():
     self.seed = seed
     self.model_id = model_id
 
-    #To normalize the input images data.
     mean = [0.457342265910642, 0.4387686270106377, 0.4073427106250871]
     std =  [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
     # Note that we apply data augmentation in the training dataset.
-    self.transformations_train = transforms.Compose([transforms.Resize((256, 256)),
-                                                     transforms.CenterCrop((224, 224)), 
+    self.transformations_train = transforms.Compose([transforms.Resize((input_dim, input_dim)),
                                                      transforms.RandomChoice([
                                                                               transforms.ColorJitter(brightness=(0.80, 1.20)),
                                                                               transforms.RandomGrayscale(p = 0.25)]),
@@ -64,8 +62,7 @@ class LoadDataset():
 
     # Note that we do not apply data augmentation in the test dataset.
     self.transformations_test = transforms.Compose([
-                                                     transforms.Resize((256, 256)),
-                                                     transforms.CenterCrop((224, 224)),
+                                                     transforms.Resize(input_dim), 
                                                      transforms.ToTensor(), 
                                                      transforms.Normalize(mean = mean, std = std),
                                                      ])
