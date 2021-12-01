@@ -26,6 +26,7 @@ from typing import Callable, Any, Optional, List, Type, Union
 import torch.nn.init as init
 import functools
 from tqdm import tqdm
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 def create_save_dir(dataset_save_path, model_name, save_indices_path):
   if (not os.path.exists(dataset_save_path)):
