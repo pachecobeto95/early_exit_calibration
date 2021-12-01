@@ -50,7 +50,7 @@ dataset_name = "caltech256"
 model_name = "resnet152"
 
 
-root_save_path = os.path.dirname(__file__)
+root_save_path = "."
 
 save_indices_path = os.path.join(".", "caltech256", "indices")
 
