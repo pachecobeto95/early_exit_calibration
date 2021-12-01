@@ -241,7 +241,7 @@ class LoadDataset():
     val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, shuffle=False, num_workers=4)
     test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, shuffle=False, num_workers=4)
 
-    return train_loader, val_loader, test_loader
+    return train_loader, val_loader, val_loader
 
 
 
@@ -1093,3 +1093,5 @@ n_exits = n_branches + 1
 epoch = 0
 
 result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device)
+
+
