@@ -138,11 +138,12 @@ class LoadDataset():
     test_set = datasets.ImageFolder(dataset_path, transform=self.transformations_test)
 
     if (os.path.exists(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))):
-      print("entrou")
       print(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       train_idx = np.load(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       val_idx = np.load(os.path.join(savePath_idx, "validation_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       self.val_idx = val_idx
+      print(val_idx)
+      sys.exit()
       #test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
       #test_idx = np.array(list(test_idx.tolist()))
 
@@ -1667,6 +1668,8 @@ model_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "mo
 
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
+
+sys.exit()
 
 early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution=distribution)
 early_exit_dnn = early_exit_dnn.to(device)
