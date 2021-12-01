@@ -862,107 +862,6 @@ class Early_Exit_DNN(nn.Module):
     temperature = temp_branches[exit_branch].unsqueeze(1).expand(logits.size(0), logits.size(1)).to(self.device)
     return logits / temperature
 
-  def forward_inference_calib_overall(self, x, p_tar, temp_overall):
-    """
-    This method is used to experiment of early-exit DNNs with overall calibration.
-    """
-    output_list, conf_list, class_list  = [], [], []
-    n_exits = self.n_branches + 1
-    exit_branches = np.zeros(n_exits)
-    wasClassified = False
-
-    for i, exitBlock in enumerate(self.exits):
-      x = self.stages[i](x)
-      output_branch = exitBlock(x)
-      output_branch = self.temperature_scale_overall(output_branch, temp_overall)
-
-      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
-      conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
-
-      if (conf_branch.item() >= p_tar):
-        exit_branches[i] = 1
-
-        if (not wasClassified):
-          actual_exit_branch = i
-          actual_conf = conf_branch.item()
-          actual_inferred_class = infered_class_branch
-          wasClassified = True
-
-    x = self.stages[-1](x)
-    
-    x = torch.flatten(x, 1)
-
-    output = self.classifier(x)
-    output = self.temperature_scale_overall(output, temp_overall)
-
-    conf, infered_class = torch.max(self.softmax(output), 1)
-    conf_list.append(conf.item()), class_list.append(infered_class)
-
-    exit_branches[-1] = 1
-
-    if (conf.item() <  p_tar):
-      max_conf = np.argmax(conf_list)
-      conf_list[-1] = conf_list[max_conf]
-      class_list[-1] = class_list[max_conf]
-
-    if (not wasClassified):
-      actual_exit_branch = self.n_branches
-      actual_conf = conf_list[-1]
-      actual_inferred_class = class_list[-1]
-
-    return actual_conf, actual_inferred_class, actual_exit_branch, conf_list, class_list, exit_branches
-
-  def forward_inference_calib_branches(self, x, p_tar, temp_branches):
-    """
-    This method is used to experiment of early-exit DNNs with calibration in all the branches.
-    """
-
-    output_list, conf_list, class_list  = [], [], []
-    n_exits = self.n_branches + 1
-    exit_branches = np.zeros(n_exits)
-    wasClassified = False
-
-    for i, exitBlock in enumerate(self.exits):
-      x = self.stages[i](x)
-      output_branch = exitBlock(x)
-      output_branch = self.temperature_scale_branches(output_branch, temp_branches, i)
-
-      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
-      conf_list.append(conf_branch.item()), class_list.append(infered_class_branch)
-
-      if (conf_branch.item() >= p_tar):
-        exit_branches[i] = 1
-
-        if (not wasClassified):
-          actual_exit_branch = i
-          actual_conf = conf_branch.item()
-          actual_inferred_class = infered_class_branch
-          wasClassified = True
-
-    x = self.stages[-1](x)
-    
-    x = torch.flatten(x, 1)
-
-    output = self.classifier(x)
-    output = self.temperature_scale_branches(output, temp_branches, -1)
-    conf, infered_class = torch.max(self.softmax(output), 1)
-    conf_list.append(conf.item()), class_list.append(infered_class)
-
-    exit_branches[-1] = 1
-
-    if (conf.item() <  p_tar):
-      max_conf = np.argmax(conf_list)
-      conf_list[-1] = conf_list[max_conf]
-      class_list[-1] = class_list[max_conf]
-
-    if (not wasClassified):
-      actual_exit_branch = self.n_branches
-      actual_conf = conf_list[-1]
-      actual_inferred_class = class_list[-1]
-
-    return actual_conf, actual_inferred_class, actual_exit_branch, conf_list, class_list, exit_branches
-
-
   def forwardAllExits(self, x):  
 
     output_list, conf_list, infered_class_list = [], [], []
@@ -998,7 +897,7 @@ class Early_Exit_DNN(nn.Module):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
       
-      output_branch = self.temperature_scale_overall(output_branch, temp_overall)
+      #output_branch = self.temperature_scale_overall(output_branch, temp_overall)
 
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
@@ -1210,6 +1109,8 @@ class BranchesModelWithTemperature(nn.Module):
     return self.model.forwardBranchesCalibration(x, self.temperature_branches)
 
   def forwardOverallCalibration(self, x):
+     print(id(self.model))
+     print(temperature)
      return self.model.forwardOverallCalibration(x, self.temperature)
   
   def temperature_scale_overall(self, logits):
@@ -1484,7 +1385,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
         #print([conf.item() for conf in conf_branches])
 
       elif(model_type == "calib_overall"):
-        _, conf_branches, infered_class_branches = model.model(data)
+        _, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
         #print([conf.item() for conf in conf_branches])
         #print(model.temperature_overall)
 
@@ -1529,33 +1430,6 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
                     "correct_branch_%s"%(i+1): correct_list[:, i]})
 
   return results
-
-
-def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
-  running_loss = []
-  val_acc_dict = {i: [] for i in range(1, (n_branches+1)+1)}
-  model.eval()
-
-  with torch.no_grad():
-    for (data, target) in tqdm(val_loader):
-
-      data, target = data.to(device), target.long().to(device)
-
-      output_list, conf_list, class_list = model(data)
-      for j, (output, inf_class) in enumerate(zip(output_list, class_list), 1):
-        val_acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
-
-
-      # clear variables
-      del data, target, output_list, conf_list, class_list
-      torch.cuda.empty_cache()
-
-  result_dict = {"epoch":epoch}
-  for key, value in val_acc_dict.items():
-    result_dict.update({"val_acc_branch_%s"%(key): round(np.average(val_acc_dict[key]), 4)})    
-    print("Val Acc Branch %s: %s"%(key, result_dict["val_acc_branch_%s"%(key)]))
-  
-  return result_dict
 
 input_dim = 224
 batch_size_train = 32
@@ -1605,6 +1479,9 @@ saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTemp
 early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution=distribution)
 early_exit_dnn = early_exit_dnn.to(device)
 early_exit_dnn.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
+
+print(id(early_exit_dnn))
+
 
 criterion = nn.CrossEntropyLoss()
 
