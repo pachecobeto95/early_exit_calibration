@@ -1536,6 +1536,19 @@ dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
 
+saveTempOverallPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+  dataset_name, model_name, "temperature", "temp_overall_id_%s.csv"%(model_id))
+
+saveTempBranchesPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+  dataset_name, model_name, "temperature", "temp_branches_id_%s.csv"%(model_id))
+
+saveTempBranchesAllSamplesPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+  dataset_name, model_name, "temperature", "temp_all_samples_id_%s.csv"%(model_id))
+
+saveTempDict = {"calib_overall": saveTempOverallPath, "calib_branches": saveTempBranchesPath,
+                "calib_branches_all_samples": saveTempBranchesAllSamplesPath}
+
+
 lr = [1.5e-4, 0.01]
 
 early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution=distribution)
@@ -1553,20 +1566,21 @@ result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, 
 
 p_tar_list = [0.8]
 
-no_calib_result = experiment_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib")
+no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
     
 
+
 for p_tar in p_tar_list:
-  overall_calibrated_model = BranchesModelWithTemperature(model, n_branches, device)
+  overall_calibrated_model = BranchesModelWithTemperature(early_exit_dnn, n_branches, device)
   overall_calibrated_model.calibrate_overall(val_loader, p_tar, saveTempBranchesPath["calib_overall"])
   
-  calib_overall_result = experiment_early_exit_inference(calib_models_dict["calib_overall"], test_loader, p_tar, n_branches, device, 
+  calib_overall_result = experiment_early_exit_inference(overall_calibrated_model, test_loader, p_tar, n_branches, device, 
     model_type="calib_overall")
 
-  branches_calibrated_model = BranchesModelWithTemperature(model, n_branches, device)
+  branches_calibrated_model = BranchesModelWithTemperature(early_exit_dnn, n_branches, device)
   branches_calibrated_model.calibrate_branches(val_loader, dataset, p_tar, saveTempBranchesPath["calib_branches"])
 
-  calib_branches_result = experiment_early_exit_inference(calib_models_dict["calib_branches"], test_loader, p_tar, n_branches, device, 
+  calib_branches_result = experiment_early_exit_inference(branches_calibrated_model, test_loader, p_tar, n_branches, device, 
     model_type="calib_branches")
 
 
