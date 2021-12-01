@@ -1155,13 +1155,12 @@ class BranchesModelWithTemperature(nn.Module):
     with torch.no_grad():
       for data, label in val_loader:
         data, label = data.to(self.device), label.to(self.device)
-        logits, conf, _, exit_branch = self.model(data, p_tar, training=False)
+        logits, conf, _, exit_branch = self.model(data)
         logits_list.append(logits)
         labels_list.append(label)
 
         print(conf)
-        print(id(self.model))
-        break
+
 
       
       logits = torch.cat(logits_list).cuda()
