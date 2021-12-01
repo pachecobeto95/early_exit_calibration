@@ -1666,7 +1666,7 @@ train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_
 early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution=distribution)
 early_exit_dnn = early_exit_dnn.to(device)
 early_exit_dnn.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
-print(torch.load(model_save_path, map_location=device)["val_loss"])
+print([torch.load(model_save_path, map_location=device)["val_acc_branch_%s"%(i)] for i in range(1, 7)])
 sys.exit()
 
 result_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",
