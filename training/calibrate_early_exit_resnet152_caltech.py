@@ -1159,14 +1159,9 @@ class BranchesModelWithTemperature(nn.Module):
         logits_list.append(logits)
         labels_list.append(label)
 
-        print(confs)
-        print(class_list)
-
-
-      
       logits = torch.cat(logits_list).cuda()
       labels = torch.cat(labels_list).cuda()
-      sys.exit()
+
       # Calculate NLL and ECE before temperature scaling
       before_temperature_nll = nll_criterion(logits, labels).item()
       before_temperature_ece = ece_criterion(logits, labels).item()
@@ -1486,8 +1481,6 @@ early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, i
 early_exit_dnn = early_exit_dnn.to(device)
 early_exit_dnn.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
-print(id(early_exit_dnn))
-
 
 criterion = nn.CrossEntropyLoss()
 
@@ -1496,17 +1489,14 @@ n_exits = n_branches + 1
 
 epoch = 0
 
-#result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device)
-
 p_tar_list = [0.8]
-
 
     
 for p_tar in p_tar_list:
   #no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
   overall_calibrated_model = BranchesModelWithTemperature(early_exit_dnn, n_branches, device)
-  overall_calibrated_model.calibrate_overall(val_loader, p_tar, saveTempDict["calib_overall"])
+  overall_calibrated_model.calibrate_overall(test_loader, p_tar, saveTempDict["calib_overall"])
   
   calib_overall_result = experiment_early_exit_inference(overall_calibrated_model, test_loader, p_tar, n_branches, device, 
     model_type="calib_overall")
