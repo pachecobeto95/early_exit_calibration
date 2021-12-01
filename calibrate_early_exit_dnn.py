@@ -168,7 +168,7 @@ class LoadDataset():
     test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=self.batch_size_train, shuffle=True, num_workers=4)
-    val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=2)
+    val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=4)
     test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
 
     return train_loader, val_loader, val_loader 
@@ -1162,7 +1162,6 @@ class _ECELoss(nn.Module):
         return ece
 
 
-
 class BranchesModelWithTemperature(nn.Module):
   def __init__(self, model, n_branches, device, lr=0.01, max_iter=50):
     super(BranchesModelWithTemperature, self).__init__()
@@ -1189,7 +1188,12 @@ class BranchesModelWithTemperature(nn.Module):
     
     # This line initiates a single temperature parameter for the entire early-exit DNN model
     self.temperature_overall = nn.Parameter(1.5*torch.ones(1).to(self.device))
+    self.temperature = nn.Parameter((torch.ones(1) * 1.5).to(self.device))
 
+  def temperature_scale(self, logits):
+
+    temperature = self.temperature.unsqueeze(1).expand(logits.size(0), logits.size(1))
+    return logits / temperature
 
   def forwardAllSamplesCalibration(self, x):
     return self.model.forwardAllSamplesCalibration(x, self.temperature_branches)
@@ -1231,17 +1235,63 @@ class BranchesModelWithTemperature(nn.Module):
     df = df.append(pd.Series(error_measure_dict), ignore_index=True)
     df.to_csv(save_overall_path)
 
-  def temperature_scale(self, logits):
-
-    temperature = self.temperature.unsqueeze(1).expand(logits.size(0), logits.size(1))
-    return logits / temperature
-
-  def calibrate_overall(self, val_loader, p_tar, save_overall_path):
+  def calibrate_overall2(self, val_loader, p_tar, save_overall_path):
     """
     This method calibrates the entire model. In other words, this method finds a singles temperature parameter 
     for the entire early-exit DNN model
     """
  
+
+    nll_criterion = nn.CrossEntropyLoss().to(self.device)
+    ece = ECE()
+
+    optimizer = optim.LBFGS([self.temperature_overall], lr=self.lr, max_iter=self.max_iter)
+
+    logits_list, labels_list = [], []
+
+    self.model.eval()
+    with torch.no_grad():
+      for (data, target) in tqdm(val_loader):
+
+        data, target = data.to(self.device), target.to(self.device)
+        
+        logits, conf, infer_class, exit_branch = self.model(data, p_tar, training=False)
+
+        logits_list.append(logits), labels_list.append(target)
+
+    logits_list = torch.cat(logits_list).to(self.device)
+    labels_list = torch.cat(labels_list).to(self.device)
+
+    before_temperature_nll = nll_criterion(logits_list, labels_list).item()
+    
+    before_ece = ece(logits_list, labels_list).item()
+
+    def eval():
+      optimizer.zero_grad()
+      loss = nll_criterion(self.temperature_scale_overall(logits_list), labels_list)
+      loss.backward()
+      return loss
+    
+    optimizer.step(eval)
+
+    after_temperature_nll = nll_criterion(self.temperature_scale_overall(logits_list), labels_list).item()
+    after_ece = ece(self.temperature_scale_overall(logits_list), labels_list).item()
+
+    print("Before NLL: %s, After NLL: %s"%(before_temperature_nll, after_temperature_nll))
+    print("Before ECE: %s, After ECE: %s"%(before_ece, after_ece))
+    print("Temp %s"%(self.temperature_overall.item()))
+
+    error_measure_dict = {"p_tar": p_tar, "before_nll": before_temperature_nll, "after_nll": after_temperature_nll, 
+                          "before_ece": before_ece, "after_ece": after_ece, 
+                          "temperature": self.temperature_overall.item()}
+    
+    # This saves the parameter to save the temperature parameter
+    self.save_temperature_overall(error_measure_dict, save_overall_path)
+
+
+  def calibrate_overall(self, val_loader, p_tar, save_overall_path):
+
+    self.cuda()
     nll_criterion = nn.CrossEntropyLoss().to(self.device)
     ece_criterion = _ECELoss().to(self.device)
 
@@ -1250,13 +1300,16 @@ class BranchesModelWithTemperature(nn.Module):
     labels_list = []
     with torch.no_grad():
       for data, label in val_loader:
-        data, target = data.to(self.device), label.to(self.device)
-        logits = self.model(data)
+        data, label = data.to(self.device), label.to(self.device)
+
+        logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+
+
         logits_list.append(logits)
         labels_list.append(label)
     
-    logits = torch.cat(logits_list).to(self.device)
-    labels = torch.cat(labels_list).to(self.device)
+    logits = torch.cat(logits_list).cuda()
+    labels = torch.cat(labels_list).cuda()
 
     # Calculate NLL and ECE before temperature scaling
     before_temperature_nll = nll_criterion(logits, labels).item()
@@ -1271,6 +1324,7 @@ class BranchesModelWithTemperature(nn.Module):
       loss = nll_criterion(self.temperature_scale(logits), labels)
       loss.backward()
       return loss
+    
     optimizer.step(eval)
 
     # Calculate NLL and ECE after temperature scaling
@@ -1280,7 +1334,6 @@ class BranchesModelWithTemperature(nn.Module):
     print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
 
     return self
-
 
   def calibrate_branches_all_samples(self, val_loader, p_tar, save_branches_path):
 
@@ -1589,6 +1642,9 @@ pretrained = False
 n_branches = 5
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_shape = (3, input_dim, input_dim)
+learning_rate = 0.005
+weight_decay = 0
+momentum = 0
 steps = 10
 p_tar_calib = 0.8
 
