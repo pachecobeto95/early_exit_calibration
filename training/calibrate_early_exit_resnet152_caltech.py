@@ -1109,8 +1109,7 @@ class BranchesModelWithTemperature(nn.Module):
     return self.model.forwardBranchesCalibration(x, self.temperature_branches)
 
   def forwardOverallCalibration(self, x):
-     print(id(self.model))
-     print(self.temperature)
+
      return self.model.forwardOverallCalibration(x, self.temperature)
   
   def temperature_scale_overall(self, logits):
@@ -1156,13 +1155,17 @@ class BranchesModelWithTemperature(nn.Module):
     with torch.no_grad():
       for data, label in val_loader:
         data, label = data.to(self.device), label.to(self.device)
-        logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+        logits, conf, _, exit_branch = self.model(data, p_tar, training=False)
         logits_list.append(logits)
         labels_list.append(label)
+
+        print(conf)
+        break
+
       
       logits = torch.cat(logits_list).cuda()
       labels = torch.cat(labels_list).cuda()
-
+      sys.exit()
       # Calculate NLL and ECE before temperature scaling
       before_temperature_nll = nll_criterion(logits, labels).item()
       before_temperature_ece = ece_criterion(logits, labels).item()
@@ -1381,8 +1384,8 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
       data, target = data.to(device), target.to(device)
 
       if (model_type == "no_calib"):
-        print(id(model.model))
         _, conf_branches, infered_class_branches = model.forwardAllExits(data)
+        print(conf_branches)
         #print([conf.item() for conf in conf_branches])
 
       elif(model_type == "calib_overall"):
@@ -1408,7 +1411,8 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
       for j, inf_class in enumerate(infered_class_branches, 1):
         val_acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
 
-      del data, target
+      break
+      del data, target,conf_branches, infered_class_branches
       torch.cuda.empty_cache()
 
   conf_branches_list = np.array(conf_branches_list)
