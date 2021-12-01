@@ -141,8 +141,8 @@ class LoadDataset():
       train_idx = np.load(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       val_idx = np.load(os.path.join(savePath_idx, "validation_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       self.val_idx = val_idx
-      test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
-      test_idx = np.array(list(test_idx.tolist()))
+      #test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
+      #test_idx = np.array(list(test_idx.tolist()))
 
     else:
 
@@ -162,11 +162,11 @@ class LoadDataset():
     # This line mounts the training and test dataset, selecting the samples according indices. 
     train_data = torch.utils.data.Subset(train_set, indices=train_idx)
     val_data = torch.utils.data.Subset(val_set, indices=val_idx)
-    test_data = torch.utils.data.Subset(test_set, indices=test_idx)
+    #test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=self.batch_size_train, shuffle=True, num_workers=4)
     val_loader = torch.utils.data.DataLoader(val_data, batch_size=self.batch_size_test, num_workers=4)
-    test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
+    #test_loader = torch.utils.data.DataLoader(test_data, batch_size=self.batch_size_test, num_workers=4)
 
     return train_loader, val_loader, val_loader 
 
