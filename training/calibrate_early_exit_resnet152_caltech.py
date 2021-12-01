@@ -1484,7 +1484,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
         #print([conf.item() for conf in conf_branches])
 
       elif(model_type == "calib_overall"):
-        _, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
+        _, conf_branches, infered_class_branches = model.model(data)
         #print([conf.item() for conf in conf_branches])
         #print(model.temperature_overall)
 
@@ -1613,14 +1613,14 @@ n_exits = n_branches + 1
 
 epoch = 0
 
-result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device)
+#result = evalBranches(early_exit_dnn, val_loader, criterion, n_branches, epoch, device)
 
 p_tar_list = [0.8]
 
 
     
 for p_tar in p_tar_list:
-  no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
+  #no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
   overall_calibrated_model = BranchesModelWithTemperature(early_exit_dnn, n_branches, device)
   overall_calibrated_model.calibrate_overall(val_loader, p_tar, saveTempDict["calib_overall"])
