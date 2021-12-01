@@ -1248,7 +1248,7 @@ class BranchesModelWithTemperature(nn.Module):
     logits_list = []
     labels_list = []
     with torch.no_grad():
-      for data, label in valid_loader:
+      for data, label in val_loader:
         data, target = data.to(self.device), target.to(self.device)
         logits = self.model(data)
         logits_list.append(logits)
