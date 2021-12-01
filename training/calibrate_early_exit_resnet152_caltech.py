@@ -1243,105 +1243,49 @@ class BranchesModelWithTemperature(nn.Module):
     df = df.append(pd.Series(error_measure_dict), ignore_index=True)
     df.to_csv(save_overall_path)
 
-  def calibrate_overall2(self, val_loader, p_tar, save_overall_path):
-    """
-    This method calibrates the entire model. In other words, this method finds a singles temperature parameter 
-    for the entire early-exit DNN model
-    """
- 
-
-    nll_criterion = nn.CrossEntropyLoss().to(self.device)
-    ece = ECE()
-
-    optimizer = optim.LBFGS([self.temperature_overall], lr=self.lr, max_iter=self.max_iter)
-
-    logits_list, labels_list = [], []
-
-    self.model.eval()
-    with torch.no_grad():
-      for (data, target) in tqdm(val_loader):
-
-        data, target = data.to(self.device), target.to(self.device)
-        
-        logits, conf, infer_class, exit_branch = self.model(data, p_tar, training=False)
-
-        logits_list.append(logits), labels_list.append(target)
-
-    logits_list = torch.cat(logits_list).to(self.device)
-    labels_list = torch.cat(labels_list).to(self.device)
-
-    before_temperature_nll = nll_criterion(logits_list, labels_list).item()
-    
-    before_ece = ece(logits_list, labels_list).item()
-
-    def eval():
-      optimizer.zero_grad()
-      loss = nll_criterion(self.temperature_scale_overall(logits_list), labels_list)
-      loss.backward()
-      return loss
-    
-    optimizer.step(eval)
-
-    after_temperature_nll = nll_criterion(self.temperature_scale_overall(logits_list), labels_list).item()
-    after_ece = ece(self.temperature_scale_overall(logits_list), labels_list).item()
-
-    print("Before NLL: %s, After NLL: %s"%(before_temperature_nll, after_temperature_nll))
-    print("Before ECE: %s, After ECE: %s"%(before_ece, after_ece))
-    print("Temp %s"%(self.temperature_overall.item()))
-
-    error_measure_dict = {"p_tar": p_tar, "before_nll": before_temperature_nll, "after_nll": after_temperature_nll, 
-                          "before_ece": before_ece, "after_ece": after_ece, 
-                          "temperature": self.temperature_overall.item()}
-    
-    # This saves the parameter to save the temperature parameter
-    self.save_temperature_overall(error_measure_dict, save_overall_path)
-
 
   def calibrate_overall(self, val_loader, p_tar, save_overall_path):
 
-    nll_criterion = nn.CrossEntropyLoss().to(self.device)
-    ece_criterion = _ECELoss().to(self.device)
+    nll_criterion = nn.CrossEntropyLoss().cuda()
+    ece_criterion = _ECELoss().cuda()
 
     # First: collect all the logits and labels for the validation set
     logits_list = []
     labels_list = []
-    print("Calibrating")
     with torch.no_grad():
-      for data, label in tqdm(val_loader):
+      for data, label in valid_loader:
         data, label = data.to(self.device), label.to(self.device)
-
-        logits, _, _, exit_branch = self.model(data, p_tar, training=False)
-
-
+        logits = self.model(data, p_tar, training=False)
         logits_list.append(logits)
         labels_list.append(label)
-    
-    logits = torch.cat(logits_list).cuda()
-    labels = torch.cat(labels_list).cuda()
+      
+      logits = torch.cat(logits_list).cuda()
+      labels = torch.cat(labels_list).cuda()
 
-    # Calculate NLL and ECE before temperature scaling
-    before_temperature_nll = nll_criterion(logits, labels).item()
-    before_temperature_ece = ece_criterion(logits, labels).item()
-    print('Before temperature - NLL: %.3f, ECE: %.3f' % (before_temperature_nll, before_temperature_ece))
+      # Calculate NLL and ECE before temperature scaling
+      before_temperature_nll = nll_criterion(logits, labels).item()
+      before_temperature_ece = ece_criterion(logits, labels).item()
+      print('Before temperature - NLL: %.3f, ECE: %.3f' % (before_temperature_nll, before_temperature_ece))
 
-    # Next: optimize the temperature w.r.t. NLL
-    optimizer = optim.LBFGS([self.temperature], lr=0.01, max_iter=50)
+      # Next: optimize the temperature w.r.t. NLL
+      optimizer = optim.LBFGS([self.temperature], lr=0.01, max_iter=50)
 
-    def eval():
-      optimizer.zero_grad()
-      loss = nll_criterion(self.temperature_scale(logits), labels)
-      loss.backward()
-      return loss
-    
-    optimizer.step(eval)
+      def eval():
+        optimizer.zero_grad()
+        loss = nll_criterion(self.temperature_scale(logits), labels)
+        loss.backward()
+        return loss
+      optimizer.step(eval)
 
-    # Calculate NLL and ECE after temperature scaling
-    after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
-    after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
-    print('Optimal temperature: %.3f' % self.temperature.item())
-    print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
+      # Calculate NLL and ECE after temperature scaling
+      after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
+      after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
+      print('Optimal temperature: %.3f' % self.temperature.item())
+      print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
 
-    return self
+      return self
+
+
 
   def calibrate_branches_all_samples(self, val_loader, p_tar, save_branches_path):
 
