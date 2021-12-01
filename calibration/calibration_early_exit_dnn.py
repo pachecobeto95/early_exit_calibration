@@ -118,7 +118,7 @@ class ModelOverallCalibration(nn.Module):
         optimizer.zero_grad()
         loss = nll_criterion(self.temperature_scale(logits), labels)
         loss.backward()
-            return loss
+        return loss
       optimizer.step(eval)
 
       # Calculate NLL and ECE after temperature scaling
