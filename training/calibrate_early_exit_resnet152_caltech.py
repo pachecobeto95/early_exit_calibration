@@ -1502,7 +1502,7 @@ p_tar_list = [0.8]
 
     
 for p_tar in p_tar_list:
-  no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
+  #no_calib_result = experiment_early_exit_inference(early_exit_dnn, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
   overall_calibrated_model = BranchesModelWithTemperature(early_exit_dnn, n_branches, device)
   overall_calibrated_model.calibrate_overall(val_loader, p_tar, saveTempDict["calib_overall"])
