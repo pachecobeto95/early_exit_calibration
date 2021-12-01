@@ -143,6 +143,7 @@ class LoadDataset():
       
       train_idx = np.load(os.path.join(savePath_idx, "training_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
       val_idx = np.load(os.path.join(savePath_idx, "validation_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))
+      print(val_idx)
       #test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
       #test_idx = np.array(list(test_idx.tolist()))
     else:
@@ -1098,7 +1099,7 @@ batch_size_test = 1
 model_id = 3
 split_ratio = 0.2
 n_classes = 258
-pretrained = True
+pretrained = False
 n_branches = 5
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_shape = (3, input_dim, input_dim)
@@ -1131,6 +1132,7 @@ save_temp_branches_path = os.path.join(root_save_path, "appEdge", "api", "servic
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
+sys.exit()
 
 lr = [1.5e-4, 0.01]
 
