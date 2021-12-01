@@ -1120,32 +1120,46 @@ class Early_Exit_DNN(nn.Module):
       return self.forwardEval(x, p_tar)
 
 
-class ECE(nn.Module):
-  def __init__(self, n_bins=15):
+class _ECELoss(nn.Module):
+    """
+    Calculates the Expected Calibration Error of a model.
+    (This isn't necessary for temperature scaling, just a cool metric).
+    The input to this loss is the logits of a model, NOT the softmax scores.
+    This divides the confidence outputs into equally-sized interval bins.
+    In each bin, we compute the confidence gap:
+    bin_gap = | avg_confidence_in_bin - accuracy_in_bin |
+    We then return a weighted average of the gaps, based on the number
+    of samples in each bin
+    See: Naeini, Mahdi Pakdaman, Gregory F. Cooper, and Milos Hauskrecht.
+    "Obtaining Well Calibrated Probabilities Using Bayesian Binning." AAAI.
+    2015.
+    """
+    def __init__(self, n_bins=15):
+        """
+        n_bins (int): number of confidence interval bins
+        """
+        super(_ECELoss, self).__init__()
+        bin_boundaries = torch.linspace(0, 1, n_bins + 1)
+        self.bin_lowers = bin_boundaries[:-1]
+        self.bin_uppers = bin_boundaries[1:]
 
-    super(ECE, self).__init__()
-    bin_boundaries = torch.linspace(0, 1, n_bins + 1)
-    self.bin_lowers = bin_boundaries[:-1]
-    self.bin_uppers = bin_boundaries[1:]
+    def forward(self, logits, labels):
+        softmaxes = F.softmax(logits, dim=1)
+        confidences, predictions = torch.max(softmaxes, 1)
+        accuracies = predictions.eq(labels)
 
-  def forward(self, logits, labels):
+        ece = torch.zeros(1, device=logits.device)
+        for bin_lower, bin_upper in zip(self.bin_lowers, self.bin_uppers):
+            # Calculated |confidence - accuracy| in each bin
+            in_bin = confidences.gt(bin_lower.item()) * confidences.le(bin_upper.item())
+            prop_in_bin = in_bin.float().mean()
+            if prop_in_bin.item() > 0:
+                accuracy_in_bin = accuracies[in_bin].float().mean()
+                avg_confidence_in_bin = confidences[in_bin].mean()
+                ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
 
-    softmaxes = F.softmax(logits, dim=1)
-    confidences, predictions = torch.max(softmaxes, 1)
-    accuracies = predictions.eq(labels)
-    ece = torch.zeros(1, device=logits.device)
+        return ece
 
-    for bin_lower, bin_upper in zip(self.bin_lowers, self.bin_uppers):
-      # Calculated |confidence - accuracy| in each bin
-      in_bin = confidences.gt(bin_lower.item()) * confidences.le(bin_upper.item())
-      prop_in_bin = in_bin.float().mean()
-
-      if (prop_in_bin.item() > 0):
-        accuracy_in_bin = accuracies[in_bin].float().mean()
-        avg_confidence_in_bin = confidences[in_bin].mean()
-        ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
-
-    return ece
 
 
 class BranchesModelWithTemperature(nn.Module):
@@ -1216,57 +1230,55 @@ class BranchesModelWithTemperature(nn.Module):
     df = df.append(pd.Series(error_measure_dict), ignore_index=True)
     df.to_csv(save_overall_path)
 
+  def temperature_scale(self, logits):
+
+    temperature = self.temperature.unsqueeze(1).expand(logits.size(0), logits.size(1))
+    return logits / temperature
+
   def calibrate_overall(self, val_loader, p_tar, save_overall_path):
     """
     This method calibrates the entire model. In other words, this method finds a singles temperature parameter 
     for the entire early-exit DNN model
     """
+ 
     nll_criterion = nn.CrossEntropyLoss().to(self.device)
-    ece = ECE()
+    ece_criterion = _ECELoss().to(self.device)
 
-    optimizer = optim.LBFGS([self.temperature_overall], lr=self.lr, max_iter=self.max_iter)
-
-    logits_list, labels_list = [], []
-
-    self.model.eval()
+    # First: collect all the logits and labels for the validation set
+    logits_list = []
+    labels_list = []
     with torch.no_grad():
-      for (data, target) in tqdm(val_loader):
-      #for i, (data, target) in enumerate(val_loader, 1):
-          
+      for data, label in valid_loader:
         data, target = data.to(self.device), target.to(self.device)
-        
-        logits, conf, infer_class, exit_branch = self.model(data, p_tar, training=False)
-
-        logits_list.append(logits), labels_list.append(target)
-
-    logits_list = torch.cat(logits_list).to(self.device)
-    labels_list = torch.cat(labels_list).to(self.device)
-
-    before_temperature_nll = nll_criterion(logits_list, labels_list).item()
+        logits = self.model(data)
+        logits_list.append(logits)
+        labels_list.append(label)
     
-    before_ece = ece(logits_list, labels_list).item()
+    logits = torch.cat(logits_list).to(self.device)
+    labels = torch.cat(labels_list).to(self.device)
+
+    # Calculate NLL and ECE before temperature scaling
+    before_temperature_nll = nll_criterion(logits, labels).item()
+    before_temperature_ece = ece_criterion(logits, labels).item()
+    print('Before temperature - NLL: %.3f, ECE: %.3f' % (before_temperature_nll, before_temperature_ece))
+
+    # Next: optimize the temperature w.r.t. NLL
+    optimizer = optim.LBFGS([self.temperature], lr=0.01, max_iter=50)
 
     def eval():
       optimizer.zero_grad()
-      loss = nll_criterion(self.temperature_scale_overall(logits_list), labels_list)
+      loss = nll_criterion(self.temperature_scale(logits), labels)
       loss.backward()
       return loss
-    
     optimizer.step(eval)
 
-    after_temperature_nll = nll_criterion(self.temperature_scale_overall(logits_list), labels_list).item()
-    after_ece = ece(self.temperature_scale_overall(logits_list), labels_list).item()
+    # Calculate NLL and ECE after temperature scaling
+    after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
+    after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
+    print('Optimal temperature: %.3f' % self.temperature.item())
+    print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
 
-    print("Before NLL: %s, After NLL: %s"%(before_temperature_nll, after_temperature_nll))
-    print("Before ECE: %s, After ECE: %s"%(before_ece, after_ece))
-    print("Temp %s"%(self.temperature_overall.item()))
-
-    error_measure_dict = {"p_tar": p_tar, "before_nll": before_temperature_nll, "after_nll": after_temperature_nll, 
-                          "before_ece": before_ece, "after_ece": after_ece, 
-                          "temperature": self.temperature_overall.item()}
-    
-    # This saves the parameter to save the temperature parameter
-    self.save_temperature_overall(error_measure_dict, save_overall_path)
+    return self
 
 
   def calibrate_branches_all_samples(self, val_loader, p_tar, save_branches_path):
@@ -1356,37 +1368,6 @@ class BranchesModelWithTemperature(nn.Module):
     self.save_temperature_branches(error_measure_dict, save_branches_path)
 
 
-  def generate_data_augmentation(self, dataset, idx_list):
-    nll_criterion = nn.CrossEntropyLoss().to(self.device)
-    
-    logits_list = [[] for i in range(self.n_exits)]
-    labels_list = [[] for i in range(self.n_exits)]
-
-    epoch = 5
-
-    data_set = dataset.train_set
-    self.model.eval()
-    for exit in range(self.n_exits):
-      validation_dataset = torch.utils.data.Subset(data_set, indices=idx_list[exit])
-      val_loader = torch.utils.data.DataLoader(validation_dataset, batch_size=dataset.batch_size_test, num_workers=2)
-
-      for j in range(epoch):
-
-        for data, target in tqdm(val_loader):
-        
-          data, target = data.to(self.device), target.to(self.device)
-        
-          logits = self.model.forwardDefinedBranch(data, exit)
-
-          logits_list[exit].append(logits)
-          labels_list[exit].append(target)
-
-          del data, target
-
-    return logits_list, labels_list
-
-
-
   def calibrate_branches(self, val_loader, dataset, p_tar, save_branches_path, data_augmentation=False):
     """
     This method calibrates for each side branch. In other words, this method finds a temperature parameter 
@@ -1417,7 +1398,6 @@ class BranchesModelWithTemperature(nn.Module):
         labels_list[exit_branch].append(target)
 
 
-    print([len(logits_list[i]) for i in range(self.n_exits)])
     for i in range(self.n_exits):
       print("Exit: %s"%(i+1))
 
