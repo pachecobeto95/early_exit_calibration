@@ -426,7 +426,8 @@ class Early_Exit_DNN(nn.Module):
                                    "resnet18": self.early_exit_resnet18,
                                    "resnet50": self.early_exit_resnet50_2,
                                    "vgg16": self.early_exit_vgg16, 
-                                   "inceptionV3": self.early_exit_inceptionV3}
+                                   "inceptionV3": self.early_exit_inceptionV3,
+                                   "resnet152": self.early_exit_resnet152}
 
     return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
 
@@ -587,6 +588,48 @@ class Early_Exit_DNN(nn.Module):
 
     if (count_relu_layer > self.n_branches):
       raise Exception("The number of early exits is greater than number of layers in the DNN backbone model.")
+
+  def early_exit_resnet152(self):
+    self.stages = nn.ModuleList()
+    self.exits = nn.ModuleList()
+    self.layers = nn.ModuleList()
+    self.cost = []
+    self.stage_id = 0
+
+    self.inplanes = 64
+
+    n_blocks = 4
+
+    backbone_model = models.resnet152(self.pretrained)
+
+    # This obtains the flops total of the backbone model
+    self.total_flops = self.countFlops(backbone_model)
+
+    self.threshold_flop_list = self.where_insert_early_exits()
+
+    building_first_layer = ["conv1", "bn1", "relu", "maxpool"]
+    for layer in building_first_layer:
+      self.layers.append(getattr(backbone_model, layer))
+
+    if (self.is_suitable_for_exit()):
+      self.add_exit_block()
+
+    for i in range(1, n_blocks+1):
+      
+      block_layer = getattr(backbone_model, "layer%s"%(i))
+
+      for l in block_layer:
+        self.layers.append(l)
+
+        if (self.is_suitable_for_exit()):
+          self.add_exit_block()
+    
+    self.layers.append(nn.AdaptiveAvgPool2d(1))
+    self.classifier = nn.Sequential(nn.Linear(2048, self.n_classes))
+    self.stages.append(nn.Sequential(*self.layers))
+    self.softmax = nn.Softmax(dim=1)
+    self.set_device()
+
 
   def early_exit_resnet18(self):
     """
@@ -1572,7 +1615,7 @@ p_tar_calib = 0.8
 distribution = "linear"
 exit_type = "bnpool"
 dataset_name = "caltech256"
-model_name = "vgg16"
+model_name = "resnet152"
 
 root_save_path = os.path.dirname(__file__)
 
