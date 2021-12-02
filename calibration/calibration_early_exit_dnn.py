@@ -287,4 +287,4 @@ class ModelAllSamplesCalibration(nn.Module):
     df = df.append(pd.Series(result), ignore_index=True)
     df.to_csv(self.saveTempPath)
   
-  def set_temperature(self, valid_loader, p_tar):
+  #def set_temperature(self, valid_loader, p_tar):
