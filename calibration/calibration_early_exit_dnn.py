@@ -124,7 +124,7 @@ class ModelOverallCalibration(nn.Module):
     # Calculate NLL and ECE after temperature scaling
     after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
     after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
-    print('Optimal temperature: %.3f' % self.temperature.item())
+    print('Optimal temperature: %.3f' % self.temperature_overall.item())
     print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
 
     return self
