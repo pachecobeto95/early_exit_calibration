@@ -48,7 +48,7 @@ def evalEarlyExitInference(model, n_branches, test_loader, p_tar, device):
       
 			data, target = data.to(device), target.to(device)
 
-			_, conf_branches, infered_class_branches = model.forwardAllExits(data)
+			conf_branches, infered_class_branches = model.forwardOverall(data)
 
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
@@ -90,7 +90,7 @@ def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, mo
 		scaled_model = ModelOverallCalibration(model, device, model_path, saveTempPath)
 		scaled_model.set_temperature(val_loader, p_tar)
 
-		result = evalEarlyExitInference(model, test_loader, p_tar, device)
+		result = evalEarlyExitInference(model, model.n_branches, test_loader, p_tar, device)
 		saveResults(result, result_path)
 
  
@@ -139,7 +139,7 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 
 
-p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
+p_tar_list = [0.8, 0.85, 0.9, 0.95]
 
 expOverallCalibration(early_exit_dnn, val_loader, test_loader, device, p_tar_list, model_path, result_path, saveTempOverallPath)
 

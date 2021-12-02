@@ -787,18 +787,12 @@ class Early_Exit_DNN(nn.Module):
 
     return output_list, conf_list, class_list
 
-  def temperature_scale_overall(self, logits, temp_overall):
-    if (temp_overall is None):
-      return torch.zeros(logits.shape).to(self.device)
-    else:    
-      return torch.div(logits, temp_overall)
+  def temperature_scale_overall(self, logits, temp_overall):    
+    return torch.div(logits, temp_overall)
 
 
   def temperature_scale_branches(self, logits, temp, exit_branch):
-    if(temp[exit_branch] is None):
-      return torch.zeros(logits.shape).to(self.device)
-    else:
-      return torch.div(logits, temp[exit_branch])
+    return torch.div(logits, temp[exit_branch])
 
   def forwardAllExits(self, x):  
 
@@ -853,7 +847,7 @@ class Early_Exit_DNN(nn.Module):
     conf, infered_class = torch.max(self.softmax(output), 1)
     conf_list.append(conf), class_list.append(infered_class)
 
-    return output_list, conf_list, class_list
+    return conf_list, class_list
 
   def forwardBranchesCalibration(self, x, temp_branches):
     output_list, conf_list, class_list = [], [], []

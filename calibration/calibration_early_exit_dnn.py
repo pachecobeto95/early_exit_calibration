@@ -77,9 +77,8 @@ class ModelOverallCalibration(nn.Module):
     temperature = self.temperature_overall.unsqueeze(1).expand(logits.size(0), logits.size(1))
     return logits / temperature
 
-  def forward(self, x):
-    logits = self.model(x)
-    return self.temperature_scale(logits)
+  def forwardOverall(self, x):
+    return self.model.forwardOverallCalibration(x, self.temperature_overall)
 
 
   def save_temperature(self, result):
@@ -143,3 +142,27 @@ class ModelOverallCalibration(nn.Module):
     self.save_temperature(result)
 
     return self
+
+
+class ModelBranchesCalibration(nn.Module):
+
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
+    super(ModelBranchesCalibration, self).__init__()
+    
+    self.model = model
+    self.device = device
+    self.n_exits = model.n_branches + 1
+
+    self.temperature_branches = [nn.Parameter((1.5*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
+    self.lr = lr
+    self.max_iter = max_iter
+    self.saveTempPath = saveTempPath
+
+    self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
+
+
+
+
+
+
+
