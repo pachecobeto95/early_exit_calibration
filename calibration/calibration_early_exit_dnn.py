@@ -99,7 +99,8 @@ class ModelOverallCalibration(nn.Module):
       for data, label in tqdm(valid_loader):
         data, label = data.to(self.device), label.to(self.device)  
           
-        logits, _, _, _ = self.model.forwardEval(data, p_tar)
+        logits, confs, _, _ = self.model.forwardEval(data, p_tar)
+        print(confs)
 
         logits_list.append(logits), labels_list.append(label)
       
