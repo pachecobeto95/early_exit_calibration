@@ -77,8 +77,9 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 
 
-p_tar_list = [0.8]
+p_tar_list = [0.7, 0.8, 0.9]
 
 for p_tar in p_tar_list:
+	print("P_tar: %s"%(p_tar))
 	scaled_model = ModelOverallCalibration(early_exit_dnn, device, model_path)
 	scaled_model.set_temperature(val_loader, p_tar)
