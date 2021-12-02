@@ -90,7 +90,7 @@ def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, mo
 		scaled_model = ModelOverallCalibration(model, device, model_path, saveTempPath)
 		scaled_model.set_temperature(val_loader, p_tar)
 
-		result = evalEarlyExitInference(model, model.n_branches, test_loader, p_tar, device)
+		result = evalEarlyExitInference(scaled_model, model.n_branches, test_loader, p_tar, device)
 		saveResults(result, result_path)
 
  
