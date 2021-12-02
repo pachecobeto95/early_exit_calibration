@@ -77,7 +77,7 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 
 
-p_tar_list = [0.5]
+p_tar_list = [1.0]
 
 for p_tar in p_tar_list:
 	scaled_model = ModelOverallCalibration(early_exit_dnn, device, model_path)
