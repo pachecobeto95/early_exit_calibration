@@ -1132,7 +1132,6 @@ save_temp_branches_path = os.path.join(root_save_path, "appEdge", "api", "servic
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
-sys.exit()
 
 lr = [1.5e-4, 0.01]
 
