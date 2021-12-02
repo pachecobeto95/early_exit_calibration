@@ -874,7 +874,7 @@ class Early_Exit_DNN(nn.Module):
     conf, infered_class = torch.max(self.softmax(output), 1)
     conf_list.append(conf), class_list.append(infered_class)
 
-    return output_list, conf_list, class_list
+    return conf_list, class_list
 
   def forwardAllSamplesCalibration(self, x, temp_all_samples):
     output_list, conf_list, class_list = [], [], []

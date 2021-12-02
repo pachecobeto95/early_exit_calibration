@@ -28,7 +28,7 @@ import functools
 from tqdm import tqdm
 from load_dataset import LoadDataset
 from early_exit_dnn import Early_Exit_DNN
-from calibration_early_exit_dnn import ModelBranchesCalibration
+from calibration_early_exit_dnn import ModelAllSamplesCalibration
 
 
 torch.multiprocessing.set_sharing_strategy('file_system')
