@@ -61,7 +61,7 @@ class _ECELoss(nn.Module):
 
 class ModelOverallCalibration(nn.Module):
 
-  def __init__(self, model, device, modelPath, saveTempPath, lr=0.01, max_iter=1000):
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
     super(ModelOverallCalibration, self).__init__()
     
     self.model = model
