@@ -101,7 +101,6 @@ class ModelOverallCalibration(nn.Module):
         data, label = data.to(self.device), label.to(self.device)  
           
         logits, confs, _, exit_branch = self.model.forwardEval(data, p_tar)
-        print(confs, exit_branch)
 
         logits_list.append(logits), labels_list.append(label)
       
