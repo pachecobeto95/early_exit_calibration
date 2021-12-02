@@ -141,7 +141,7 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
 
-expOverallCalibration(early_exit_dnn, val_loader, device, p_tar_list, model_path, result_path, saveTempOverallPath)
+expOverallCalibration(early_exit_dnn, val_loader, test_loader, device, p_tar_list, model_path, result_path, saveTempOverallPath)
 
 
 
