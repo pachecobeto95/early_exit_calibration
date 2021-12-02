@@ -61,7 +61,7 @@ class _ECELoss(nn.Module):
 
 class ModelOverallCalibration(nn.Module):
 
-  def __init__(self, model, device, modelPath, saveTempPath, lr=0.01, max_iter=50):
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.01, max_iter=1000):
     super(ModelOverallCalibration, self).__init__()
     
     self.model = model
@@ -87,7 +87,6 @@ class ModelOverallCalibration(nn.Module):
     
     df = df.append(pd.Series(result), ignore_index=True)
     df.to_csv(self.saveTempPath)
-
   
   def set_temperature(self, valid_loader, p_tar):
     """
@@ -161,8 +160,19 @@ class ModelBranchesCalibration(nn.Module):
     self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
 
 
+  def forwardBranchesCalibration(self, x):
+    return self.model.forwardBranchesCalibration(x, self.temperature_branches)
+  
+  def temperature_scale_branches(self, logits):
+    return torch.div(logits, self.temperature_branch)
 
+  def save_temperature(self, result):
 
+    df = pd.read_csv(self.saveTempPath) if (os.path.exists(self.saveTempPath)) else pd.DataFrame()    
+    df = df.append(pd.Series(result), ignore_index=True)
+    df.to_csv(self.saveTempPath)
+  
+  def set_temperature(self, valid_loader, p_tar):
 
 
 
