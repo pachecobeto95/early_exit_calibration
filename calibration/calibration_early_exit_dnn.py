@@ -225,6 +225,9 @@ class ModelBranchesCalibration(nn.Module):
 
 
       optimizer.step(eval)
+      loss = eval()
+      print(loss)
+
 
       after_temperature_nll = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch).item()
       after_temperature_nll_list.append(after_temperature_nll)
