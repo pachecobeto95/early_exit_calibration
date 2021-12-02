@@ -66,7 +66,7 @@ class ModelOverallCalibration(nn.Module):
     
     self.model = model
     self.device = device
-    self.temperature_overall = nn.Parameter((2.0*torch.ones(1)).to(self.device))
+    self.temperature_overall = nn.Parameter((1.5*torch.ones(1)).to(self.device))
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
@@ -262,12 +262,11 @@ class ModelAllSamplesCalibration(nn.Module):
   def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
     super(ModelAllSamplesCalibration, self).__init__()
 
-
     self.model = model
     self.device = device
     self.n_exits = model.n_branches + 1
 
-    self.temperature_branches = [nn.Parameter((2.0*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
+    self.temperature_branches = [nn.Parameter((1.5*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
@@ -368,6 +367,6 @@ class ModelAllSamplesCalibration(nn.Module):
     
     # This saves the parameter to save the temperature parameter for each side branch
 
-    self.save_temperature_branches(error_measure_dict, save_branches_path)
+    self.save_temperature(error_measure_dict)
 
     return self
