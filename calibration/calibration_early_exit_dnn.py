@@ -206,7 +206,6 @@ class ModelBranchesCalibration(nn.Module):
 
       self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
 
-
       optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
 
       logit_branch = torch.cat(logits_list[i]).to(self.device)
@@ -252,7 +251,7 @@ class ModelBranchesCalibration(nn.Module):
     
 
     # This saves the parameter to save the temperature parameter for each side branch
-    self.save_temperature(error_measure_dict, save_branches_path)
+    self.save_temperature(error_measure_dict)
 
     return self
 
