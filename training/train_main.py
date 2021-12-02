@@ -70,6 +70,7 @@ class ModelWithTemperature(nn.Module):
         # First: collect all the logits and labels for the validation set
         logits_list = []
         labels_list = []
+        self.model.eval()
         with torch.no_grad():
             for data, label in valid_loader:
                 data, label = data.cuda(), label.cuda()
