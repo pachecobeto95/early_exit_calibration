@@ -72,7 +72,7 @@ def evalEarlyExitInference(model, n_branches, test_loader, p_tar, device):
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
 			"correct_branch_%s"%(i+1): correct_list[:, i]})
 
-  return results
+	return results
 
 
 def saveResults(result, save_path):
@@ -83,7 +83,7 @@ def saveResults(result, save_path):
 
 def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, model_path, save_path):
 	for p_tar in p_tar_list:
-		
+
 		print("P_tar: %s"%(round(p_tar, 2)))
 		scaled_model = ModelOverallCalibration(model, device, model_path)
 		scaled_model.set_temperature(val_loader, p_tar)
