@@ -95,6 +95,7 @@ class ModelOverallCalibration(nn.Module):
     # First: collect all the logits and labels for the validation set
     logits_list = []
     labels_list = []
+    self.model.eval()
     with torch.no_grad():
       for data, label in tqdm(valid_loader):
         data, label = data.to(self.device), label.to(self.device)  
