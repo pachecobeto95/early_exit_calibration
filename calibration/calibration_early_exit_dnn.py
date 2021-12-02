@@ -82,7 +82,7 @@ class ModelOverallCalibration(nn.Module):
     return self.temperature_scale(logits)
 
 
-  def save_temperature(result):
+  def save_temperature(self, result):
   # This function probably should live outside of this class, but whatever
     df = pd.read_csv(self.saveTempPath) if (os.path.exists(self.saveTempPath)) else pd.DataFrame()
     
