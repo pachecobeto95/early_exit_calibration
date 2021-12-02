@@ -142,7 +142,6 @@ class ModelOverallCalibration(nn.Module):
 
     return self
 
-
 class ModelBranchesCalibration(nn.Module):
 
   def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
@@ -172,7 +171,120 @@ class ModelBranchesCalibration(nn.Module):
     df = df.append(pd.Series(result), ignore_index=True)
     df.to_csv(self.saveTempPath)
   
-  #def set_temperature(self, valid_loader, p_tar):
+  def set_temperature(self, valid_loader, p_tar):
+
+    nll_criterion = nn.CrossEntropyLoss().to(self.device)
+    ece = _ECELoss()
+
+    logits_list = [[] for i in range(self.n_exits)]
+    labels_list = [[] for i in range(self.n_exits)]
+    idx_sample_exit_list = [[] for i in range(self.n_exits)]
+    before_temperature_nll_list, after_temperature_nll_list = [], []
+    before_ece_list, after_ece_list = [], []
+
+    error_measure_dict = {"p_tar": p_tar}
+
+    self.model.eval()
+    with torch.no_grad():
+      for (data, target) in tqdm(valid_loader):
+
+        data, target = data.to(self.device), target.to(self.device)
+        
+        logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+
+        logits_list[exit_branch].append(logits)
+        labels_list[exit_branch].append(target)
 
 
+    for i in range(self.n_exits):
+      print("Exit: %s"%(i+1))
 
+      if (len(logits_list[i]) == 0):
+        before_temperature_nll_list.append(None), after_temperature_nll_list.append(None)
+        before_ece_list.append(None), after_ece_list.append(None)
+        temperature_branch_list.append(None)
+        continue
+
+      self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
+
+
+      optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
+
+      logit_branch = torch.cat(logits_list[i]).to(self.device)
+      label_branch = torch.cat(labels_list[i]).to(self.device)
+
+      before_temperature_nll = nll_criterion(logit_branch, label_branch).item()
+      before_temperature_nll_list.append(before_temperature_nll)
+
+      before_ece = ece(logit_branch, label_branch).item()
+      before_ece_list.append(before_ece)
+
+      def eval():
+        optimizer.zero_grad()
+        loss = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
+        loss.backward()
+        return loss
+
+
+      optimizer.step(eval)
+
+      after_temperature_nll = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch).item()
+      after_temperature_nll_list.append(after_temperature_nll)
+
+      after_ece = ece(self.temperature_scale_branches(logit_branch), label_branch).item()
+      after_ece_list.append(after_ece)
+
+      
+      self.temperature_branches[i] = self.temperature_branch
+
+      print("Branch: %s, Before NLL: %s, After NLL: %s"%(i+1, before_temperature_nll, after_temperature_nll))
+      print("Branch: %s, Before ECE: %s, After ECE: %s"%(i+1, before_ece, after_ece))
+
+      print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()))
+
+    self.temperature_branches = [temp_branch.item() for temp_branch in self.temperature_branches]
+
+    for i in range(self.n_exits):
+      error_measure_dict.update({"before_nll_branch_%s"%(i+1): before_temperature_nll_list[i], 
+                                 "before_ece_branch_%s"%(i+1): before_ece_list[i],
+                                 "after_nll_branch_%s"%(i+1): after_temperature_nll_list[i],
+                                 "after_ece_branch_%s"%(i+1): after_ece_list[i],
+                                 "temperature_branch_%s"%(i+1): self.temperature_branches[i]})
+    
+
+    # This saves the parameter to save the temperature parameter for each side branch
+    self.save_temperature(error_measure_dict, save_branches_path)
+
+    return self
+
+class ModelAllSamplesCalibration(nn.Module):
+
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
+    super(ModelAllSamplesCalibration, self).__init__()
+
+
+    self.model = model
+    self.device = device
+    self.n_exits = model.n_branches + 1
+
+    self.temperature_branches = [nn.Parameter((2.0*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
+    self.lr = lr
+    self.max_iter = max_iter
+    self.saveTempPath = saveTempPath
+
+    self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
+
+
+  def forwardBranchesCalibration(self, x):
+    return self.model.forwardBranchesCalibration(x, self.temperature_branches)
+  
+  def temperature_scale_branches(self, logits):
+    return torch.div(logits, self.temperature_branch)
+
+  def save_temperature(self, result):
+
+    df = pd.read_csv(self.saveTempPath) if (os.path.exists(self.saveTempPath)) else pd.DataFrame()    
+    df = df.append(pd.Series(result), ignore_index=True)
+    df.to_csv(self.saveTempPath)
+  
+  def set_temperature(self, valid_loader, p_tar):
