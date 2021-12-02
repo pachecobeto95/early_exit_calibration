@@ -202,7 +202,6 @@ class ModelBranchesCalibration(nn.Module):
       if (len(logits_list[i]) == 0):
         before_temperature_nll_list.append(None), after_temperature_nll_list.append(None)
         before_ece_list.append(None), after_ece_list.append(None)
-        temperature_branch_list.append(None)
         continue
 
       self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
@@ -318,7 +317,6 @@ class ModelAllSamplesCalibration(nn.Module):
       if (len(logits_list[i]) == 0):
         before_temperature_nll_list.append(None), after_temperature_nll_list.append(None)
         before_ece_list.append(None), after_ece_list.append(None)
-        temperature_branch_list.append(None)
         continue
 
       self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
