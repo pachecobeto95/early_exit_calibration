@@ -61,14 +61,15 @@ class _ECELoss(nn.Module):
 
 class ModelOverallCalibration(nn.Module):
 
-  def __init__(self, model, device, modelPath, lr=0.001, max_iter=2000):
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
     super(ModelOverallCalibration, self).__init__()
     
     self.model = model
     self.device = device
-    self.temperature_overall = nn.Parameter(1.5*torch.ones(1).to(self.device))
+    self.temperature_overall = nn.Parameter((1.5*torch.ones(1)).to(self.device))
     self.lr = lr
     self.max_iter = max_iter
+    self.saveTempPath = saveTempPath
 
     self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
 
@@ -81,7 +82,14 @@ class ModelOverallCalibration(nn.Module):
     return self.temperature_scale(logits)
 
 
+  def save_temperature(result):
   # This function probably should live outside of this class, but whatever
+    df = pd.read_csv(self.saveTempPath) if (os.path.exists(self.saveTempPath)) else pd.DataFrame()
+    
+    df = df.append(pd.Series(result), ignore_index=True)
+    df.to_csv(self.saveTempPath)
+
+  
   def set_temperature(self, valid_loader, p_tar):
     """
     Tune the tempearature of the model (using the validation set).
@@ -127,5 +135,11 @@ class ModelOverallCalibration(nn.Module):
     after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
     print('Optimal temperature: %.3f' % self.temperature_overall.item())
     print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
+
+    result = {"p_tar": round(p_tar, 2), "before_nll": before_temperature_nll, "after_nll": after_temperature_nll,
+    "before_ece": before_temperature_ece, "after_ece": after_temperature_ece,
+    "temperature": self.temperature_overall.item()}
+
+    self.save_temperature(result)
 
     return self
