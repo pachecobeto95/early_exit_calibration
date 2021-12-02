@@ -249,10 +249,8 @@ class ModelBranchesCalibration(nn.Module):
                                  "after_ece_branch_%s"%(i+1): after_ece_list[i],
                                  "temperature_branch_%s"%(i+1): self.temperature_branches[i]})
     
-
     # This saves the parameter to save the temperature parameter for each side branch
     self.save_temperature(error_measure_dict)
-
     return self
 
 class ModelAllSamplesCalibration(nn.Module):
@@ -270,7 +268,6 @@ class ModelAllSamplesCalibration(nn.Module):
     self.saveTempPath = saveTempPath
 
     self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
-
 
   def forwardBranchesCalibration(self, x):
     return self.model.forwardBranchesCalibration(x, self.temperature_branches)
