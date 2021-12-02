@@ -81,4 +81,4 @@ p_tar_list = [0.8]
 
 for p_tar in p_tar_list:
 	scaled_model = ModelOverallCalibration(early_exit_dnn, device, model_path)
-	scaled_model.set_temperature(valid_loader, p_tar)
+	scaled_model.set_temperature(val_loader, p_tar)
