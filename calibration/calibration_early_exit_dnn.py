@@ -96,10 +96,10 @@ class ModelOverallCalibration(nn.Module):
     logits_list = []
     labels_list = []
     with torch.no_grad():
-      for data, label in valid_loader:
+      for data, label in tqdm(valid_loader):
         data, label = data.to(self.device), label.to(self.device)  
           
-        logits = self.model.forwardEval(data, p_tar)
+        logits, _, _, _ = self.model.forwardEval(data, p_tar)
 
         logits_list.append(logits), labels_list.append(label)
       
