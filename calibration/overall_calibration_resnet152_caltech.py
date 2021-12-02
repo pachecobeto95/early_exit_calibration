@@ -33,6 +33,7 @@ from calibration_early_exit_dnn import ModelOverallCalibration
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
+
 def evalEarlyExitInference(model, n_branches, test_loader, p_tar, device):
 	df_result = pd.DataFrame()
 
@@ -81,15 +82,16 @@ def saveResults(result, save_path):
 	df_result = df_result.append(df)
 	df_result.to_csv(save_path)
 
-def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, model_path, save_path):
+
+def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, model_path, result_path, saveTempPath):
 	for p_tar in p_tar_list:
 
 		print("P_tar: %s"%(round(p_tar, 2)))
-		scaled_model = ModelOverallCalibration(model, device, model_path)
+		scaled_model = ModelOverallCalibration(model, device, model_path, saveTempPath)
 		scaled_model.set_temperature(val_loader, p_tar)
 
 		result = evalEarlyExitInference(model, test_loader, p_tar, device)
-		saveResults(result, save_path)
+		saveResults(result, result_path)
 
  
 
@@ -123,7 +125,7 @@ model_path = os.path.join(root_save_path, "appEdge", "api", "services", "models"
 
 save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name, model_name)
 
-result_path =  os.path.join(save_path, "results", "calib_overall_exp_data_%s_alert.csv"%(model_id))
+result_path =  os.path.join(save_path, "results", "calib_overall_exp_data_%s.csv"%(model_id))
 
 saveTempOverallPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
   dataset_name, model_name, "temperature", "temp_overall_id_%s.csv"%(model_id))
@@ -139,7 +141,7 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
 
-expOverallCalibration(early_exit_dnn, val_loader, device, p_tar_list, model_path)
+expOverallCalibration(early_exit_dnn, val_loader, device, p_tar_list, model_path, result_path, saveTempOverallPath)
 
 
 
