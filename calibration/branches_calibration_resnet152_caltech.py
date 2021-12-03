@@ -98,7 +98,7 @@ def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, mo
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 2
+model_id = 1
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -139,7 +139,7 @@ early_exit_dnn = early_exit_dnn.to(device)
 
 
 
-p_tar_list = [0.5, 0.8, 0.85, 0.9, 0.95]
+p_tar_list = [0.8, 0.85, 0.9, 0.95]
 
 expOverallCalibration(early_exit_dnn, val_loader, test_loader, device, p_tar_list, model_path, result_path, saveTempOverallPath)
 
