@@ -1096,14 +1096,14 @@ def evalBranches(model, val_loader, criterion, n_branches, epoch, device):
 input_dim = 224
 batch_size_train = 32
 batch_size_test = 1
-model_id = 3
+model_id = 4
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
 n_branches = 5
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_shape = (3, input_dim, input_dim)
-weight_decay = 0.0005
+weight_decay = 0.0001
 momentum = 0.9
 steps = 10
 p_tar_calib = 0.8
