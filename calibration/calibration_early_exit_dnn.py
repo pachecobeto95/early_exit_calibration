@@ -51,11 +51,11 @@ class _ECELoss(nn.Module):
             # Calculated |confidence - accuracy| in each bin
             in_bin = confidences.gt(bin_lower.item()) * confidences.le(bin_upper.item())
             prop_in_bin = in_bin.float().mean()
-            #if prop_in_bin.item() > 0:
-            accuracy_in_bin = accuracies[in_bin].float().mean()
-            avg_confidence_in_bin = confidences[in_bin].mean()
-            print(bin_lower, bin_upper, accuracy_in_bin, avg_confidence_in_bin)
-            ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
+            if prop_in_bin.item() > 0:
+              accuracy_in_bin = accuracies[in_bin].float().mean()
+              avg_confidence_in_bin = confidences[in_bin].mean()
+              print(bin_lower, bin_upper, accuracy_in_bin, avg_confidence_in_bin)
+              ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
 
         return ece
 
