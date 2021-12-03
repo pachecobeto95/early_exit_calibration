@@ -70,7 +70,7 @@ def save_result(result, save_path):
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 2
+model_id = 3
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
