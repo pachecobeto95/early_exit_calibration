@@ -54,8 +54,8 @@ class _ECELoss(nn.Module):
             if prop_in_bin.item() > 0:
               accuracy_in_bin = accuracies[in_bin].float().mean()
               avg_confidence_in_bin = confidences[in_bin].mean()
-              print(bin_lower, bin_upper, accuracy_in_bin, avg_confidence_in_bin)
               ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
+              print(bin_lower, bin_upper, ece)
 
         return ece
 
@@ -258,7 +258,7 @@ class ModelBranchesCalibration(nn.Module):
 
 class ModelAllSamplesCalibration(nn.Module):
 
-  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.01, max_iter=50):
     super(ModelAllSamplesCalibration, self).__init__()
 
     self.model = model
