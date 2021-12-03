@@ -217,7 +217,6 @@ class ModelBranchesCalibration(nn.Module):
       before_temperature_nll = nll_criterion(logit_branch, label_branch).item()
       before_temperature_nll_list.append(before_temperature_nll)
 
-      print(logit_branch.shape, label_branch.shape)
       before_ece = ece(logit_branch, label_branch).item()
       before_ece_list.append(before_ece)
 
@@ -233,7 +232,6 @@ class ModelBranchesCalibration(nn.Module):
       after_temperature_nll = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch).item()
       after_temperature_nll_list.append(after_temperature_nll)
 
-      print(self.temperature_scale_branches(logit_branch).shape)
       after_ece = ece(self.temperature_scale_branches(logit_branch), label_branch).item()
       after_ece_list.append(after_ece)
 
