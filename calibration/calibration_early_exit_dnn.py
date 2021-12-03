@@ -193,10 +193,11 @@ class ModelBranchesCalibration(nn.Module):
 
         data, target = data.to(self.device), target.to(self.device)
         
-        logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+        logits, _, inf_class, exit_branch = self.model(data, p_tar, training=False)
 
-        logits_list[exit_branch].append(logits)
-        labels_list[exit_branch].append(target)
+        if (inf_class.item() == target.item()):
+          logits_list[exit_branch].append(logits)
+          labels_list[exit_branch].append(target)
 
 
     for i in range(self.n_exits):
