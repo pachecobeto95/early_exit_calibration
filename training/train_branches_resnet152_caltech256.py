@@ -1099,7 +1099,7 @@ batch_size_test = 1
 model_id = 4
 split_ratio = 0.2
 n_classes = 258
-pretrained = False
+pretrained = True
 n_branches = 5
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_shape = (3, input_dim, input_dim)
@@ -1185,5 +1185,4 @@ while (count < patience):
   else:
     print("Current Patience: %s"%(count))
     count += 1
-
 print("Stop! Patience is finished")
