@@ -19,7 +19,7 @@ from early_exit_dnn import Early_Exit_DNN
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 
-def evalEarlyExitInference(model, n_branches, test_loader, p_tar, device):
+def evalEarlyExitInference(model, n_branches, test_loader, device):
 	df_result = pd.DataFrame()
 
 	n_exits = n_branches + 1
@@ -104,4 +104,4 @@ early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, i
 early_exit_dnn = early_exit_dnn.to(device)
 early_exit_dnn.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 
-no_calib_results = evalEarlyExitInference(early_exit_dnn, early_exit_dnn.n_branches, test_loader, p_tar, device)
+no_calib_results = evalEarlyExitInference(early_exit_dnn, early_exit_dnn.n_branches, test_loader, device)
