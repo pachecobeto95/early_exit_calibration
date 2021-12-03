@@ -48,7 +48,6 @@ def evalEarlyExitInference(model, n_branches, test_loader, device):
 	infered_class_branches_list = np.array(infered_class_branches_list)
 	correct_list = np.array(correct_list)
   
-	print(model_type)
 	print("Acc:")
 	print([sum(correct_list[:, i])/len(correct_list[:, i]) for i in range(n_exits)])
 
