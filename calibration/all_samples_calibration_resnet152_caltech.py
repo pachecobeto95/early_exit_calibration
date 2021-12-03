@@ -98,7 +98,7 @@ def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, mo
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 1
+model_id = 3
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
