@@ -32,7 +32,7 @@ torch.multiprocessing.set_sharing_strategy('file_system')
 
 class _ECELoss(nn.Module):
 
-    def __init__(self, n_bins=15):
+    def __init__(self, n_bins=10):
         """
         n_bins (int): number of confidence interval bins
         """
