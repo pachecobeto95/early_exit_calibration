@@ -98,7 +98,7 @@ def expOverallCalibration(model, val_loader, test_loader, device, p_tar_list, mo
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 1
+model_id = 4
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -119,9 +119,11 @@ save_indices_path = os.path.join(".", "caltech256", "indices")
 
 dataset_path = os.path.join(root_save_path, "datasets", dataset_name, "256_ObjectCategories")
 
-model_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",
-	dataset_name, model_name, "models", 
-	"ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+#model_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+#	dataset_name, model_name, "models", 
+#	"ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+
+model_path = os.path.join(root_save_path, "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
 
 save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name, model_name)
 
