@@ -258,7 +258,7 @@ class ModelBranchesCalibration(nn.Module):
 
 class ModelAllSamplesCalibration(nn.Module):
 
-  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.01, max_iter=1000):
     super(ModelAllSamplesCalibration, self).__init__()
 
     self.model = model
