@@ -1141,23 +1141,18 @@ early_exit_dnn = early_exit_dnn.to(device)
 criterion = nn.CrossEntropyLoss()
 
 
-#optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
-#                      {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-#                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], 
-#                      momentum=momentum, weight_decay=weight_decay,
-#                      nesterov=True)
-
-optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
+optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
                       {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], weight_decay=weight_decay)
-
+                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], 
+                      momentum=momentum, weight_decay=weight_decay,
+                      nesterov=True)
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 
 n_exits = n_branches + 1
 #loss_weights = np.linspace(1, 0.3, n_exits)
 #loss_weights = np.ones(n_exits)
-loss_weights = np.linspace(0.3, 1, n_exits)
+loss_weights = np.linspace(0.15, 1, n_exits)
 
 epoch = 0
 best_val_loss = np.inf
