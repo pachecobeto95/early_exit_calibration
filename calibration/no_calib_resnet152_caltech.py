@@ -91,9 +91,12 @@ save_indices_path = os.path.join(".", "caltech256", "indices")
 
 dataset_path = os.path.join(root_save_path, "datasets", dataset_name, "256_ObjectCategories")
 
-model_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",
-	dataset_name, model_name, "models", 
-	"ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+#model_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",
+#	dataset_name, model_name, "models", 
+#	"ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+
+model_path = os.path.join(root_save_path, "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id))
+
 
 save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name, model_name)
 
