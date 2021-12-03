@@ -51,7 +51,7 @@ def evalEarlyExitInference(model, n_branches, test_loader, device):
 	print("Acc:")
 	print([sum(correct_list[:, i])/len(correct_list[:, i]) for i in range(n_exits)])
 
-	results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
+	results = {"target": target_list, "id": id_list}
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
@@ -59,6 +59,11 @@ def evalEarlyExitInference(model, n_branches, test_loader, device):
 
 	return results
 
+def save_result(result, save_path):
+	df_result = pd.read_csv(save_path) if (os.path.exists(save_path)) else pd.DataFrame()
+	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	df_result = df_result.append(df)
+	df_result.to_csv(save_path)
 
 
 
@@ -104,3 +109,4 @@ early_exit_dnn = early_exit_dnn.to(device)
 early_exit_dnn.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 
 no_calib_results = evalEarlyExitInference(early_exit_dnn, early_exit_dnn.n_branches, test_loader, device)
+save_result(no_calib_results, no_calib_result_path)
