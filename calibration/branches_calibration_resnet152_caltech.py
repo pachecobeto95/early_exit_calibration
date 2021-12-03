@@ -127,10 +127,10 @@ model_path = os.path.join(root_save_path, "ee_%s_branches_%s_id_%s.pth"%(model_n
 
 save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models", dataset_name, model_name)
 
-result_path =  os.path.join(save_path, "results", "calib_branches_exp_data_%s.csv"%(model_id))
+result_path =  os.path.join(save_path, "results", "calib_branches_exp_data_%s_testing.csv"%(model_id))
 
 saveTempOverallPath = os.path.join(root_save_path, "appEdge", "api", "services", "models",
-  dataset_name, model_name, "temperature", "temp_branches_id_%s.csv"%(model_id))
+  dataset_name, model_name, "temperature", "temp_branches_id_%s_testing.csv"%(model_id))
 
 
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
