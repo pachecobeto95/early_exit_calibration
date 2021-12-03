@@ -52,6 +52,7 @@ class _ECELoss(nn.Module):
             in_bin = confidences.gt(bin_lower.item()) * confidences.le(bin_upper.item())
             prop_in_bin = in_bin.float().mean()
             if prop_in_bin.item() > 0:
+                print(len(in_bin))
                 accuracy_in_bin = accuracies[in_bin].float().mean()
                 avg_confidence_in_bin = confidences[in_bin].mean()
                 ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
@@ -163,7 +164,8 @@ class ModelBranchesCalibration(nn.Module):
     return self.model.forwardBranchesCalibration(x, self.temperature_branches)
   
   def temperature_scale_branches(self, logits):
-    return torch.div(logits, self.temperature_branch)
+    temperature = self.temperature_branch.unsqueeze(1).expand(logits.size(0), logits.size(1))
+    return logits / temperature
 
   def save_temperature(self, result):
 
@@ -219,11 +221,9 @@ class ModelBranchesCalibration(nn.Module):
       before_ece = ece(logit_branch, label_branch).item()
       before_ece_list.append(before_ece)
 
-      weight_list = np.linspace(1, 0.3, self.n_exits)
-
       def eval():
         optimizer.zero_grad()
-        loss = weight_list[i]*nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
+        loss = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
         loss.backward()
         return loss
 
