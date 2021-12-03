@@ -70,7 +70,7 @@ def save_result(result, save_path):
 input_dim = 224
 batch_size_train = 64
 batch_size_test = 1
-model_id = 3
+model_id = 4
 split_ratio = 0.2
 n_classes = 258
 pretrained = False
@@ -99,7 +99,7 @@ save_path = os.path.join(root_save_path, "appEdge", "api", "services", "models",
 
 result_path = os.path.join(save_path, "results")
 
-no_calib_result_path = os.path.join(result_path, "no_calib_exp_data_%s_alert.csv"%(model_id))
+no_calib_result_path = os.path.join(result_path, "no_calib_exp_data_%s.csv"%(model_id))
 
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
