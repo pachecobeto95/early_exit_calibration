@@ -29,12 +29,12 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split
 		transforms.ToTensor(),
 		transforms.Normalize(mean, std)])
 
-	trainset = CIFAR10(".", transform=transform_train, train=True, download=True)
+	trainset = CIFAR10(root_path, transform=transform_train, train=True, download=True)
 
 	indices = np.arange(len(trainset))
 
 	# This line defines the size of training dataset.
-	train_size = int(len(indices) - int(split_ratio*len(indices)))
+	train_size = int(len(indices) - int(split_rate*len(indices)))
 
 	np.random.shuffle(indices)
 	train_idx, val_idx = indices[:train_size], indices[train_size:]
@@ -49,7 +49,7 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split
 	train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
 	val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=4)
 
-	testset = CIFAR10(root_path, transform=transform_test, train=False)
+	testset = CIFAR10(root_path, transform=transform_test, train=False, download=True)
 	testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle = False, num_workers=4)
 
 	return train_loader, val_loader, testloader
