@@ -57,23 +57,7 @@ class MobileNetV2(nn.Module):
         # build bottlenecks
         BaseBlock.alpha = alpha
         self.bottlenecks = nn.Sequential(
-            BaseBlock(32, 16, t = 1, downsample = False),
-            BaseBlock(16, 24, downsample = False),
-            BaseBlock(24, 24),
-            BaseBlock(24, 32, downsample = False),
-            BaseBlock(32, 32),
-            BaseBlock(32, 32),
-            BaseBlock(32, 64, downsample = True),
-            BaseBlock(64, 64),
-            BaseBlock(64, 64),
-            BaseBlock(64, 64),
-            BaseBlock(64, 96, downsample = False),
-            BaseBlock(96, 96),
-            BaseBlock(96, 96),
-            BaseBlock(96, 160, downsample = True),
-            BaseBlock(160, 160),
-            BaseBlock(160, 160),
-            BaseBlock(160, 320, downsample = False))
+            BaseBlock(32, 16, t = 1, downsample = False),)
 
         # last conv layers and fc layer
         self.conv1 = nn.Conv2d(int(320*alpha), 1280, kernel_size = 1, bias = False)
