@@ -106,7 +106,7 @@ if __name__ == "__main__":
 	model = MobileNetV2(n_classes).to(device)
 	criterion = nn.CrossEntropyLoss()
 	
-	train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_path, args.model_id, 
+	train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
 		args.batch_size, args.input_size, split_rate=args.split_rate, seed=args.seed)
 
 	if(args.opt == "RMSProp"):
