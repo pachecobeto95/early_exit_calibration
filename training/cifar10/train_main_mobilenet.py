@@ -149,6 +149,8 @@ if __name__ == "__main__":
 			count += 1
 
 	print("Stop! Patience is finished")
+	trainEvalModel(model, test_loader, criterion, optimizer, train=False)
+
 
 
 
