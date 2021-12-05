@@ -98,7 +98,7 @@ class MobileNetV2(nn.Module):
 				#m.bias.data.zero_()
 
 
-	def forward(self, inputs):
+	def forward(self, x):
 
 		x = self.bottlenecks(x)
 		x = x.view(x.shape[0], -1)
