@@ -27,7 +27,7 @@ from utils import MobileNetV2, create_dir
 from load_dataset import loadCifar10
 import argparse
 
-def trainEvalModel(model, train_loader, criterion, optimizer, train):
+def trainEvalModel(model, dataLoader, criterion, optimizer, train):
 	if(train):
 		model.train()
 	else:
