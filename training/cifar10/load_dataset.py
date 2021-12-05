@@ -3,7 +3,7 @@ import torchvision, torch
 from torchvision import datasets, transforms
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision.utils import save_image
-import os, sys, time, math, os
+import os, sys, time, math, os, ssl
 from torchvision import transforms, utils, datasets
 from torch.utils.data import Dataset, DataLoader, SubsetRandomSampler, WeightedRandomSampler
 from torch.utils.data import random_split
@@ -12,6 +12,7 @@ import numpy as np
 
 
 def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split_rate=0.1, seed=42):
+	ssl._create_default_https_context = ssl._create_unverified_context
 
 	np.random.seed(seed)
 	torch.manual_seed(seed)
