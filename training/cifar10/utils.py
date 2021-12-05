@@ -79,7 +79,8 @@ class MobileNetV2(nn.Module):
 			BaseBlock(160, 320, downsample = False),
 			nn.Conv2d(int(320*alpha), 1280, kernel_size = 1, bias = False),
 			nn.BatchNorm2d(1280),
-			)
+			nn.ReLU6(inplace = True),
+			nn.AdaptiveAvgPool2d(1))
 
 		self.classifier = nn.Linear(1280, n_classes)
 
