@@ -95,7 +95,7 @@ class MobileNetV2(nn.Module):
 
 			elif isinstance(m, nn.BatchNorm2d):
 				m.weight.data.fill_(1)
-			m.bias.data.zero_()
+			#m.bias.data.zero_()
 
 
 	def forward(self, inputs):
