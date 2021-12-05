@@ -21,7 +21,7 @@ from torch.optim.lr_scheduler import _LRScheduler
 from torch.optim import lr_scheduler
 from torchvision import datasets, transforms
 from torch import Tensor
-import functools
+import functools, os
 from tqdm import tqdm
 from utils import MobileNetV2, create_dir
 from load_dataset import loadCifar10
