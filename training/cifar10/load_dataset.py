@@ -29,7 +29,7 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split
 		transforms.ToTensor(),
 		transforms.Normalize(mean, std)])
 
-	trainset = CIFAR10(".", transform=transform_train, train=True)
+	trainset = CIFAR10(".", transform=transform_train, train=True, download=True)
 
 	indices = np.arange(len(trainset))
 
