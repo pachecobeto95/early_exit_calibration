@@ -97,6 +97,7 @@ if __name__ == "__main__":
 	create_dir(model_dir_path, history_dir_path)
 
 	n_classes = 10
+	input_size = 32
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	count = 0
 	epoch = 0
@@ -107,7 +108,7 @@ if __name__ == "__main__":
 	criterion = nn.CrossEntropyLoss()
 	
 	train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
-		args.batch_size, args.input_size, split_rate=args.split_rate, seed=args.seed)
+		args.batch_size, input_size, split_rate=args.split_rate, seed=args.seed)
 
 	if(args.opt == "RMSProp"):
 		optimizer = torch.optim.RMSprop(params, lr=args.lr, 
