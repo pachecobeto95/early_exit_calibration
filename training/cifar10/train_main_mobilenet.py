@@ -49,13 +49,12 @@ def trainEvalModel(model, train_loader, criterion, optimizer, train):
 
 		else:
 			with torch.no_grad():
-			output = model(data)
-			loss = criterion(output, target)
+				output = model(data)
+				loss = criterion(output, target)
 
 		_, infered_class = torch.max(softmax(output), 1)
 		acc_list.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
 		loss_list.append(loss.item())
-  
 
 	avg_acc = np.mean(acc_list)
 	avg_loss = np.mean(loss_list)
