@@ -111,7 +111,7 @@ if __name__ == "__main__":
 		args.batch_size, input_size, split_rate=args.split_rate, seed=args.seed)
 
 	if(args.opt == "RMSProp"):
-		optimizer = torch.optim.RMSprop(params, lr=args.lr, 
+		optimizer = torch.optim.RMSprop(model.parameters(), lr=args.lr, 
 			alpha=args.momentum, weight_decay=args.weight_decay, momentum=args.momentum)
 	
 	elif(args.opt == "SGD"):
