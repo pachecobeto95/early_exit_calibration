@@ -134,7 +134,7 @@ if __name__ == "__main__":
 		result.update(result_train), result.update(result_val) 
 
 		df = df.append(pd.Series(result), ignore_index=True)
-		df.to_csv(history_save_path)
+		df.to_csv(history_path)
 
 		if (result["val_loss"] < best_val_loss):
 			best_val_loss = result["val_loss"]
