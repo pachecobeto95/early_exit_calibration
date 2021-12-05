@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
 	scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay)
 
-	while (count <= patience):
+	while (count <= args.patience):
 		epoch += 1
 		print("Current Epoch: %s"%(epoch))
 
