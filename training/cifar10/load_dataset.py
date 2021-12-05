@@ -19,37 +19,37 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split
 	mean, std = (0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)
 
 	transform_train = transforms.Compose([
-        transforms.RandomCrop(input_size, padding = 4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std)])
+		transforms.RandomCrop(input_size, padding = 4),
+		transforms.RandomHorizontalFlip(),
+		transforms.ToTensor(),
+		transforms.Normalize(mean, std)])
     
-    transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std)])
+	transform_test = transforms.Compose([
+		transforms.ToTensor(),
+		transforms.Normalize(mean, std)])
 
-    trainset = CIFAR10(root_path, transform=transform_train, train=True)
+	trainset = CIFAR10(root_path, transform=transform_train, train=True)
 
-    indices = np.arange(len(trainset))
+	indices = np.arange(len(trainset))
 
-    # This line defines the size of training dataset.
-    train_size = int(len(indices) - int(split_ratio*len(indices)))
+	# This line defines the size of training dataset.
+	train_size = int(len(indices) - int(split_ratio*len(indices)))
 
-    np.random.shuffle(indices)
-    train_idx, val_idx = indices[:train_size], indices[train_size:]
+	np.random.shuffle(indices)
+	train_idx, val_idx = indices[:train_size], indices[train_size:]
 
 
-    np.save('train_id_%s.npy'%(model_id), train_idx)
-    np.save('val_id_%s.npy'%(model_id), val_idx)
+	np.save('train_id_%s.npy'%(model_id), train_idx)
+	np.save('val_id_%s.npy'%(model_id), val_idx)
 
-    train_data = torch.utils.data.Subset(trainset, indices=train_idx)
-    val_data = torch.utils.data.Subset(trainset, indices=val_idx)
+	train_data = torch.utils.data.Subset(trainset, indices=train_idx)
+	val_data = torch.utils.data.Subset(trainset, indices=val_idx)
 
-    train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
-    val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=4)
+	train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
+	val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=4)
 
-    testset = CIFAR10(root_path, transform=transform_test, train=False)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle = False, num_workers=4)
+	testset = CIFAR10(root_path, transform=transform_test, train=False)
+	testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle = False, num_workers=4)
 
-    return train_loader, val_loader, testloader
+	return train_loader, val_loader, testloader
 
