@@ -106,3 +106,117 @@ class MobileNetV2(nn.Module):
 		x = self.classifier(x)
 
 		return x
+
+
+
+class InvertedResidual(nn.Module):
+	def __init__(self, in_channels, out_channels, t=6, s=1):
+		"""
+		Initialization of inverted residual block
+		:param in_channels: number of input channels
+		:param out_channels: number of output channels
+		:param t: the expansion factor of block
+		:param s: stride of the first convolution
+		"""
+		super(InvertedResidual, self).__init__()
+
+		self.in_ = in_channels
+		self.out_ = out_channels
+		self.t = t
+		self.s = s
+		self.inverted_residual_block()
+
+	def inverted_residual_block(self):
+
+		block = []
+		block.append(nn.Conv2d(self.in_, self.in_*self.t, 1, bias=False))
+		block.append(nn.BatchNorm2d(self.in_*self.t))
+		block.append(nn.ReLU6())
+
+		# conv 3*3 depthwise
+		block.append(nn.Conv2d(self.in_*self.t, self.in_*self.t, 3,
+			stride=self.s, padding=1, groups=self.in_*self.t, bias=False))
+		block.append(nn.BatchNorm2d(self.in_*self.t))
+		block.append(nn.ReLU6())
+
+		# conv 1*1 linear
+		block.append(nn.Conv2d(self.in_*self.t, self.out_, 1, bias=False))
+		block.append(nn.BatchNorm2d(self.out_))
+
+		self.block = nn.Sequential(*block)
+
+		# if use conv residual connection
+		if self.in_ != self.out_ and self.s != 2:
+			self.res_conv = nn.Sequential(nn.Conv2d(self.in_, self.out_, 1, bias=False),
+				nn.BatchNorm2d(self.out_))
+		else:
+			self.res_conv = None
+
+	def forward(self, x):
+		if self.s == 1:
+			if self.res_conv is None:
+				out = x + self.block(x)
+			else:
+				out = self.res_conv(x) + self.block(x)
+		else:
+			out = self.block(x)
+
+		return out
+
+
+def get_inverted_residual_block_arr(in_, out_, t=6, s=1, n=1):
+	block = []
+	block.append(InvertedResidual(in_, out_, t, s=s))
+	for i in range(n-1):
+		block.append(InvertedResidual(out_, out_, t, 1))
+	return block
+
+class MobileNetV2_2(nn.Module):
+	def __init__(self, n_classes, device, alpha = 1):
+		super(MobileNetV2_2, self).__init__()
+
+		t = [1, 1, 6, 6, 6, 6, 6, 6]  # expansion factor t
+		s = [1, 1, 1, 2, 2, 1, 2, 1, 1]  # stride of each conv stage
+		n = [1, 1, 2, 3, 4, 3, 3, 1, 1]  # number of repeat time
+		c = [32, 16, 24, 32, 64, 96, 160, 320, 1280]  # output channel of each conv stage
+		down_sample_rate = 32  # product of strides above
+		dropout_prob = 0.2
+
+		block = []
+
+		block.append(nn.Sequential(nn.Conv2d(3, c[0], 3, stride=1, padding=1, bias=False),
+			nn.BatchNorm2d(c[0]),
+			nn.Dropout2d(dropout_prob, inplace=True),
+			nn.ReLU6()))
+
+		for i in range(7):
+			block.extend(get_inverted_residual_block_arr(c[i], c[i+1],
+				t=t[i+1], s=s[i+1],
+				n=n[i+1]))
+
+
+		block.append(nn.Sequential(nn.AvgPool2d(image_size//down_sample_rate),
+			nn.Dropout2d(dropout_prob, inplace=True),
+			nn.Conv2d(c[-1], n_classes, 1, bias=True)))
+
+		self.network = nn.Sequential(*block).to(device)
+
+		# initialize
+		self.initialize()
+
+	def initialize(self):
+		"""Initializes the model parameters"""
+		for m in self.modules():
+			if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+				nn.init.xavier_normal_(m.weight)
+				if m.bias is not None:
+					nn.init.constant_(m.bias, 0)
+			elif isinstance(m, nn.BatchNorm2d):
+				nn.init.constant_(m.weight, 1)
+				nn.init.constant_(m.bias, 0)
+
+	def forward(self, x):
+		return self.network(x)
+
+
+
