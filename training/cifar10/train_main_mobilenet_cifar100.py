@@ -88,15 +88,15 @@ if __name__ == "__main__":
 	model_dir_path = os.path.join(root_path, "mobilenet", "models")
 	history_dir_path = os.path.join(root_path, "mobilenet", "history")
 
-	model_path = os.path.join(model_dir_path, "mobilenet_main_id_%s.pth"%(args.model_id))
-	history_path = os.path.join(history_dir_path, "history_mobilenet_main_id_%s.csv"%(args.model_id))
+	model_path = os.path.join(model_dir_path, "mobilenet_CIFAR100_main_id_%s.pth"%(args.model_id))
+	history_path = os.path.join(history_dir_path, "history_CIFAR100_mobilenet_main_id_%s.csv"%(args.model_id))
 	
 
 	indices_dir_path = os.path.join(root_path, "indices")
 
 	create_dir(model_dir_path, history_dir_path)
 
-	n_classes = 10
+	n_classes = 100
 	input_size = 32
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	count = 0
@@ -107,7 +107,7 @@ if __name__ == "__main__":
 	model = MobileNetV2(n_classes).to(device)
 	criterion = nn.CrossEntropyLoss()
 	
-	train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
+	train_loader, val_loader, test_loader = loadCifar100(dataset_path, indices_dir_path, args.model_id, 
 		args.batch_size, input_size, split_rate=args.split_rate, seed=args.seed)
 
 	if(args.opt == "RMSProp"):
