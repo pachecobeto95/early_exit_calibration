@@ -176,6 +176,7 @@ if __name__ == "__main__":
 
 	print("Stop! Patience is finished")
 	"""
+	model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 	trainEvalModel(model, test_loader, criterion, optimizer, train=False)
 
 
