@@ -109,11 +109,11 @@ if __name__ == "__main__":
 	df = pd.DataFrame()
 
 	#model = MobileNetV2(n_classes).to(device)
-	model = models.mobilenet_v2(args.pretrained).to(device) if (args.pretrained) else MobileNetV2(n_classes).to(device)
+	model = models.mobilenet_v2(args.pretrained) if (args.pretrained) else MobileNetV2(n_classes)
 	if(args.pretrained):
 		model.classifier[1] = nn.Linear(1280, n_classes)
 
-
+	model = model.to(device)
 
 	criterion = nn.CrossEntropyLoss()
 	
