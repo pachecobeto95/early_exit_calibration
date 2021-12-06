@@ -179,7 +179,7 @@ class MobileNetV2_2(nn.Module):
 		s = [1, 1, 1, 2, 2, 1, 2, 1, 1]  # stride of each conv stage
 		n = [1, 1, 2, 3, 4, 3, 3, 1, 1]  # number of repeat time
 		c = [32, 16, 24, 32, 64, 96, 160, 320, 1280]  # output channel of each conv stage
-		down_sample_rate = 32  # product of strides above
+		down_sample_rate = 8  # product of strides above
 		dropout_prob = 0.2
 		image_size = 32
 

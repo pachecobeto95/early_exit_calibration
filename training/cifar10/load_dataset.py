@@ -11,7 +11,7 @@ from torchvision.datasets import CIFAR10, CIFAR100
 import numpy as np
 
 
-def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split_rate=0.1, seed=42):
+def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, crop_size, split_rate=0.1, seed=42):
 	ssl._create_default_https_context = ssl._create_unverified_context
 
 	np.random.seed(seed)
@@ -20,7 +20,8 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split
 	mean, std = (0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)
 
 	transform_train = transforms.Compose([
-		transforms.RandomCrop(input_size, padding = 4),
+		transforms.Resize(input_size)
+		transforms.RandomCrop(crop_size, padding = 4),
 		transforms.RandomHorizontalFlip(),
 		transforms.ToTensor(),
 		transforms.Normalize(mean, std)])
@@ -55,7 +56,7 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, split
 	return train_loader, val_loader, testloader
 
 
-def loadCifar100(root_path, indices_path, model_id, batch_size, input_size, split_rate=0.1, seed=42):
+def loadCifar100(root_path, indices_path, model_id, batch_size, input_size, crop_size, split_rate=0.1, seed=42):
 	ssl._create_default_https_context = ssl._create_unverified_context
 
 	np.random.seed(seed)
@@ -65,7 +66,7 @@ def loadCifar100(root_path, indices_path, model_id, batch_size, input_size, spli
 
 	transform_train = transforms.Compose([
 		transforms.Resize(input_size),
-		transforms.RandomCrop(input_size, padding = 4),
+		transforms.RandomCrop(crop_size, padding = 4),
 		transforms.RandomHorizontalFlip(),
 		transforms.ColorJitter(0.3, 0.3, 0.3),
 		transforms.ToTensor(),

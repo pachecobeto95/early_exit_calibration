@@ -73,7 +73,7 @@ if __name__ == "__main__":
 	parser.add_argument('--opt', type=str, default= "RMSProp", help='Optimizer (default: RMSProp)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
 	parser.add_argument('--lr_decay', type=float, default=0.98, help='Learning Rate Decay (default: 0.98)')
-	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 96)')
+	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 128)')
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
@@ -98,6 +98,7 @@ if __name__ == "__main__":
 
 	n_classes = 100
 	input_size = 32
+	crop_size = 32
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	count = 0
 	epoch = 0
@@ -108,7 +109,7 @@ if __name__ == "__main__":
 	criterion = nn.CrossEntropyLoss()
 	
 	train_loader, val_loader, test_loader = loadCifar100(dataset_path, indices_dir_path, args.model_id, 
-		args.batch_size, input_size, split_rate=args.split_rate, seed=args.seed)
+		args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
 	if(args.opt == "RMSProp"):
 		optimizer = torch.optim.RMSprop(model.parameters(), lr=args.lr, 
