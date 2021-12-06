@@ -64,7 +64,7 @@ def loadCifar100(root_path, indices_path, model_id, batch_size, input_size, spli
 	mean, std = (0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)
 
 	transform_train = transforms.Compose([
-		transforms.Resize(input_size)
+		transforms.Resize(input_size),
 		transforms.RandomCrop(input_size, padding = 4),
 		transforms.RandomHorizontalFlip(),
 		transforms.ColorJitter(0.3, 0.3, 0.3),
