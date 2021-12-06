@@ -181,6 +181,7 @@ class MobileNetV2_2(nn.Module):
 		c = [32, 16, 24, 32, 64, 96, 160, 320, 1280]  # output channel of each conv stage
 		down_sample_rate = 32  # product of strides above
 		dropout_prob = 0.2
+		image_size = 32
 
 		block = []
 
