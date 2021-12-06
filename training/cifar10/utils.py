@@ -221,7 +221,10 @@ class MobileNetV2_2(nn.Module):
 				nn.init.constant_(m.bias, 0)
 
 	def forward(self, x):
-		return self.network(x)
+		x = self.network(x)
+		x = x.view(x.size(0), -1)
+
+		return x
 
 
 
