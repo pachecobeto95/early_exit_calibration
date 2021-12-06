@@ -125,8 +125,9 @@ if __name__ == "__main__":
 	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 
 
-	while (count <= args.patience):
-		epoch += 1
+	#while (count <= args.patience):
+	for epoch in range(args.n_epochs):
+		#epoch += 1
 		print("Current Epoch: %s"%(epoch))
 
 		result = {}
