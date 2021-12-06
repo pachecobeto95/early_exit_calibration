@@ -7,7 +7,7 @@ import os, sys, time, math, os, ssl
 from torchvision import transforms, utils, datasets
 from torch.utils.data import Dataset, DataLoader, SubsetRandomSampler, WeightedRandomSampler
 from torch.utils.data import random_split
-from torchvision.datasets import CIFAR10
+from torchvision.datasets import CIFAR10, CIFAR100
 import numpy as np
 
 
