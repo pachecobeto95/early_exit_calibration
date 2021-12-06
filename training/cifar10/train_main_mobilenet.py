@@ -148,7 +148,6 @@ if __name__ == "__main__":
 
 	
 	stop_condition = count <= args.patience if(args.pretrained) else epoch <= args.n_epochs
-	"""
 	while (stop_condition):
 		epoch += 1
 		print("Current Epoch: %s"%(epoch))
@@ -175,8 +174,6 @@ if __name__ == "__main__":
 			count += 1
 
 	print("Stop! Patience is finished")
-	"""
-	model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 	trainEvalModel(model, test_loader, criterion, optimizer, train=False)
 
 
