@@ -41,14 +41,14 @@ def trainEvalModel(model, dataLoader, criterion, optimizer, train):
 
 		if (train):
 			optimizer.zero_grad()
-			output = model(data).squeeze_()
+			output = model(data).squeeze()
 			loss = criterion(output, target)
 			loss.backward()
 			optimizer.step()
 
 		else:
 			with torch.no_grad():
-				output = model(data).squeeze_()
+				output = model(data).squeeze()
 				loss = criterion(output, target)
 
 		_, infered_class = torch.max(softmax(output), 1)
