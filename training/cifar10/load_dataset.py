@@ -20,7 +20,7 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, crop_
 	mean, std = (0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)
 
 	transform_train = transforms.Compose([
-		transforms.Resize(input_size)
+		transforms.Resize(input_size),
 		transforms.RandomCrop(crop_size, padding = 4),
 		transforms.RandomHorizontalFlip(),
 		transforms.ToTensor(),
