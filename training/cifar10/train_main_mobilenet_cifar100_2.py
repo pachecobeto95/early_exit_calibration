@@ -122,7 +122,7 @@ if __name__ == "__main__":
 			weight_decay=args.weight_decay)
 
 
-	scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay)
+	scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay, verbose=True)
 	#scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 
 
@@ -140,8 +140,8 @@ if __name__ == "__main__":
 		df = df.append(pd.Series(result), ignore_index=True)
 		df.to_csv(history_path)
 
-		if (result["val_loss"] < best_val_loss):
-			best_val_loss = result["val_loss"]
+		if (result["val_acc"] > best_val_acc):
+			best_val_acc = result["val_acc"]
 			count = 0
 			save_dict = {"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(),
 			"epoch": epoch, "val_loss": result["val_loss"]}
