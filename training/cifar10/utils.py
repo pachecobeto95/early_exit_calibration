@@ -196,6 +196,10 @@ class MobileNetV2_2(nn.Module):
 				n=n[i+1]))
 
 
+		block.append(nn.Sequential(nn.Conv2d(c[-2], c[-1], 1, bias=False),
+			nn.BatchNorm2d(c[-1]),
+			nn.ReLU6()))
+
 		block.append(nn.Sequential(nn.AvgPool2d(image_size//down_sample_rate),
 			nn.Dropout2d(dropout_prob, inplace=True),
 			nn.Conv2d(c[-1], n_classes, 1, bias=True)))
