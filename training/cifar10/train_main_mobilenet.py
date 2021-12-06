@@ -72,7 +72,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Training the backbone of a MobileNetV2')
 	parser.add_argument('--lr', type=float, default=0.045, help='Learning Rate (default: 0.045)')
 	parser.add_argument('--weight_decay', type=float, default= 0.00004, help='Weight Decay (default: 0.00004)')
-	parser.add_argument('--opt', type=str, default= "RMSProp", help='Optimizer (default: RMSProp)')
+	parser.add_argument('--opt', type=str, default= "SGD", help='Optimizer (default: SGD)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
 	parser.add_argument('--lr_decay', type=float, default=0.98, help='Learning Rate Decay (default: 0.98)')
 	parser.add_argument('--batch_size', type=int, default=96, help='Batch Size (default: 96)')
@@ -81,6 +81,7 @@ if __name__ == "__main__":
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
 	parser.add_argument('--n_epochs', type=int, default=300, help='Number of epochs (default: 300)')
 	parser.add_argument('--model_id', type=int, default=1, help='Model ID (default: 1)')
+	parser.add_argument('--pretrained', type=bool, default=True, help='Pretrained (default: True)')
 
 
 	args = parser.parse_args()
@@ -89,9 +90,10 @@ if __name__ == "__main__":
 	dataset_path = os.path.join(root_path, "dataset")
 	model_dir_path = os.path.join(root_path, "mobilenet", "models")
 	history_dir_path = os.path.join(root_path, "mobilenet", "history")
+	mode = "ft" if(args.pretrained) else "scratch"
 
-	model_path = os.path.join(model_dir_path, "mobilenet_main_id_%s.pth"%(args.model_id))
-	history_path = os.path.join(history_dir_path, "history_mobilenet_main_id_%s.csv"%(args.model_id))
+	model_path = os.path.join(model_dir_path, "mobilenet_main_id_%s_%s.pth"%(args.model_id, mode))
+	history_path = os.path.join(history_dir_path, "history_mobilenet_main_id_%s_%s.csv"%(args.model_id, mode))
 	
 
 	indices_dir_path = os.path.join(root_path, "indices")
@@ -99,16 +101,20 @@ if __name__ == "__main__":
 	create_dir(model_dir_path, history_dir_path)
 
 	n_classes = 10
-	input_size = 224
-	crop_size = 224
+	input_size = 224 if (args.pretrained) else 32
+	crop_size = 224 if (args.pretrained) else 32
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-	count = 0
-	epoch = 0
+	count = 0, epoch = 0
 	best_val_loss = np.inf
 	df = pd.DataFrame()
 
 	#model = MobileNetV2(n_classes).to(device)
-	model = models.mobilenet_v2(True).to(device)
+	model = models.mobilenet_v2(args.pretrained).to(device) if (args.pretrained) else MobileNetV2(n_classes).to(device)
+	if(args.pretrained):
+		model.classifier[1] = nn.Linear(1280, n_classes)
+
+
+
 	criterion = nn.CrossEntropyLoss()
 	
 	train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
