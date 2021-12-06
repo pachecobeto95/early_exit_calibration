@@ -121,7 +121,9 @@ if __name__ == "__main__":
 		optimizer = optim.Adam(model.parameters(), lr=args.lr,
 			weight_decay=args.weight_decay)
 
-	scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay)
+	#scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay)
+	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
+
 
 	while (count <= args.patience):
 		epoch += 1
