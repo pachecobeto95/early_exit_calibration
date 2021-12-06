@@ -26,6 +26,8 @@ from tqdm import tqdm
 from utils import MobileNetV2, create_dir
 from load_dataset import loadCifar10
 import argparse
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def trainEvalModel(model, dataLoader, criterion, optimizer, train):
 	if(train):
