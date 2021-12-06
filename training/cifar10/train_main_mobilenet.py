@@ -104,7 +104,7 @@ if __name__ == "__main__":
 	input_size = 224 if (args.pretrained) else 32
 	crop_size = 224 if (args.pretrained) else 32
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-	count = 0, epoch = 0
+	count, epoch = 0, 0
 	best_val_loss = np.inf
 	df = pd.DataFrame()
 
