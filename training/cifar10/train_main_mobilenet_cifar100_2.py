@@ -127,6 +127,7 @@ if __name__ == "__main__":
 
 
 	#while (count <= args.patience):
+	best_val_acc = 0
 	for epoch in range(args.n_epochs):
 		#epoch += 1
 		print("Current Epoch: %s"%(epoch))
