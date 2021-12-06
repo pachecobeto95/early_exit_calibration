@@ -27,7 +27,7 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, crop_
 		transforms.Normalize(mean, std)])
     
 	transform_test = transforms.Compose([
-		transforms.Resize(input_size)
+		transforms.Resize(input_size),
 		transforms.ToTensor(),
 		transforms.Normalize(mean, std)])
 
