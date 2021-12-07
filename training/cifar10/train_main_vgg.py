@@ -130,6 +130,20 @@ if __name__ == "__main__":
 		train_loader, val_loader, test_loader = loadCifar100(dataset_path, indices_dir_path, args.model_id, 
 			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
+
+	if(args.opt == "RMSProp"):
+		optimizer = torch.optim.RMSprop(model.parameters(), lr=args.lr, 
+			alpha=args.momentum, weight_decay=args.weight_decay, momentum=args.momentum)
+	
+	elif(args.opt == "SGD"):
+		optimizer = optim.SGD(model.parameters(), lr=args.lr, 
+			momentum=args.momentum, weight_decay=args.weight_decay, nesterov=True)
+	else:
+		optimizer = optim.Adam(model.parameters(), lr=args.lr,
+			weight_decay=args.weight_decay)
+
+
+
 	if(args.lr_scheduler == "stepRL"):
 		scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay, verbose=True)
 	elif(args.lr_scheduler == "plateau"):
