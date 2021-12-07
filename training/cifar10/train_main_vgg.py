@@ -89,6 +89,7 @@ if __name__ == "__main__":
 
 
 	args = parser.parse_args()
+	mode = "ft" if(args.pretrained) else "scratch"
 
 	root_path = os.path.dirname(__file__)
 	dataset_path = os.path.join(root_path, "dataset")
@@ -109,7 +110,6 @@ if __name__ == "__main__":
 	count, epoch = 0, 0
 	best_val_loss = np.inf
 	df = pd.DataFrame()
-	mode = "ft" if(args.pretrained) else "scratch"
 
 
 	if(args.pretrained):
