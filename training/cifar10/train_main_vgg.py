@@ -26,7 +26,7 @@ from tqdm import tqdm
 from utils import MobileNetV2_2, create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse
-
+from networks.vgg import vgg16_bn
 
 def trainEvalModel(model, dataLoader, criterion, optimizer, train):
 	if(train):
@@ -118,8 +118,7 @@ if __name__ == "__main__":
 		model.classifier[6] = nn.Linear(model.classifier[6].in_features, n_classes)
 	
 	else:
-		#model = vgg16(n_classes)
-		model = "m"
+		model = vgg16_bn(n_classes)
 
 	model = model.to(device)
 	criterion = nn.CrossEntropyLoss()
