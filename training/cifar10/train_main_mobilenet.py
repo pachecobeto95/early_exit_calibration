@@ -82,7 +82,7 @@ if __name__ == "__main__":
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
 	parser.add_argument('--n_epochs', type=int, default=300, help='Number of epochs (default: 300)')
 	parser.add_argument('--model_id', type=int, default=1, help='Model ID (default: 1)')
-	parser.add_argument('--pretrained', default=True, action="store_true", help='Pretrained (default: True)')
+	parser.add_argument('--pretrained', default=True, action="store_true", help='Pretrained (default:True)')
 	parser.add_argument('--dataset_name', type=str, default="cifar10", 
 		choices=["cifar10", "cifar100"], help='Pretrained (default: True)')
 	parser.add_argument('--lr_scheduler', type=str, default="stepRL", 
