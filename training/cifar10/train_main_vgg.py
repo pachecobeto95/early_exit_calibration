@@ -104,8 +104,9 @@ if __name__ == "__main__":
 
 	create_dir(model_dir_path, history_dir_path)
 
-	n_classes = 100
-	input_size = 32
+	n_classes = 10 if(args.dataset_name == "cifar10") else 100
+	input_size = 224 if (args.pretrained) else 32
+	crop_size = 224 if (args.pretrained) else 32
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	count, epoch = 0, 0
 	best_val_loss = np.inf
