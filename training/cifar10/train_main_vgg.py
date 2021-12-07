@@ -114,10 +114,12 @@ if __name__ == "__main__":
 
 
 	if(args.pretrained):
+		print("Pretrained")
 		model = models.vgg16_bn(pretrained=args.pretrained).to(device)
 		model.classifier[6] = nn.Linear(model.classifier[6].in_features, n_classes)
 	
 	else:
+		print("Not Pretrained")
 		model = vgg16_bn(n_classes)
 
 	model = model.to(device)
