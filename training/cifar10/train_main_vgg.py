@@ -162,7 +162,10 @@ if __name__ == "__main__":
 		result = {}
 		result_train = trainEvalModel(model, train_loader, criterion, optimizer, train=True)
 		result_val = trainEvalModel(model, val_loader, criterion, optimizer, train=False)
-		scheduler.step(result_val["val_acc"])
+		if(args.lr_scheduler == "plateau")
+			scheduler.step(result_val["val_acc"])
+		else:
+			scheduler.step()
 		result.update(result_train), result.update(result_val) 
 
 		df = df.append(pd.Series(result), ignore_index=True)
