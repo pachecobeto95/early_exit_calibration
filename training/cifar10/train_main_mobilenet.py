@@ -76,7 +76,7 @@ if __name__ == "__main__":
 		choices=["SGD", "RMSProp", "Adam"], help='Optimizer (default: SGD)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
 	parser.add_argument('--lr_decay', type=float, default=0.98, help='Learning Rate Decay (default: 0.98)')
-	parser.add_argument('--batch_size', type=int, default=96, help='Batch Size (default: 96)')
+	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 96)')
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
@@ -112,9 +112,13 @@ if __name__ == "__main__":
 	best_val_loss = np.inf
 	df = pd.DataFrame()
 
-	model = models.mobilenet_v2(args.pretrained) if (args.pretrained) else MobileNetV2_2(n_classes)
 	if(args.pretrained):
+		print("Pretrained")
+		model = models.mobilenet_v2(args.pretrained)
 		model.classifier[1] = nn.Linear(1280, n_classes)
+	else:
+		print("Not Pretrained")
+		model = MobileNetV2_2(n_classes)
 
 	model = model.to(device)
 
@@ -139,7 +143,7 @@ if __name__ == "__main__":
 			weight_decay=args.weight_decay)
 
 	if(args.lr_scheduler == "stepRL"):
-		scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay)
+		scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay, verbose=True)
 	elif(args.lr_scheduler == "plateau"):
 		scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=args.lr_decay, 
 			patience=int(args.patience/2), verbose=True)
