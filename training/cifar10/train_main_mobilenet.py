@@ -118,7 +118,7 @@ if __name__ == "__main__":
 		model.classifier[1] = nn.Linear(1280, n_classes)
 	else:
 		print("Not Pretrained")
-		model = MobileNetV2_2(n_classes)
+		model = MobileNetV2_2(n_classes, device)
 
 	model = model.to(device)
 
