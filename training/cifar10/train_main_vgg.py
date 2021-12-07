@@ -24,7 +24,7 @@ from torch import Tensor
 import functools, os
 from tqdm import tqdm
 from utils import MobileNetV2_2, create_dir
-from load_dataset import loadCifar10
+from load_dataset import loadCifar10, loadCifar100
 import argparse
 
 
@@ -95,8 +95,8 @@ if __name__ == "__main__":
 	model_dir_path = os.path.join(root_path, "vgg16", "models")
 	history_dir_path = os.path.join(root_path, "vgg16", "history")
 
-	model_path = os.path.join(model_dir_path, "vgg16_%s_main_id_%s.pth"%(args.dataset, args.model_id, mode))
-	history_path = os.path.join(history_dir_path, "history_%s_vgg16_main_id_%s.csv"%(args.dataset, args.model_id, mode))
+	model_path = os.path.join(model_dir_path, "vgg16_%s_main_id_%s.pth"%(args.dataset_name, args.model_id, mode))
+	history_path = os.path.join(history_dir_path, "history_%s_vgg16_main_id_%s.csv"%(args.dataset_name, args.model_id, mode))
 	
 
 	indices_dir_path = os.path.join(root_path, "indices")
@@ -117,12 +117,17 @@ if __name__ == "__main__":
 		model.classifier[6] = nn.Linear(model.classifier[6].in_features, n_classes)
 	
 	else:
-		model = vgg16(n_classes)
+		#model = vgg16(n_classes)
+		model = "m"
 
 	criterion = nn.CrossEntropyLoss()
 	
-	train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
-		args.batch_size, input_size, split_rate=args.split_rate, seed=args.seed)
+	if(args.dataset_name=="cifar10"):
+		train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
+			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
+	else:
+		train_loader, val_loader, test_loader = loadCifar100(dataset_path, indices_dir_path, args.model_id, 
+			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
 	if(args.lr_scheduler == "stepRL"):
 		scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay, verbose=True)
