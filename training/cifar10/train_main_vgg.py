@@ -121,6 +121,7 @@ if __name__ == "__main__":
 		#model = vgg16(n_classes)
 		model = "m"
 
+	model = model.to(device)
 	criterion = nn.CrossEntropyLoss()
 	
 	if(args.dataset_name=="cifar10"):
