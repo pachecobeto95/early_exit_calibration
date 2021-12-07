@@ -83,7 +83,7 @@ if __name__ == "__main__":
 	parser.add_argument('--n_epochs', type=int, default=300, help='Number of epochs (default: 300)')
 	parser.add_argument('--model_id', type=int, default=1, help='Model ID (default: 1)')
 	#parser.add_argument('--pretrained', choices=[True, False], help='Pretrained (default:True)')
-	parser.add_argument('--pretrained',  dest='pretrained', action='store_false', default=True)
+	parser.add_argument('--pretrained', dest='pretrained', action='store_false', default=True)
 	parser.add_argument('--dataset_name', type=str, default="cifar10", 
 		choices=["cifar10", "cifar100"], help='Pretrained (default: True)')
 	parser.add_argument('--lr_scheduler', type=str, default="stepRL", 
