@@ -162,7 +162,7 @@ if __name__ == "__main__":
 		result = {}
 		result_train = trainEvalModel(model, train_loader, criterion, optimizer, train=True)
 		result_val = trainEvalModel(model, val_loader, criterion, optimizer, train=False)
-		if(args.lr_scheduler == "plateau")
+		if(args.lr_scheduler == "plateau"):
 			scheduler.step(result_val["val_acc"])
 		else:
 			scheduler.step()
