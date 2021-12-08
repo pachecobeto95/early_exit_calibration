@@ -150,7 +150,8 @@ if __name__ == "__main__":
 		scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.n_epochs, verbose=True)
 
 	
-	while (verify_stop_condition(count, epoch, args)):
+	#while (verify_stop_condition(count, epoch, args)):
+	while (epoch <= args.n_epochs):
 		epoch += 1
 		print("Current Epoch: %s"%(epoch))
 
