@@ -94,8 +94,8 @@ if __name__ == "__main__":
 	history_dir_path = os.path.join(root_path, "resnet18", "history")
 	mode = "ft" if(args.pretrained) else "scratch"
 
-	model_path = os.path.join(model_dir_path, "resnet18_%s_main_id_%s.pth"%(args.dataset_name, args.model_id, mode))
-	history_path = os.path.join(history_dir_path, "history_%s_resnet18_main_id_%s.csv"%(args.dataset_name, args.model_id, mode))
+	model_path = os.path.join(model_dir_path, "resnet18_%s_main_id_%s_%s.pth"%(args.dataset_name, args.model_id, mode))
+	history_path = os.path.join(history_dir_path, "history_%s_resnet18_main_id_%s_%s.csv"%(args.dataset_name, args.model_id, mode))
 	
 	indices_dir_path = os.path.join(root_path, "indices")
 
