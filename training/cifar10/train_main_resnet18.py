@@ -26,7 +26,7 @@ from tqdm import tqdm
 from load_dataset import loadCifar10
 import argparse
 from networks.resnet import resnet18
-from utils import verify_stop_condition
+from utils import verify_stop_condition, create_dir
 
 def trainEvalModel(model, dataLoader, criterion, optimizer, train):
 	if(train):
