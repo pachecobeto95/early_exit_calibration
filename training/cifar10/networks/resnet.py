@@ -77,7 +77,13 @@ class Resnet(nn.Module):
 		return nn.Sequential(*layers)
 
 	def forward(self, x):
-		output = self.features(x)
+		output = self.conv1(x)
+		output = self.bn1(output)
+		output = self.relu(output)
+		output = self.layer1(output)
+		output = self.layer2(output)
+		output = self.layer3(output)
+		output = self.layer4(output)
 		output = self.avg_pool(output)
 		output = output.view(output.size(0), -1)
 		output = self.fc(output)
