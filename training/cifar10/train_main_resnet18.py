@@ -27,6 +27,8 @@ from load_dataset import loadCifar10
 import argparse
 from networks.resnet import resnet18
 from utils import verify_stop_condition, create_dir
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def trainEvalModel(model, dataLoader, criterion, optimizer, train):
 	if(train):
