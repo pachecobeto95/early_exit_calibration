@@ -138,11 +138,6 @@ if __name__ == "__main__":
 		optimizer = optim.Adam(model.parameters(), lr=args.lr,
 			weight_decay=args.weight_decay)
 
-
-
- divide it by 10 at 32k and 48k iterations, and
-terminate training at 64k iterations
-
 	if(args.lr_scheduler == "stepRL"):
 		scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, 
 			milestones=[100, 150, 180], last_epoch=-1, verbose=True)
