@@ -23,7 +23,7 @@ from torchvision import datasets, transforms
 from torch import Tensor
 import functools, os
 from tqdm import tqdm
-from load_dataset import loadCifar10
+from load_dataset import loadCifar10, loadCifar100
 import argparse
 from networks.resnet import resnet18
 from utils import verify_stop_condition, create_dir
