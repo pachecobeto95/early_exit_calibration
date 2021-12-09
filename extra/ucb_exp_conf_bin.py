@@ -60,7 +60,8 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, ver
 		selected_arm_list.append(threshold)
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
-	"label":[label]*len(inst_regret_list), "overhead":[round(overhead, 2)]*len(inst_regret_list)}
+	"label":[label]*len(inst_regret_list), "overhead":[round(overhead, 2)]*len(inst_regret_list),
+	"bin_lower": bin_lower, "bin_upper": bin_upper}
 
 	return result
 
