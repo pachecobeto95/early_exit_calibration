@@ -55,7 +55,7 @@ class _ECELoss(nn.Module):
               accuracy_in_bin = accuracies[in_bin].float().mean()
               avg_confidence_in_bin = confidences[in_bin].mean()
               ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
-              print(bin_lower, bin_upper, ece)
+              #print(bin_lower, bin_upper, ece)
 
         return ece
 
@@ -128,7 +128,7 @@ class MainModelCalibration(nn.Module):
     # Calculate NLL and ECE after temperature scaling
     after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
     after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
-    print('Optimal temperature: %.3f' % self.temperature_overall.item())
+    print('Optimal temperature: %.3f' % self.temperature.item())
     print('After temperature - NLL: %.3f, ECE: %.3f'%(after_temperature_nll, after_temperature_ece))
 
     result = {"before_nll": before_temperature_nll, "after_nll": after_temperature_nll,
