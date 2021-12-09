@@ -22,7 +22,7 @@ from torchvision import datasets, transforms
 from torch import Tensor
 from tqdm import tqdm
 from networks.mobilenet import MobileNetV2_2
-from utils import create_dir_temperature
+from utils import create_dir_temperature, get_model_arch
 from load_dataset import loadCifar10, loadCifar100
 from calibration_dnn import MainModelCalibration
 
