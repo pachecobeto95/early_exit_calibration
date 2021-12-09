@@ -160,7 +160,7 @@ if __name__ == "__main__":
 		result_train = trainEvalModel(model, train_loader, criterion, optimizer, train=True)
 
 		if epoch <= args.warm+1:
-			for g in optim.param_groups:
+			for g in optimizer.param_groups:
 				g['lr'] = 0.1
 		
 		result_val = trainEvalModel(model, val_loader, criterion, optimizer, train=False)
