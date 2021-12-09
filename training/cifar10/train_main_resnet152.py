@@ -71,7 +71,7 @@ def trainEvalModel(model, dataLoader, criterion, optimizer, train):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='Training the backbone of a MobileNetV2')
-	parser.add_argument('--lr', type=float, default=0.1, help='Learning Rate (default: 0.0001)')
+	parser.add_argument('--lr', type=float, default=0.01, help='Learning Rate (default: 0.0001)')
 	parser.add_argument('--weight_decay', type=float, default= 0.0001, help='Weight Decay (default: 0.0001)')
 	parser.add_argument('--opt', type=str, default= "SGD", help='Optimizer (default: RMSProp)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
@@ -87,6 +87,8 @@ if __name__ == "__main__":
 		choices=["cifar10", "cifar100"], help='Pretrained (default: True)')
 	parser.add_argument('--lr_scheduler', type=str, default="stepRL", 
 		choices=["stepRL", "plateau", "cossine"], help='Learning Rate Scheduler (default: stepRL)')
+	parser.add_argument('-warm', type=int, default=1, help='Warm up training phase (default: 1)')
+
 
 	args = parser.parse_args()
 
@@ -148,12 +150,19 @@ if __name__ == "__main__":
 	else:
 		scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.n_epochs, verbose=True)
 
+	iter_per_epoch = len(train_loader)
+	warmup_scheduler = WarmUpLR(optimizer, iter_per_epoch * args.warm)
+
 	while (epoch <= args.n_epochs):
 		epoch += 1
 		print("Current Epoch: %s"%(epoch))
 
 		result = {}
 		result_train = trainEvalModel(model, train_loader, criterion, optimizer, train=True)
+
+		if epoch <= args.warm:
+			warmup_scheduler.step()
+		
 		result_val = trainEvalModel(model, val_loader, criterion, optimizer, train=False)
 		scheduler.step()
 		result.update(result_train), result.update(result_val) 
