@@ -141,8 +141,8 @@ if __name__ == "__main__":
 			weight_decay=args.weight_decay)
 
 	if(args.lr_scheduler == "stepRL"):
-		scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, 
-			milestones=[100, 150, 180], last_epoch=-1, verbose=True)
+		scheduler = lr_scheduler.MultiStepLR(optimizer, milestones=[100, 150, 180], gamma=args.lr_decay, 
+			last_epoch=-1, verbose=True)
 
 	elif(args.lr_scheduler == "plateau"):
 		scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=args.lr_decay, 
@@ -150,9 +150,7 @@ if __name__ == "__main__":
 	else:
 		scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.n_epochs, verbose=True)
 
-	iter_per_epoch = len(train_loader)
-	warmup_scheduler = WarmUpLR(optimizer, iter_per_epoch * args.warm)
-
+	warmup_scheduler = lr_scheduler.StepLR(optimizer, 1, gamma=10, last_epoch=args.warm, verbose=False)
 	while (epoch <= args.n_epochs):
 		epoch += 1
 		print("Current Epoch: %s"%(epoch))
