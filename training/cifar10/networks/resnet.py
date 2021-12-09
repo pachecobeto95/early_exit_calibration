@@ -123,10 +123,6 @@ def resnet18(n_classes):
 	""" return a ResNet 18 object"""
 	return Resnet(BasicBlock, [2, 2, 2, 2], n_classes)
 
-def resnet18(n_classes):
-	""" return a ResNet 18 object"""
-	return Resnet(BasicBlock, [2, 2, 2, 2], n_classes)
-
 def resnet152(n_classes):
 	""" return a ResNet 152 object"""
-	return ResNet(BottleNeck, [3, 8, 36, 3], n_classes)
+	return Resnet(BottleNeck, [3, 8, 36, 3], n_classes)
