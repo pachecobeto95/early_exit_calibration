@@ -30,6 +30,43 @@ from utils import verify_stop_condition, create_dir
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
+def trainEvalModel(model, dataLoader, criterion, optimizer, train):
+	if(train):
+		model.train()
+	else:
+		model.eval()
+
+
+	acc_list, loss_list = [], []
+	softmax = nn.Softmax(dim=1)
+	for (data, target) in tqdm(dataLoader):
+		data, target = data.to(device), target.to(device)
+
+		if (train):
+			optimizer.zero_grad()
+			output = model(data).squeeze()
+			loss = criterion(output, target)
+			loss.backward()
+			optimizer.step()
+
+		else:
+			with torch.no_grad():
+				output = model(data).squeeze()
+				loss = criterion(output, target)
+
+		_, infered_class = torch.max(softmax(output), 1)
+		acc_list.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
+		loss_list.append(loss.item())
+
+	avg_acc = np.mean(acc_list)
+	avg_loss = np.mean(loss_list)
+
+	print("%s Loss: %s Loss"%('Train' if train else 'Eval', np.mean(avg_loss)))
+	print("%s Acc: %s Acc"%('Train' if train else 'Eval', np.mean(acc_list)))
+
+	mode = "train" if(train) else "val"
+	return {"%s_loss"%(mode): avg_loss, "%s_acc"%(mode): avg_acc}
+
 
 if __name__ == "__main__":
 
