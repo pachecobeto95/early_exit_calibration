@@ -73,6 +73,6 @@ if (__name__ == "__main__"):
 			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
 
-	scaled_model = MainModelCalibration(model, device, model_path, save_temp_path)
+	scaled_model = MainModelCalibration(model, device, model_path, save_temp_path, args.lr, args.max_iter)
 	scaled_model.set_temperature(val_loader)
 
