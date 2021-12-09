@@ -62,7 +62,7 @@ if (__name__ == "__main__"):
 	
 	create_dir_temperature(temp_dir_path)
 
-	model = get_model_arch(args.pretrained, args.model_name, n_classes).to(device)
+	model = get_model_arch(args.pretrained, args.model_name, n_classes, device).to(device)
 
 	if(args.dataset_name=="cifar10"):
 		train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
