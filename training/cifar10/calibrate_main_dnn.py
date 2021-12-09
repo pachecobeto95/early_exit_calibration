@@ -54,7 +54,7 @@ if (__name__ == "__main__"):
 	mode = "ft" if(args.pretrained) else "scratch"
 	input_size = 224 if (args.pretrained) else 32
 	crop_size = 224 if (args.pretrained) else 32
-	n_classes = 10 if (args.pretrained) else 100
+	n_classes = 10 if (args.dataset_name == "cifar10") else 100
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 	model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
@@ -62,7 +62,7 @@ if (__name__ == "__main__"):
 	
 	create_dir_temperature(temp_dir_path)
 
-	model = get_model_arch(args.pretrained, args.model_name).to(device)
+	model = get_model_arch(args.pretrained, args.model_name, n_classes).to(device)
 
 	if(args.dataset_name=="cifar10"):
 		train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
