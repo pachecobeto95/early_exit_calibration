@@ -21,7 +21,7 @@ def verify_stop_condition(count, epoch, args):
 	return stop_condition
 
 
-def get_model_arch(pretrained, model_name, n_classes):
+def get_model_arch(pretrained, model_name, n_classes, device):
 	if (pretrained):
 		mobilenet = models.mobilenet_v2()
 		mobilenet.classifier[1] = nn.Linear(1280, n_classes)
@@ -29,7 +29,7 @@ def get_model_arch(pretrained, model_name, n_classes):
 		dict_model = {"mobilenet": mobilenet, "vgg16": models.vgg16_bn(), 
 		"resnet18": models.resnet18(), "resnet152": models.resnet152()}
 	else:
-		dict_model = {"mobilenet": MobileNetV2_2(), "vgg16": vgg16_bn(), 
+		dict_model = {"mobilenet": MobileNetV2_2(n_classes, device), "vgg16": vgg16_bn(), 
 		"resnet18": resnet18(), "resnet152": models.resnet152()}
 
 	return dict_model[model_name]
