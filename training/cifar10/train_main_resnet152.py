@@ -23,65 +23,27 @@ from torchvision import datasets, transforms
 from torch import Tensor
 import functools, os
 from tqdm import tqdm
-from networks.mobilenet import MobileNetV2_2
-from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse
+from networks.resnet import resnet152
+from utils import verify_stop_condition, create_dir
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
-
-def trainEvalModel(model, dataLoader, criterion, optimizer, train):
-	if(train):
-		model.train()
-	else:
-		model.eval()
-
-
-	acc_list, loss_list = [], []
-	softmax = nn.Softmax(dim=1)
-	for (data, target) in tqdm(dataLoader):
-		data, target = data.to(device), target.to(device)
-
-		if (train):
-			optimizer.zero_grad()
-			output = model(data)
-			loss = criterion(output, target)
-			loss.backward()
-			optimizer.step()
-
-		else:
-			with torch.no_grad():
-				output = model(data)
-				loss = criterion(output, target)
-
-		_, infered_class = torch.max(softmax(output), 1)
-		acc_list.append(100*infered_class.eq(target.view_as(infered_class)).sum().item()/target.size(0))
-		loss_list.append(loss.item())
-
-	avg_acc = np.mean(acc_list)
-	avg_loss = np.mean(loss_list)
-
-	print("%s Loss: %s Loss"%('Train' if train else 'Eval', np.mean(avg_loss)))
-	print("%s Acc: %s Acc"%('Train' if train else 'Eval', np.mean(acc_list)))
-
-	mode = "train" if(train) else "val"
-	return {"%s_loss"%(mode): avg_loss, "%s_acc"%(mode): avg_acc}
 
 
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='Training the backbone of a MobileNetV2')
-	parser.add_argument('--lr', type=float, default=0.045, help='Learning Rate (default: 0.045)')
-	parser.add_argument('--weight_decay', type=float, default= 0.00004, help='Weight Decay (default: 0.00004)')
-	parser.add_argument('--opt', type=str, default= "SGD", 
-		choices=["SGD", "RMSProp", "Adam"], help='Optimizer (default: SGD)')
+	parser.add_argument('--lr', type=float, default=0.1, help='Learning Rate (default: 0.0001)')
+	parser.add_argument('--weight_decay', type=float, default= 0.0001, help='Weight Decay (default: 0.0001)')
+	parser.add_argument('--opt', type=str, default= "SGD", help='Optimizer (default: RMSProp)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
-	parser.add_argument('--lr_decay', type=float, default=0.98, help='Learning Rate Decay (default: 0.98)')
-	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 96)')
+	parser.add_argument('--lr_decay', type=float, default=0.1, help='Learning Rate Decay (default: 0.98)')
+	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 128)')
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
-	parser.add_argument('--n_epochs', type=int, default=300, help='Number of epochs (default: 300)')
+	parser.add_argument('--n_epochs', type=int, default=500, help='Number of epochs (default: 500)')
 	parser.add_argument('--model_id', type=int, default=1, help='Model ID (default: 1)')
 	parser.add_argument('--pretrained', dest='pretrained', action='store_false', default=True, help='Pretrained (default:True)')
 	parser.add_argument('--dataset_name', type=str, default="cifar10", 
@@ -93,14 +55,13 @@ if __name__ == "__main__":
 
 	root_path = os.path.dirname(__file__)
 	dataset_path = os.path.join(root_path, "dataset")
-	model_dir_path = os.path.join(root_path, "mobilenet", "models")
-	history_dir_path = os.path.join(root_path, "mobilenet", "history")
+	model_dir_path = os.path.join(root_path, "resnet152", "models")
+	history_dir_path = os.path.join(root_path, "resnet152", "history")
 	mode = "ft" if(args.pretrained) else "scratch"
 
-	model_path = os.path.join(model_dir_path, "mobilenet_main_%s_id_%s_%s.pth"%(args.dataset_name, args.model_id, mode))
-	history_path = os.path.join(history_dir_path, "history_mobilenet_main_%s_id_%s_%s.csv"%(args.dataset_name, args.model_id, mode))
+	model_path = os.path.join(model_dir_path, "resnet152_%s_main_id_%s_%s.pth"%(args.dataset_name, args.model_id, mode))
+	history_path = os.path.join(history_dir_path, "history_%s_resnet152_main_id_%s_%s.csv"%(args.dataset_name, args.model_id, mode))
 	
-
 	indices_dir_path = os.path.join(root_path, "indices")
 
 	create_dir(model_dir_path, history_dir_path)
@@ -114,15 +75,12 @@ if __name__ == "__main__":
 	df = pd.DataFrame()
 
 	if(args.pretrained):
-		print("Pretrained")
-		model = models.mobilenet_v2(args.pretrained)
-		model.classifier[1] = nn.Linear(1280, n_classes)
+		model = models.resnet152(pretrained=args.pretrained)
+		model.fc = nn.Linear(model.fc.in_features, n_classes)
 	else:
-		print("Not Pretrained")
-		model = MobileNetV2_2(n_classes, device)
+		model = resnet152(n_classes)
 
 	model = model.to(device)
-
 	criterion = nn.CrossEntropyLoss()
 	
 	if(args.dataset_name=="cifar10"):
@@ -144,16 +102,16 @@ if __name__ == "__main__":
 			weight_decay=args.weight_decay)
 
 	if(args.lr_scheduler == "stepRL"):
-		scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay, verbose=True)
+		scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, 
+			milestones=[100, 150, 180], last_epoch=-1, verbose=True)
+
 	elif(args.lr_scheduler == "plateau"):
 		scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=args.lr_decay, 
 			patience=int(args.patience/2), verbose=True)
 	else:
 		scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.n_epochs, verbose=True)
 
-	
-	stop_condition = count <= args.patience if(args.pretrained) else epoch <= args.n_epochs
-	while (stop_condition):
+	while (epoch <= args.n_epochs):
 		epoch += 1
 		print("Current Epoch: %s"%(epoch))
 
@@ -180,8 +138,3 @@ if __name__ == "__main__":
 
 	print("Stop! Patience is finished")
 	trainEvalModel(model, test_loader, criterion, optimizer, train=False)
-
-
-
-
-

@@ -26,10 +26,19 @@ def get_model_arch(pretrained, model_name, n_classes, device):
 		mobilenet = models.mobilenet_v2()
 		mobilenet.classifier[1] = nn.Linear(1280, n_classes)
 
-		dict_model = {"mobilenet": mobilenet, "vgg16": models.vgg16_bn(), 
-		"resnet18": models.resnet18(), "resnet152": models.resnet152()}
+		vgg16 = models.vgg16_bn()
+		vgg16.classifier[6] = nn.Linear(vgg16.classifier[6].in_features, n_classes)
+
+		model_resnet18 = models.resnet18()
+		model_resnet18.fc = nn.Linear(model_resnet18.fc.in_features, n_classes)
+
+		model_resnet152 = models.resnet18()
+		model_resnet152.fc = nn.Linear(model_resnet152.fc.in_features, n_classes)
+
+		dict_model = {"mobilenet": mobilenet, "vgg16": vgg16(), 
+		"resnet18": model_resnet18, "resnet152": model_resnet152()}
 	else:
 		dict_model = {"mobilenet": MobileNetV2_2(n_classes, device), "vgg16": vgg16_bn(n_classes), 
-		"resnet18": resnet18(n_classes), "resnet152": models.resnet152()}
+		"resnet18": resnet18(n_classes), "resnet152": model_resnet152()}
 
 	return dict_model[model_name]

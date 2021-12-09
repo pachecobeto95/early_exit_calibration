@@ -21,7 +21,7 @@ def get_row_data(row, threshold):
 		delta_conf = max(conf_list) - conf_branch 
 		return conf_branch, delta_conf
 
-def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, verbose):
+def run_ucb(df, label, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, verbose):
 
 	df = df.sample(frac=1)
 	delta = 1e-10
@@ -61,7 +61,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, ver
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
 	"label":[label]*len(inst_regret_list), "overhead":[round(overhead, 2)]*len(inst_regret_list),
-	"bin_lower": bin_lower, "bin_upper": bin_upper}
+	"bin_lower": [round(bin_lower, 2)]*len(inst_regret_list), "bin_upper": [round(bin_upper, 2)]*len(inst_regret_list)}
 
 	return result
 
@@ -81,7 +81,7 @@ def ucb_experiment(df, threshold_list, overhead_list, label_list, n_round, c, sa
 			df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper) & (df.label==label)] 
 			
 			if(len(df_temp.conf_branch_1.values) > 0):
-				result = run_ucb(df_temp, threshold_list, overhead, n_round, c, bin_lower, bin_upper, verbose)
+				result = run_ucb(df_temp, label, threshold_list, overhead, n_round, c, bin_lower, bin_upper, verbose)
 				df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
 				df_result = df_result.append(df2)
 				df_result.to_csv(savePath)
