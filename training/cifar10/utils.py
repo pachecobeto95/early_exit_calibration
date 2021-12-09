@@ -30,6 +30,6 @@ def get_model_arch(pretrained, model_name, n_classes, device):
 		"resnet18": models.resnet18(), "resnet152": models.resnet152()}
 	else:
 		dict_model = {"mobilenet": MobileNetV2_2(n_classes, device), "vgg16": vgg16_bn(n_classes), 
-		"resnet18": resnet18(), "resnet152": models.resnet152()}
+		"resnet18": resnet18(n_classes), "resnet152": models.resnet152()}
 
 	return dict_model[model_name]
