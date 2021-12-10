@@ -65,4 +65,4 @@ def trainEvalEarlyExit(model, dataLoader, criterion, optimizer, n_branches, epoc
 		result_dict.update({"%s_acc_branch_%s"%(mode, key): round(np.average(acc_dict[key]), 4)})    
 		print("%s Acc Branch %s: %s"%(mode, key, result_dict["%s_acc_branch_%s"%(mode, key)]))
   
-  return result_dict
+	return result_dict
