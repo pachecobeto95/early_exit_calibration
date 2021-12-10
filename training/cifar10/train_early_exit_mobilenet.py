@@ -109,7 +109,7 @@ if __name__ == "__main__":
 			optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': args.lr_backbone}, 
 				{'params': early_exit_dnn.exits.parameters(), 'lr': args.lr_branches},
 				{'params': early_exit_dnn.classifier.parameters(), 'lr': args.lr_backbone}], 
-				momentum=momentum, weight_decay=weight_decay,
+				momentum=args.momentum, weight_decay=args.weight_decay,
 				nesterov=True)
 		else:
 			optimizer = optim.SGD(early_exit_dnn.parameters(), lr=args.lr_branches, 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 		if(args.pretrained or args.backbone_pretrained):
 			optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': args.lr_backbone}, 
 				{'params': early_exit_dnn.exits.parameters(), 'lr': args.lr_branches},
-				{'params': early_exit_dnn.classifier.parameters(), 'lr': args.lr_backbone}], weight_decay=weight_decay)
+				{'params': early_exit_dnn.classifier.parameters(), 'lr': args.lr_backbone}], weight_decay=args.weight_decay)
 		else:
 			optimizer = optim.Adam(early_exit_dnn.parameters(), lr=args.lr_branches, weight_decay=args.weight_decay)
 
