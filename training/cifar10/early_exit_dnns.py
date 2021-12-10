@@ -764,7 +764,7 @@ class Early_Exit_DNN(nn.Module):
     # It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
     self.verifies_nr_exits(backbone_model.networks)
 
-    if(selg.backbone_pretrained):
+    if(self.backbone_pretrained):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
 
     self.total_flops = self.countFlops(backbone_model)
@@ -809,7 +809,7 @@ class Early_Exit_DNN(nn.Module):
     # It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
     self.verifies_nr_exits(backbone_model.features)
 
-    if(selg.backbone_pretrained):
+    if(self.backbone_pretrained):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
     
     # This obtains the flops total of the backbone model
@@ -859,7 +859,8 @@ class Early_Exit_DNN(nn.Module):
 
     x = self.stages[-1](x)
 
-    x = torch.flatten(x, 1)
+    if((self.model_name=="mobilenet") and (self.pretrained)):
+      x = torch.flatten(x, 1)
 
     output = self.classifier(x)
     infered_conf, infered_class = torch.max(self.softmax(output), 1)
