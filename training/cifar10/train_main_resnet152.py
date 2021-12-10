@@ -148,7 +148,7 @@ if __name__ == "__main__":
 		scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=args.lr_decay, 
 			patience=int(args.patience/2), verbose=True)
 	else:
-		scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.n_epochs, verbose=True)
+		scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=10, verbose=True)
 
 	while (epoch <= args.n_epochs):
 		epoch += 1
