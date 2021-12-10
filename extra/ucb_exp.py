@@ -40,7 +40,6 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
   for n_round in tqdm(range(n_rounds)):
     idx = random.choice(np.arange(len(df)))
     row = df.iloc[[idx]]
-    #print(row.conf_branch_1.item(), row.conf_branch_2.item())
 
     if (t < len(threshold_list)):
       action = t
@@ -86,17 +85,17 @@ def ucb_experiment(df, threshold_list, overhead_list, label_list, n_round, c, sa
 
 
 model_id = 2
+model_name = "alexnet"
 root_path = os.path.join(".")
 results_path = os.path.join(root_path, "inference_exp_ucb_%s.csv"%(model_id))
 df_result = pd.read_csv(results_path)
 df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
 threshold_list = np.arange(0, 1.1, 0.1)
 overhead_list = np.arange(0, 1.0, 0.1)
-n_rounds = 100000
+n_rounds = 5000000
 verbose = False
-#label_list = df_result.label.unique()
 label_list = ["cat", "ship", "dog", "automobile"]
-c = 0.2
-savePath = os.path.join(".", "ucb_result_c_%s_last_dance.csv"%(c))
+c = 1.0
+savePath = os.path.join(".", "%s_ucb_all_samples_c_%s_nrounds_%s.csv"%(model_name, c, n_rounds))
 
 ucb_experiment(df_result, threshold_list, overhead_list, label_list, n_rounds, c, savePath, verbose)
