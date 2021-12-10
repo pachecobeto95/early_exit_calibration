@@ -28,6 +28,7 @@ from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse
 from train import trainEvalEarlyExit
+from early_exit_dnns import Early_Exit_DNN
 
 if __name__ == "__main__":
 
