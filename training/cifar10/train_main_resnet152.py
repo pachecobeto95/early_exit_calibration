@@ -150,8 +150,6 @@ if __name__ == "__main__":
 	else:
 		scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.n_epochs, verbose=True)
 
-	#warmup_scheduler = lr_scheduler.StepLR(optimizer, 1, gamma=10, last_epoch=args.warm, verbose=False)
-	#torch.optim.lr_scheduler.StepLR(optimizer, step_size, gamma=0.1, last_epoch=- 1, verbose=False)
 	while (epoch <= args.n_epochs):
 		epoch += 1
 		print("Current Epoch: %s"%(epoch))
