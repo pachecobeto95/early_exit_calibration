@@ -91,8 +91,8 @@ if __name__ == "__main__":
 
 	loss_weights = loss_dict[args.loss_weight_type]
 
-	early_exit_dnn = Early_Exit_DNN(model_name, n_classes, args.pretrained, args.backbone_pretrained, backbone_model_path
-		args.n_branches, input_shape, exit_type, device, distribution=distribution)
+	early_exit_dnn = Early_Exit_DNN(model_name, n_classes, args.pretrained, args.backbone_pretrained, 
+		backbone_model_path, args.n_branches, input_shape, exit_type, device, distribution=distribution)
 	early_exit_dnn = early_exit_dnn.to(device)
 
 	if(args.dataset_name=="cifar10"):
