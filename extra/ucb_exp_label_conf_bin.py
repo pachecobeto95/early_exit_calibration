@@ -92,7 +92,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='UCB using Alexnet')
 	parser.add_argument('--model_id', type=int, default=2, help='Model Id (default: 2)')
 	parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
-	parser.add_argument('--n_rounds', type=int, default=100000, help='Model Id (default: 100000)')
+	parser.add_argument('--n_rounds', type=int, default=5000000, help='Model Id (default: 100000)')
 
 	args = parser.parse_args()
 
