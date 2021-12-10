@@ -91,13 +91,12 @@ results_path = os.path.join(root_path, "inference_exp_ucb_%s.csv"%(model_id))
 df_result = pd.read_csv(results_path)
 df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
 threshold_list = np.arange(0, 1.1, 0.1)
-#overhead_list = np.arange(0, 1.1, 0.1)
-overhead_list = [0.1, 0.12, 0.15, 0.17, 0.2, 0.25, 0.3]
+overhead_list = np.arange(0, 1.0, 0.1)
 n_rounds = 100000
 verbose = False
 #label_list = df_result.label.unique()
 label_list = ["cat", "ship", "dog", "automobile"]
-c = 0.5
-savePath = os.path.join(".", "ucb_result_c_%s.csv"%(c))
+c = 0.2
+savePath = os.path.join(".", "ucb_result_c_%s_last_dance.csv"%(c))
 
 ucb_experiment(df_result, threshold_list, overhead_list, label_list, n_rounds, c, savePath, verbose)
