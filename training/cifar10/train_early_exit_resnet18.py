@@ -23,7 +23,6 @@ from torchvision import datasets, transforms
 from torch import Tensor
 import functools, os
 from tqdm import tqdm
-from networks.mobilenet import MobileNetV2_2
 from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse
@@ -32,19 +31,18 @@ from early_exit_dnns import Early_Exit_DNN
 
 if __name__ == "__main__":
 
-	parser = argparse.ArgumentParser(description='Training the Early Exit of a MobileNetV2. B-Mobilenet')
-	parser.add_argument('--lr_backbone', type=float, default=0.045, help='Learning Rate (default: 0.045)')
+	parser = argparse.ArgumentParser(description='Training the backbone of a MobileNetV2')
+	parser.add_argument('--lr_backbone', type=float, default=0.01, help='Learning Rate (default: 0.01)')
 	parser.add_argument('--lr_branches', type=float, default=1.5e-4, help='Learning Rate (default: 1.5e-4)')
-	parser.add_argument('--weight_decay', type=float, default= 0.00004, help='Weight Decay (default: 0.00004)')
-	parser.add_argument('--opt', type=str, default= "SGD", 
-		choices=["SGD", "RMSProp", "Adam"], help='Optimizer (default: SGD)')
+	parser.add_argument('--weight_decay', type=float, default= 0.0001, help='Weight Decay (default: 0.0001)')
+	parser.add_argument('--opt', type=str, default= "SGD", help='Optimizer (default: RMSProp)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
-	parser.add_argument('--lr_decay', type=float, default=0.98, help='Learning Rate Decay (default: 0.98)')
+	parser.add_argument('--lr_decay', type=float, default=0.1, help='Learning Rate Decay (default: 0.98)')
 	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 128)')
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
-	parser.add_argument('--n_epochs', type=int, default=300, help='Number of epochs (default: 300)')
+	parser.add_argument('--n_epochs', type=int, default=500, help='Number of epochs (default: 500)')
 	parser.add_argument('--model_id', type=int, default=1, help='Model ID (default: 1)')
 	parser.add_argument('--pretrained', dest='pretrained', action='store_false', default=True, help='Pretrained (default:True)')
 	parser.add_argument('--dataset_name', type=str, default="cifar10", 
@@ -62,19 +60,7 @@ if __name__ == "__main__":
 
 	args = parser.parse_args()
 
-	root_path = os.path.dirname(__file__)
-	dataset_path = os.path.join(root_path, "dataset")
-	model_dir_path = os.path.join(root_path, "mobilenet", "models")
-	history_dir_path = os.path.join(root_path, "mobilenet", "history")
-	mode = "ft" if(args.pretrained) else "scratch"
-	mode_backbone = "backbone" if(args.backbone_pretrained) else ""
-
-	backbone_model_path = os.path.join(model_dir_path, "mobilenet_main_%s_id_%s_%s_%s.pth"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
-	early_exit_model_path = os.path.join(model_dir_path, "b_mobilenet_early_exit_%s_id_%s_%s_%s.pth"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
-	history_path = os.path.join(history_dir_path, "history_b_mobilenet_early_exit_%s_id_%s_%s_%s.csv"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
-	indices_dir_path = os.path.join(root_path, "indices")
-
-	model_name = "mobilenet"
+	model_name = "resnet18"
 	n_classes = 10 if(args.dataset_name == "cifar10") else 100
 	input_size = 224 if (args.pretrained) else 32
 	crop_size = 224 if (args.pretrained) else 32
@@ -84,6 +70,18 @@ if __name__ == "__main__":
 	best_val_loss = np.inf
 	df = pd.DataFrame()
 	n_exits = args.n_branches + 1
+
+	root_path = os.path.dirname(__file__)
+	dataset_path = os.path.join(root_path, "dataset")
+	model_dir_path = os.path.join(root_path, model_name, "models")
+	history_dir_path = os.path.join(root_path, model_name, "history")
+	mode = "ft" if(args.pretrained) else "scratch"
+	mode_backbone = "backbone" if(args.backbone_pretrained) else ""
+
+	backbone_model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s_%s.pth"%(model_name, args.dataset_name, args.model_id, mode, args.loss_weight_type))
+	early_exit_model_path = os.path.join(model_dir_path, "b_%s_early_exit_%s_id_%s_%s_%s.pth"%(model_name, args.dataset_name, args.model_id, mode, args.loss_weight_type))
+	history_path = os.path.join(history_dir_path, "history_b_%s_early_exit_%s_id_%s_%s_%s.csv"%(model_name, args.dataset_name, args.model_id, mode, args.loss_weight_type))
+	indices_dir_path = os.path.join(root_path, "indices")
 
 
 	criterion = nn.CrossEntropyLoss()
@@ -164,3 +162,4 @@ if __name__ == "__main__":
 	print("Stop! Patience is finished")
 	trainEvalEarlyExit(early_exit_dnn, test_loader, criterion, optimizer, args.n_branches, 
 		epoch, device, loss_weights, train=False)
+
