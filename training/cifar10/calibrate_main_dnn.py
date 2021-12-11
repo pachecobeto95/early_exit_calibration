@@ -21,10 +21,10 @@ from torch.optim import lr_scheduler
 from torchvision import datasets, transforms
 from torch import Tensor
 from tqdm import tqdm
-from networks.mobilenet import MobileNetV2_2
-from utils import create_dir_temperature, get_model_arch
+from utils import create_dir, get_model_arch, save_calibration_main_results
 from load_dataset import loadCifar10, loadCifar100
 from calibration_dnn import MainModelCalibration
+from train import testMainModel
 
 if (__name__ == "__main__"):
 	parser = argparse.ArgumentParser(description='Calibrating the backbone of a MobileNetV2')
@@ -49,6 +49,7 @@ if (__name__ == "__main__"):
 	model_dir_path = os.path.join(network_dir_path, "models")
 	history_dir_path = os.path.join(network_dir_path, "history")
 	temp_dir_path = os.path.join(network_dir_path, "temperature")
+	result_dir_path = os.path.join(network_dir_path, "results")
 	indices_dir_path = os.path.join(root_path, "indices")
 	
 	mode = "ft" if(args.pretrained) else "scratch"
@@ -59,8 +60,11 @@ if (__name__ == "__main__"):
 
 	model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
 	save_temp_path = os.path.join(temp_dir_path, "temp_%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
+	results_no_calib = os.path.join(result_dir_path, "no_calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
+	results_calib = os.path.join(result_dir_path, "calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	
-	create_dir_temperature(temp_dir_path)
+	create_dir(temp_dir_path)
+	create_dir(result_dir_path)
 
 	model = get_model_arch(args.pretrained, args.model_name, n_classes, device).to(device)
 
@@ -75,4 +79,23 @@ if (__name__ == "__main__"):
 
 	scaled_model = MainModelCalibration(model, device, model_path, save_temp_path, args.lr, args.max_iter)
 	scaled_model.set_temperature(val_loader)
+
+	results_no_calib = testMainModel(model, test_loader, device)
+	results_calib = testMainModel(scaled_model, test_loader, device)
+
+	save_calibration_main_results(results_no_calib, result_no_calib_path)
+	save_calibration_main_results(results_calib, result_calib_path)
+
+
+
+
+
+
+
+
+
+
+
+
+
 

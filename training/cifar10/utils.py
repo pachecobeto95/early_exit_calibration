@@ -7,18 +7,23 @@ from networks.resnet import resnet18
 from networks.vgg import vgg16_bn
 import torchvision.models as models
 
-def create_dir(history_path, model_path):
+def create_dirs(history_path, model_path):
 	if not os.path.exists(model_path):
 		os.makedirs(model_path)
 		os.makedirs(history_path)
 
-def create_dir_temperature(temp_dir_path):
-	if (not os.path.exists(temp_dir_path)):
-		os.makedirs(temp_dir_path)
+def create_dir(dir_path):
+	if (not os.path.exists(dir_path)):
+		os.makedirs(dir_path)
 
 def verify_stop_condition(count, epoch, args):
 	stop_condition = count <= args.patience if(args.pretrained) else epoch <= args.n_epochs
 	return stop_condition
+
+
+def save_calibration_main_results(result, save_path):
+	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	df.to_csv(save_path)
 
 
 def get_model_arch(pretrained, model_name, n_classes, device):

@@ -66,3 +66,41 @@ def trainEvalEarlyExit(model, dataLoader, criterion, optimizer, n_branches, epoc
 		print("%s Acc Branch %s: %s"%(mode, key, result_dict["%s_acc_branch_%s"%(mode, key)]))
   
 	return result_dict
+
+
+
+def testMainModel(model, testLoader, device):
+
+	model.eval()
+
+	conf_list, infered_class_list, target_list, correct_list = [], [], [], []
+	softmax = nn.Softmax(dim=1)
+	
+	with torch.no_grad():
+		for i, (data, target) in tqdm(enumerate(testLoader, 1)):
+
+			data, target = data.to(device), target.to(device)
+
+			output = model(data)
+			conf, infered_class = torch.max(softmax(output), 1)
+			correct = infered_class.eq(target.view_as(infered_class)).sum().item()
+
+			conf_list.append(conf.item()), infered_class_list.append(infered_class.item())
+			target_list.append(target.item()), correct_list.append(correct)
+			id_list.append(i)
+
+			del data, target
+			torch.cuda.empty_cache()
+
+	conf_list = np.array(conf_list)
+	infered_class_list = np.array(infered_class_list)
+	correct_list = np.array(correct_list)
+	target_list = np.array(target_list)
+
+	acc = sum(correct_list)/len(correct_list)
+	print("Acc: %s"%(acc))
+
+	results = {"conf": conf_list, "target": target_list, "infered_class": infered_class_list, 
+	"correct": correct_list, "id": id_list}
+
+	return results
