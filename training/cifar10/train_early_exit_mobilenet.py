@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='Training the Early Exit of a MobileNetV2. B-Mobilenet')
 	parser.add_argument('--lr_backbone', type=float, default=0.045, help='Learning Rate (default: 0.045)')
-	parser.add_argument('--lr_branches', type=float, default=0.045, help='Learning Rate (default: 0.045)')
+	parser.add_argument('--lr_branches', type=float, default=1.5e-4, help='Learning Rate (default: 1.5e-4)')
 	parser.add_argument('--weight_decay', type=float, default= 0.00004, help='Weight Decay (default: 0.00004)')
 	parser.add_argument('--opt', type=str, default= "SGD", 
 		choices=["SGD", "RMSProp", "Adam"], help='Optimizer (default: SGD)')
