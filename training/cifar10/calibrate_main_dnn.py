@@ -61,8 +61,8 @@ if (__name__ == "__main__"):
 
 	model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
 	save_temp_path = os.path.join(temp_dir_path, "temp_%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
-	results_no_calib = os.path.join(result_dir_path, "no_calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
-	results_calib = os.path.join(result_dir_path, "calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
+	result_no_calib_path = os.path.join(result_dir_path, "no_calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
+	result_calib_path = os.path.join(result_dir_path, "calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	
 	create_dir(temp_dir_path)
 	create_dir(result_dir_path)
@@ -86,17 +86,3 @@ if (__name__ == "__main__"):
 
 	save_calibration_main_results(results_no_calib, result_no_calib_path)
 	save_calibration_main_results(results_calib, result_calib_path)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
