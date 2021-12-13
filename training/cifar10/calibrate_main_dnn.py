@@ -37,7 +37,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--model_name', type=str, default="mobilenet", 
 		choices=["mobilenet", "vgg16", "resnet18", "resnet152"], help='Model Name (default: mobilenet)')
-	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 128)')
+	parser.add_argument('--batch_size_train', type=int, default=128, help='Batch Size (default: 128)')
+	parser.add_argument('--batch_size_test', type=int, default=1, help='Batch Size (default: 1)')	
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
 
 
@@ -70,11 +71,11 @@ if (__name__ == "__main__"):
 
 	if(args.dataset_name=="cifar10"):
 		train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
-			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
+			args.batch_size_train, args.batch_size_test, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
 	else:
 		train_loader, val_loader, test_loader = loadCifar100(dataset_path, indices_dir_path, args.model_id, 
-			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
+			args.batch_size_train, args.batch_size_test, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
 
 	scaled_model = MainModelCalibration(model, device, model_path, save_temp_path, args.lr, args.max_iter)

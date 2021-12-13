@@ -11,7 +11,7 @@ from torchvision.datasets import CIFAR10, CIFAR100
 import numpy as np
 
 
-def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, crop_size, split_rate=0.1, seed=42):
+def loadCifar10(root_path, indices_path, model_id, batch_size_train, batch_size_test, input_size, crop_size, split_rate=0.1, seed=42):
 	ssl._create_default_https_context = ssl._create_unverified_context
 
 	np.random.seed(seed)
@@ -48,16 +48,15 @@ def loadCifar10(root_path, indices_path, model_id, batch_size, input_size, crop_
 	train_data = torch.utils.data.Subset(trainset, indices=train_idx)
 	val_data = torch.utils.data.Subset(trainset, indices=val_idx)
 
-	train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
-	val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=4)
+	train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size_train, shuffle=True, num_workers=4)
+	val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size_test, shuffle=False, num_workers=4)
 
 	testset = CIFAR10(root_path, transform=transform_test, train=False, download=True)
-	testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle = False, num_workers=4)
+	testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size_test, shuffle = False, num_workers=4)
 
 	return train_loader, val_loader, testloader
 
-
-def loadCifar100(root_path, indices_path, model_id, batch_size, input_size, crop_size, split_rate=0.1, seed=42):
+def loadCifar100(root_path, indices_path, model_id, batch_size_train, batch_size_test, input_size, crop_size, split_rate=0.1, seed=42):
 	ssl._create_default_https_context = ssl._create_unverified_context
 
 	np.random.seed(seed)
@@ -94,10 +93,10 @@ def loadCifar100(root_path, indices_path, model_id, batch_size, input_size, crop
 	train_data = torch.utils.data.Subset(trainset, indices=train_idx)
 	val_data = torch.utils.data.Subset(trainset, indices=val_idx)
 
-	train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
-	val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=4)
+	train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size_train, shuffle=True, num_workers=4)
+	val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size_test, shuffle=False, num_workers=4)
 
 	testset = CIFAR100(root_path, transform=transform_test, train=False, download=True)
-	testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle = False, num_workers=4)
+	testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size_test, shuffle = False, num_workers=4)
 
 	return train_loader, val_loader, testloader

@@ -40,7 +40,8 @@ if __name__ == "__main__":
 		choices=["SGD", "RMSProp", "Adam"], help='Optimizer (default: SGD)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
 	parser.add_argument('--lr_decay', type=float, default=0.98, help='Learning Rate Decay (default: 0.98)')
-	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 128)')
+	parser.add_argument('--batch_size_train', type=int, default=128, help='Batch Size (default: 128)')
+	parser.add_argument('--batch_size_test', type=int, default=1, help='Batch Size (default: 1)')
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
@@ -98,10 +99,10 @@ if __name__ == "__main__":
 
 	if(args.dataset_name=="cifar10"):
 		train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
-			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
+			args.batch_size_train, args.batch_size_test, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 	else:
 		train_loader, val_loader, test_loader = loadCifar100(dataset_path, indices_dir_path, args.model_id, 
-			args.batch_size, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
+			args.batch_size_train, args.batch_size_test, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
 	
 	if(args.opt == "SGD"):
