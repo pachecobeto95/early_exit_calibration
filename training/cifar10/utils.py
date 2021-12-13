@@ -40,8 +40,8 @@ def get_model_arch(pretrained, model_name, n_classes, device):
 		model_resnet152 = models.resnet18()
 		model_resnet152.fc = nn.Linear(model_resnet152.fc.in_features, n_classes)
 
-		dict_model = {"mobilenet": mobilenet, "vgg16": vgg16(), 
-		"resnet18": model_resnet18, "resnet152": model_resnet152()}
+		dict_model = {"mobilenet": mobilenet, "vgg16": vgg16, 
+		"resnet18": model_resnet18, "resnet152": model_resnet152}
 	else:
 		dict_model = {"mobilenet": MobileNetV2_2(n_classes, device), "vgg16": vgg16_bn(n_classes), 
 		"resnet18": resnet18(n_classes), "resnet152": model_resnet152()}
