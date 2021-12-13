@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from networks.mobilenet import MobileNetV2_2
-from networks.resnet import resnet18
+from networks.resnet import resnet18, resnet152
 from networks.vgg import vgg16_bn
 import torchvision.models as models
 import pandas as pd
@@ -46,6 +46,6 @@ def get_model_arch(pretrained, model_name, n_classes, device):
 		"resnet18": model_resnet18, "resnet152": model_resnet152}
 	else:
 		dict_model = {"mobilenet": MobileNetV2_2(n_classes, device), "vgg16": vgg16_bn(n_classes), 
-		"resnet18": resnet18(n_classes), "resnet152": "a"}
+		"resnet18": resnet18(n_classes), "resnet152": resnet152(n_classes)}
 
 	return dict_model[model_name]
