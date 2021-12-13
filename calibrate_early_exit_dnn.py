@@ -1202,7 +1202,7 @@ class BranchesModelWithTemperature(nn.Module):
     return self.model.forwardBranchesCalibration(x, self.temperature_branches)
 
   def forwardOverallCalibration(self, x):
-     return self.model.forwardOverallCalibration(x, self.temperature_overall)
+     return self.model.forwardOverallCalibration(x, self.temperature)
   
   def temperature_scale_overall(self, logits):
     return torch.div(logits, self.temperature_overall)
@@ -1571,11 +1571,8 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
       id_list.append(i)
       target_list.append(target.item())
 
-
-
       del data, target
       torch.cuda.empty_cache()
-      #break
 
   conf_branches_list = np.array(conf_branches_list)
   infered_class_branches_list = np.array(infered_class_branches_list)
@@ -1669,7 +1666,6 @@ model_save_path = os.path.join(root_save_path, "appEdge", "api", "services", "mo
 dataset = LoadDataset(input_dim, batch_size_train, batch_size_test, model_id)
 train_loader, val_loader, test_loader = dataset.caltech_256(dataset_path, split_ratio, dataset_name, save_indices_path)
 
-sys.exit()
 
 early_exit_dnn = Early_Exit_DNN(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution=distribution)
 early_exit_dnn = early_exit_dnn.to(device)

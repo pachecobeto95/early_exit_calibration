@@ -60,9 +60,90 @@ class _ECELoss(nn.Module):
         return ece
 
 
+class MainModelCalibration(nn.Module):
+  def __init__(self, model, device, modelPath, saveTempPath, lr, max_iter):
+    super(MainModelCalibration, self).__init__()
+
+    self.model = model
+    self.saveTempPath = saveTempPath
+    self.lr = lr
+    self.max_iter = max_iter
+    self.device = device
+    self.temperature = nn.Parameter((1.5*torch.ones(1)).to(self.device))
+
+    self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
+
+  def temperature_scale(self, logits):
+    temperature = self.temperature.unsqueeze(1).expand(logits.size(0), logits.size(1))
+    return logits / temperature
+
+
+  def save_temperature(self, result):
+  # This function probably should live outside of this class, but whatever
+    df = pd.read_csv(self.saveTempPath) if (os.path.exists(self.saveTempPath)) else pd.DataFrame()
+    
+    df = df.append(pd.Series(result), ignore_index=True)
+    df.to_csv(self.saveTempPath)
+  
+  def set_temperature(self, valid_loader, p_tar):
+    """
+    Tune the tempearature of the model (using the validation set).
+    We're going to set it to optimize NLL.
+    valid_loader (DataLoader): validation set loader
+    """
+        
+    nll_criterion = nn.CrossEntropyLoss().to(self.device)
+    ece_criterion = _ECELoss().to(self.device)
+
+    # First: collect all the logits and labels for the validation set
+    logits_list = []
+    labels_list = []
+    self.model.eval()
+
+    with torch.no_grad():
+      for data, label in tqdm(valid_loader):
+        data, label = data.to(self.device), label.to(self.device)  
+          
+        logits = self.model(data)
+        logits_list.append(logits), labels_list.append(label)
+      
+    logits = torch.cat(logits_list).to(self.device)
+    labels = torch.cat(labels_list).to(self.device)
+
+    # Calculate NLL and ECE before temperature scaling
+    before_temperature_nll = nll_criterion(logits, labels).item()
+    before_temperature_ece = ece_criterion(logits, labels).item()
+    print('Before temperature - NLL: %.3f, ECE: %.3f' % (before_temperature_nll, before_temperature_ece))
+
+    # Next: optimize the temperature w.r.t. NLL
+    optimizer = optim.LBFGS([self.temperature], lr=self.lr, max_iter=self.max_iter)
+
+    def eval():
+      optimizer.zero_grad()
+      loss = nll_criterion(self.temperature_scale(logits), labels)
+      loss.backward()
+      return loss
+    optimizer.step(eval)
+
+    # Calculate NLL and ECE after temperature scaling
+    after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
+    after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
+    print('Optimal temperature: %.3f' % self.temperature_overall.item())
+    print('After temperature - NLL: %.3f, ECE: %.3f'%(after_temperature_nll, after_temperature_ece))
+
+    result = {"before_nll": before_temperature_nll, "after_nll": after_temperature_nll,
+    "before_ece": before_temperature_ece, "after_ece": after_temperature_ece,
+    "temperature": self.temperature.item()}
+
+    self.save_temperature(result)
+
+    return self
+
+
+
 class ModelOverallCalibration(nn.Module):
 
-  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=2000):
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=1000):
     super(ModelOverallCalibration, self).__init__()
     
     self.model = model

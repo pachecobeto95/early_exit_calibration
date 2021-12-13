@@ -4,7 +4,7 @@ import itertools
 from tqdm import tqdm
 import os, sys, random
 from statistics import mode
-
+import argparse
 
 def compute_reward(conf_branch, arm, delta_conf, overhead):
   if(conf_branch >= arm):
@@ -83,19 +83,25 @@ def ucb_experiment(df, threshold_list, overhead_list, label_list, n_round, c, sa
     df_result = df_result.append(df2)
     df_result.to_csv(savePath)
 
+if __name__ == "__main__":
 
-model_id = 2
-model_name = "alexnet"
-root_path = os.path.join(".")
-results_path = os.path.join(root_path, "inference_exp_ucb_%s.csv"%(model_id))
-df_result = pd.read_csv(results_path)
-df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
-threshold_list = np.arange(0, 1.1, 0.1)
-overhead_list = np.arange(0, 1.0, 0.1)
-n_rounds = 5000000
-verbose = False
-label_list = ["cat", "ship", "dog", "automobile"]
-c = 1.0
-savePath = os.path.join(".", "%s_ucb_all_samples_c_%s_nrounds_%s.csv"%(model_name, c, n_rounds))
+  parser = argparse.ArgumentParser(description='UCB using Alexnet')
+  parser.add_argument('--model_id', type=int, default=2, help='Model Id (default: 2)')
+  parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
+  parser.add_argument('--n_rounds', type=int, default=5000000, help='Model Id (default: 5000000)')
+  parser.add_argument('--model_name', type=str, default="alexnet", help='Model Name (default: alexnet)')
 
-ucb_experiment(df_result, threshold_list, overhead_list, label_list, n_rounds, c, savePath, verbose)
+  args = parser.parse_args()
+
+  root_path = os.path.join(".")
+  results_path = os.path.join(root_path, "inference_exp_ucb_%s.csv"%(args.model_id))
+  df_result = pd.read_csv(results_path)
+  df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
+  threshold_list = np.arange(0, 1.1, 0.1)
+  overhead_list = np.arange(0, 1.0, 0.1)
+  verbose = False
+  label_list = ["cat", "ship", "dog", "automobile"]
+  c = 1.0
+  savePath = os.path.join(".", "%s_ucb_all_samples_c_%s_nrounds_%s.csv"%(args.model_name, args.c, args.n_rounds))
+
+  ucb_experiment(df_result, threshold_list, overhead_list, label_list, args.n_rounds, args.c, savePath, verbose)
