@@ -85,15 +85,19 @@ def testMainModel(model, testLoader, device):
 			conf, infered_class = torch.max(softmax(output), 1)
 			correct = infered_class.eq(target.view_as(infered_class)).sum().item()
 
-			conf_list.append(conf.item()), infered_class_list.append(infered_class.item())
+			conf_list.append(conf), infered_class_list.append(infered_class)
 			target_list.append(target.item()), correct_list.append(correct)
 			id_list.append(i)
 
 			del data, target
 			torch.cuda.empty_cache()
 
-	conf_list = np.array(conf_list)
-	infered_class_list = np.array(infered_class_list)
+
+	conf_list = torch.cat(conf_list).to(device)
+	infered_class_list = torch.cat(infered_class_list).to(device)
+
+	conf_list = np.array(conf_list.cpu().detach().numpy())
+	infered_class_list = np.array(infered_class_list.cpu().detach().numpy())
 	correct_list = np.array(correct_list)
 	target_list = np.array(target_list)
 
