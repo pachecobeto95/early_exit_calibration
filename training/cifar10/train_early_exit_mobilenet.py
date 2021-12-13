@@ -70,7 +70,7 @@ if __name__ == "__main__":
 	mode = "ft" if(args.pretrained) else "scratch"
 	mode_backbone = "backbone" if(args.backbone_pretrained) else ""
 
-	backbone_model_path = os.path.join(model_dir_path, "mobilenet_main_%s_id_%s_%s_%s.pth"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
+	backbone_model_path = os.path.join(model_dir_path, "mobilenet_main_%s_id_%s_%s_%s.pth"%(args.dataset_name, args.model_id, mode))
 	early_exit_model_path = os.path.join(model_dir_path, "b_mobilenet_early_exit_%s_id_%s_%s_%s.pth"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
 	history_path = os.path.join(history_dir_path, "history_b_mobilenet_early_exit_%s_id_%s_%s_%s.csv"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
 	indices_dir_path = os.path.join(root_path, "indices")
