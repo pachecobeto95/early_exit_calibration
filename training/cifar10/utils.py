@@ -7,6 +7,7 @@ from networks.resnet import resnet18
 from networks.vgg import vgg16_bn
 import torchvision.models as models
 import pandas as pd
+import numpy as np
 
 def create_dirs(history_path, model_path):
 	if not os.path.exists(model_path):
