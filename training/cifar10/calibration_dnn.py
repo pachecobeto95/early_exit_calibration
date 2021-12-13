@@ -83,7 +83,7 @@ class MainModelCalibration(nn.Module):
 
     def save_temperature(self, result):
         # This function probably should live outside of this class, but whatever
-        df = pd.read_csv(self.saveTempPath) if (os.path.exists(self.saveTempPath)) else pd.DataFrame()
+        df = pd.DataFrame()
     
         df = df.append(pd.Series(result), ignore_index=True)
         df.to_csv(self.saveTempPath)

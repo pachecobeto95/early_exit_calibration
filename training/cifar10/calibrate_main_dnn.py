@@ -60,7 +60,7 @@ if (__name__ == "__main__"):
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 	model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
-	save_temp_path = os.path.join(temp_dir_path, "temp_%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
+	save_temp_path = os.path.join(temp_dir_path, "temp_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	result_no_calib_path = os.path.join(result_dir_path, "no_calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	result_calib_path = os.path.join(result_dir_path, "calib_results_%s_main_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	
