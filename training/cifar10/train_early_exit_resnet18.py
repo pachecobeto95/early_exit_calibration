@@ -32,8 +32,8 @@ from early_exit_dnns import Early_Exit_DNN
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='Training the backbone of a MobileNetV2')
-	parser.add_argument('--lr_backbone', type=float, default=0.01, help='Learning Rate (default: 0.01)')
-	parser.add_argument('--lr_branches', type=float, default=1.5e-4, help='Learning Rate (default: 1.5e-4)')
+	parser.add_argument('--lr_backbone', type=float, default=.5e-4, help='Learning Rate (default: 0.01)')
+	parser.add_argument('--lr_branches', type=float, default=0.01, help='Learning Rate (default: 1.5e-4)')
 	parser.add_argument('--weight_decay', type=float, default= 0.0001, help='Weight Decay (default: 0.0001)')
 	parser.add_argument('--opt', type=str, default= "SGD", help='Optimizer (default: RMSProp)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
