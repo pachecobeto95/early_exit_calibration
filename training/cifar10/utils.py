@@ -30,6 +30,7 @@ def save_calibration_main_results(result, save_path):
 
 def get_model_arch(pretrained, model_name, n_classes, device):
 	if (pretrained):
+		print("OK")
 		mobilenet = models.mobilenet_v2()
 		mobilenet.classifier[1] = nn.Linear(1280, n_classes)
 
@@ -39,7 +40,7 @@ def get_model_arch(pretrained, model_name, n_classes, device):
 		model_resnet18 = models.resnet18()
 		model_resnet18.fc = nn.Linear(model_resnet18.fc.in_features, n_classes)
 
-		model_resnet152 = models.resnet18()
+		model_resnet152 = models.resnet152()
 		model_resnet152.fc = nn.Linear(model_resnet152.fc.in_features, n_classes)
 
 		dict_model = {"mobilenet": mobilenet, "vgg16": vgg16, 
