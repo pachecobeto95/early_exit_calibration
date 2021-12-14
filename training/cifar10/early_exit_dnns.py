@@ -762,7 +762,7 @@ class Early_Exit_DNN(nn.Module):
     backbone_model = MobileNetV2_2(self.n_classes, self.device)
 
     # It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
-    self.verifies_nr_exits(backbone_model.networks)
+    self.verifies_nr_exits(backbone_model.network)
 
     if(self.backbone_pretrained):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
@@ -774,17 +774,17 @@ class Early_Exit_DNN(nn.Module):
 
 
     for block in range(n_blocks+1):
-      self.layers.append(backbone_model.networks[block])    
+      self.layers.append(backbone_model.network[block])    
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
 
-    self.layers.append(backbone_model.networks[-1][0])
-    self.layers.append(backbone_model.networks[-1][1])
+    self.layers.append(backbone_model.network[-1][0])
+    self.layers.append(backbone_model.network[-1][1])
     
     self.stages.append(nn.Sequential(*self.layers))
     
-    self.classifier = backbone_model.networks[-1][-1] if(self.backbone_pretrained) else Conv2d(1280, self.n_classes, 
+    self.classifier = backbone_model.network[-1][-1] if(self.backbone_pretrained) else Conv2d(1280, self.n_classes, 
       kernel_size=(1, 1), stride=(1, 1))
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
