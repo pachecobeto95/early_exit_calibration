@@ -510,7 +510,7 @@ class Early_Exit_DNN(nn.Module):
 
     if (self.pretrained):
       backbone_model = models.resnet18(self.pretrained)
-      backbone_model.fc = nn.Linear(backbone_model.fc.in_features, n_classes)
+      backbone_model.fc = nn.Linear(backbone_model.fc.in_features, self.n_classes)
     else:
       backbone_model = resnet18(self.n_classes)
 
