@@ -57,6 +57,7 @@ if __name__ == "__main__":
 	parser.add_argument('--loss_weight_type', type=str, default="crescent", 
 		choices=["crescent", "decrescent", "equal"], help='Loss Weight (default: decrescent)')
 
+	args = parser.parse_args()
 
 	model_name = "vgg16"
 	n_classes = 10 if(args.dataset_name == "cifar10") else 100
