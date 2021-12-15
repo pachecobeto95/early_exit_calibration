@@ -37,7 +37,7 @@ if __name__ == "__main__":
 	parser.add_argument('--opt', type=str, default= "SGD", help='Optimizer (default: RMSProp)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
 	parser.add_argument('--lr_decay', type=float, default=0.1, help='Learning Rate Decay (default: 0.98)')
-	parser.add_argument('--batch_size_train', type=int, default=64, help='Batch Size (default: 128)')
+	parser.add_argument('--batch_size_train', type=int, default=32, help='Batch Size (default: 128)')
 	parser.add_argument('--batch_size_test', type=int, default=1, help='Batch Size (default: 1)')
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
