@@ -658,7 +658,7 @@ class Early_Exit_DNN(nn.Module):
 
     if (self.pretrained):
       backbone_model = models.vgg16_bn(self.pretrained)
-      backbone_model.classifier[6] = nn.Linear(backbone_model.classifier[6].in_features, n_classes)
+      backbone_model.classifier[6] = nn.Linear(backbone_model.classifier[6].in_features, self.n_classes)
 
     else:
       backbone_model = vgg16(self.n_classes)
