@@ -834,7 +834,7 @@ class Early_Exit_DNN(nn.Module):
     self.stages.append(nn.Sequential(*self.layers))
 
     if (self.backbone_pretrained):
-      self.classifier = backbone_model.classifier
+      self.classifier = backbone_model.classifier[1]
 
     else:    
       self.classifier = nn.Sequential(
