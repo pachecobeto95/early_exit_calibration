@@ -400,7 +400,7 @@ class ModelAllSamplesCalibration(nn.Module):
         before_ece_list.append(None), after_ece_list.append(None)
         continue
 
-      self.temperature_branch = nn.Parameter((torch.ones(1)*1.).to(self.device))
+      self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
       optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
 
       logit_branch = torch.cat(logits_list[i]).to(self.device)
@@ -452,11 +452,11 @@ class ModelAllSamplesCalibration(nn.Module):
 
 def calibratingEEModels(model, val_loader, p_tar, device, model_path, temperaturePath, args):
 
-    overall_model = ModelOverallCalibration(model, device, model_path, temperaturePath["overall_calib"], args.lr, args.max_iter)
-    overall_model.set_temperature(val_loader, p_tar)
+    #overall_model = ModelOverallCalibration(model, device, model_path, temperaturePath["overall_calib"], args.lr, args.max_iter)
+    #overall_model.set_temperature(val_loader, p_tar)
 
-    branches_model = ModelBranchesCalibration(model, device, model_path, temperaturePath["branches_calib"], args.lr, args.max_iter)
-    branches_model.set_temperature(val_loader, p_tar)
+    #branches_model = ModelBranchesCalibration(model, device, model_path, temperaturePath["branches_calib"], args.lr, args.max_iter)
+    #branches_model.set_temperature(val_loader, p_tar)
 
     all_samples_model = ModelAllSamplesCalibration(model, device, model_path, temperaturePath["all_samples_calib"], args.lr, args.max_iter)
     all_samples_model.set_temperature(val_loader, p_tar)
