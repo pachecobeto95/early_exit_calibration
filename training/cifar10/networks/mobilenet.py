@@ -196,23 +196,22 @@ class MobileNetV2_2(nn.Module):
 		block.append(nn.Sequential(nn.Conv2d(3, c[0], 3, stride=1, padding=1, bias=False),
 			nn.BatchNorm2d(c[0]),
 			nn.Dropout2d(dropout_prob, inplace=True),
-			nn.ReLU6()))
+			nn.ReLU6()).to(device))
 
 		for i in range(7):
 			block.extend(get_inverted_residual_block_arr(c[i], c[i+1],
 				t=t[i+1], s=s[i+1],
-				n=n[i+1]))
+				n=n[i+1]).to(device))
 
 
 		block.append(nn.Sequential(nn.Conv2d(c[-2], c[-1], 1, bias=False),
 			nn.BatchNorm2d(c[-1]),
-			nn.ReLU6()))
+			nn.ReLU6()).to(device))
 
 		block.append(nn.Sequential(nn.AvgPool2d(image_size//down_sample_rate),
 			nn.Dropout2d(dropout_prob, inplace=True),
 			nn.Conv2d(c[-1], n_classes, 1, bias=True)))
 
-		block = block.to(device)
 		self.network = nn.Sequential(*block).to(device)
 
 		# initialize
