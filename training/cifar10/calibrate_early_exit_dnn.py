@@ -107,17 +107,17 @@ if (__name__ == "__main__"):
 		no_calib_result = testEarlyExitInference(early_exit_dnn, early_exit_dnn.n_branches, test_loader, 
 			threshold, device, model_type="no_calib")
 
-		scaled_models_dict = calibratingEEModels(early_exit_dnn, val_loader, p_tar, device, model_path, temperaturePath)
+		scaled_models_dict = calibratingEEModels(early_exit_dnn, val_loader, threshold, device, model_path, temperaturePath)
 
 
 		overall_result = testEarlyExitInference(scaled_models_dict["calib_overall"], early_exit_dnn.n_branches, test_loader, 
-			p_tar, device, model_type="calib_overall")
+			threshold, device, model_type="calib_overall")
 
 		branches_result = testEarlyExitInference(scaled_models_dict["calib_branches"], early_exit_dnn.n_branches, 
-			test_loader, p_tar, device, model_type="calib_branches")
+			test_loader, threshold, device, model_type="calib_branches")
 
 		all_samples_result = testEarlyExitInference(scaled_models_dict["calib_branches_all_samples"], 
-			early_exit_dnn.n_branches, test_loader, p_tar, device, model_type="calib_branches_all_samples")
+			early_exit_dnn.n_branches, test_loader, threshold, device, model_type="calib_branches_all_samples")
 
 		save_all_results_ee_calibration(no_calib_result, overall_result, branches_result, 
 			all_samples_result, resultPathDict)
