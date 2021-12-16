@@ -69,7 +69,7 @@ class MainModelCalibration(nn.Module):
         self.lr = lr
         self.max_iter = max_iter
         self.device = device
-        self.temperature = nn.Parameter((2.*torch.ones(1)).to(self.device))
+        self.temperature = nn.Parameter((1.5*torch.ones(1)).to(self.device))
 
         self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
 
@@ -150,7 +150,7 @@ class ModelOverallCalibration(nn.Module):
     
     self.model = model
     self.device = device
-    self.temperature_overall = nn.Parameter((1.5*torch.ones(1)).to(self.device))
+    self.temperature_overall = nn.Parameter((1.*torch.ones(1)).to(self.device))
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
@@ -234,7 +234,7 @@ class ModelBranchesCalibration(nn.Module):
     self.device = device
     self.n_exits = model.n_branches + 1
 
-    self.temperature_branches = [nn.Parameter((1.5*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
+    self.temperature_branches = [nn.Parameter((1.*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
@@ -289,7 +289,7 @@ class ModelBranchesCalibration(nn.Module):
         before_ece_list.append(None), after_ece_list.append(None)
         continue
 
-      self.temperature_branch = nn.Parameter((torch.ones(1)*2.).to(self.device))
+      self.temperature_branch = nn.Parameter((torch.ones(1)*1.).to(self.device))
 
       optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
 
@@ -347,7 +347,7 @@ class ModelAllSamplesCalibration(nn.Module):
     self.device = device
     self.n_exits = model.n_branches + 1
 
-    self.temperature_branches = [nn.Parameter((1.5*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
+    self.temperature_branches = [nn.Parameter((1.*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
