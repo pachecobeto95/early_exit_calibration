@@ -77,7 +77,7 @@ if (__name__ == "__main__"):
 	create_dir(temp_dir_path)
 	create_dir(result_dir_path)
 
-	early_exit_dnn = Early_Exit_DNN(model_name, n_classes, args.pretrained, args.backbone_pretrained, 
+	early_exit_dnn = Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.backbone_pretrained, 
 		backbone_model_path, args.n_branches, input_shape, args.exit_type, device, distribution=args.distribution)
 	early_exit_dnn = early_exit_dnn.to(device)
 

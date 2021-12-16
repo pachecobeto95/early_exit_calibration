@@ -116,3 +116,4 @@ def testEarlyExitInference(model, n_branches, test_loader, threshold, device, mo
 
 	return results
 
+
