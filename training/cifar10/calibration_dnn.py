@@ -145,12 +145,12 @@ class MainModelCalibration(nn.Module):
 
 class ModelOverallCalibration(nn.Module):
 
-  def __init__(self, model, device, modelPath, saveTempPath, lr=0.001, max_iter=1000):
+  def __init__(self, model, device, modelPath, saveTempPath, lr=0.01, max_iter=1000):
     super(ModelOverallCalibration, self).__init__()
     
     self.model = model
     self.device = device
-    self.temperature_overall = nn.Parameter((1.5*torch.ones(1)).to(self.device))
+    self.temperature_overall = nn.Parameter((1.*torch.ones(1)).to(self.device))
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
@@ -234,7 +234,7 @@ class ModelBranchesCalibration(nn.Module):
     self.device = device
     self.n_exits = model.n_branches + 1
 
-    self.temperature_branches = [nn.Parameter((1.5*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
+    self.temperature_branches = [nn.Parameter((1.*torch.ones(1)).to(self.device)) for i in range(self.n_exits)]
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
@@ -289,7 +289,7 @@ class ModelBranchesCalibration(nn.Module):
         before_ece_list.append(None), after_ece_list.append(None)
         continue
 
-      self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
+      self.temperature_branch = nn.Parameter((torch.ones(1)*1.).to(self.device))
 
       optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
 
