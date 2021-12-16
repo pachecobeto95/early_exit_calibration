@@ -212,6 +212,7 @@ class MobileNetV2_2(nn.Module):
 			nn.Dropout2d(dropout_prob, inplace=True),
 			nn.Conv2d(c[-1], n_classes, 1, bias=True)))
 
+		block = block.to(device)
 		self.network = nn.Sequential(*block).to(device)
 
 		# initialize
