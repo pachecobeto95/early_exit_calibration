@@ -511,6 +511,7 @@ class Early_Exit_DNN(nn.Module):
     if (self.pretrained):
       backbone_model = models.resnet18(self.pretrained)
       backbone_model.fc = nn.Linear(backbone_model.fc.in_features, self.n_classes)
+      backbone_model = backbone_model.to(self.device)
     else:
       backbone_model = resnet18(self.n_classes).to(self.device)
 
