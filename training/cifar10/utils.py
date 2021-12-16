@@ -66,7 +66,7 @@ def save_result(result, save_path):
 	df_result.to_csv(save_path)
 
 
-def testEarlyExitInference(model, n_branches, test_loader, threshold, device, model_type):
+def testEarlyExitInference(model, n_branches, test_loader, p_tar, device, model_type):
 	df_result = pd.DataFrame()
 
 	n_exits = n_branches + 1
