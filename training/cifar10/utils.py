@@ -50,3 +50,69 @@ def get_model_arch(pretrained, model_name, n_classes, device):
 		"resnet18": resnet18(n_classes), "resnet152": resnet152(n_classes)}
 
 	return dict_model[model_name]
+
+def save_all_results_ee_calibration(no_calib_result, overall_result, branches_result, all_samples_result, resultPathDict):
+	save_result(no_calib_result, resultPath["no_calib"])
+	save_result(overall_result, resultPath["overall_calib"])
+	save_result(branches_result, resultPath["branches_calib"])
+	save_result(all_samples_result, resultPath["all_samples_calib"])
+
+
+def save_result(result, save_path):
+	df_result = pd.read_csv(save_path) if (os.path.exists(save_path)) else pd.DataFrame()
+	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	df_result = df_result.append(df)
+	df_result.to_csv(save_path)
+
+
+def testEarlyExitInference(model, n_branches, test_loader, threshold, device, model_type):
+	df_result = pd.DataFrame()
+
+	n_exits = n_branches + 1
+	conf_branches_list, infered_class_branches_list, target_list = [], [], []
+	correct_list, exit_branch_list, id_list = [], [], []
+
+	model.eval()
+
+	with torch.no_grad():
+		for i, (data, target) in tqdm(enumerate(test_loader, 1)):
+
+			data, target = data.to(device), target.to(device)
+
+			if (model_type == "no_calib"):
+				_, conf_branches, infered_class_branches = model.forwardAllExits(data)
+
+			elif (model_type == "calib_overall"):
+				conf_branches, infered_class_branches = model.forwardOverall(data)
+
+			elif (model_type == "calib_branches"):
+				conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
+			
+			else:
+				conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
+
+			conf_branches_list.append([conf.item() for conf in conf_branches])
+			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
+			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
+			id_list.append(i)
+			target_list.append(target.item())
+
+			del data, target
+			torch.cuda.empty_cache()
+
+	conf_branches_list = np.array(conf_branches_list)
+	infered_class_branches_list = np.array(infered_class_branches_list)
+	correct_list = np.array(correct_list)
+  
+	print(model_type)
+	print("Acc:")
+	print([sum(correct_list[:, i])/len(correct_list[:, i]) for i in range(n_exits)])
+
+	results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
+	for i in range(n_exits):
+		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
+			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
+			"correct_branch_%s"%(i+1): correct_list[:, i]})
+
+	return results
+
