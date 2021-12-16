@@ -545,7 +545,7 @@ class Early_Exit_DNN(nn.Module):
           self.add_exit_block()
     
     self.layers.append(nn.AdaptiveAvgPool2d(1))
-    self.classifier = backbone_model.fc if(self.backbone_pretrained) else nn.Sequential(nn.Linear(512, self.n_classes))
+    self.classifier = nn.Sequential(nn.Linear(512, self.n_classes))
     self.stages.append(nn.Sequential(*self.layers))
     self.softmax = nn.Softmax(dim=1)
     self.set_device()
