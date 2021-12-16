@@ -44,6 +44,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
 	parser.add_argument('--loss_weight_type', type=str, default="crescent", 
 		choices=["crescent", "decrescent", "equal"], help='Loss Weight (default: decrescent)')
+	parser.add_argument('--backbone_pretrained', dest='backbone_pretrained', 
+		action='store_false', default=True, help='Pretrained (default:True)')
 
 
 	args = parser.parse_args()
