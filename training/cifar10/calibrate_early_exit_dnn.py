@@ -47,6 +47,11 @@ if (__name__ == "__main__"):
 	parser.add_argument('--backbone_pretrained', dest='backbone_pretrained', 
 		action='store_false', default=True, help='Pretrained (default:True)')
 	parser.add_argument('--n_branches', type=int, default=5, help='Number of side branches (default: 5)')
+	parser.add_argument('--distribution', type=str, default="linear", help='Distribution of Branches (default: 1)')
+	parser.add_argument('--exit_type', type=str, default="bnpool", 
+		choices=["bnpool", "plain"], help='Exit Block Type (default: bnpool)')
+	parser.add_argument('--loss_weight_type', type=str, default="crescent", 
+		choices=["crescent", "decrescent", "equal"], help='Loss Weight (default: decrescent)')
 
 
 	args = parser.parse_args()
@@ -65,6 +70,8 @@ if (__name__ == "__main__"):
 	crop_size = 224 if (args.pretrained) else 32
 	n_classes = 10 if (args.dataset_name == "cifar10") else 100
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+	input_shape = (3, input_size, input_size)
+
 	threshold_list = [0.5, 0.6, 0.7, 0.8, 0.9]
 
 	backbone_model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
