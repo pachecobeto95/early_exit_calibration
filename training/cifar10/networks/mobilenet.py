@@ -173,9 +173,9 @@ class InvertedResidual(nn.Module):
 
 def get_inverted_residual_block_arr(in_, out_, t=6, s=1, n=1):
 	block = []
-	block.append(InvertedResidual(in_, out_, t, s=s))
+	block.append(InvertedResidual(in_, out_, t, s=s).cuda())
 	for i in range(n-1):
-		block.append(InvertedResidual(out_, out_, t, 1))
+		block.append(InvertedResidual(out_, out_, t, 1).cuda())
 	return block
 
 class MobileNetV2_2(nn.Module):
@@ -201,7 +201,7 @@ class MobileNetV2_2(nn.Module):
 		for i in range(7):
 			block.extend(get_inverted_residual_block_arr(c[i], c[i+1],
 				t=t[i+1], s=s[i+1],
-				n=n[i+1]).to(device))
+				n=n[i+1]))
 
 
 		block.append(nn.Sequential(nn.Conv2d(c[-2], c[-1], 1, bias=False),
