@@ -25,6 +25,8 @@ from utils import create_dir, save_all_results_ee_calibration, testEarlyExitInfe
 from load_dataset import loadCifar10, loadCifar100
 from calibration_dnn import MainModelCalibration, calibratingEEModels
 from train import testMainModel
+from early_exit_dnns import Early_Exit_DNN
+
 
 if (__name__ == "__main__"):
 	parser = argparse.ArgumentParser(description='Calibrating the backbone of a MobileNetV2')
