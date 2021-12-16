@@ -71,14 +71,13 @@ if (__name__ == "__main__"):
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	input_shape = (3, input_size, input_size)
 
-	threshold_list = [0.5, 0.6, 0.7, 0.8, 0.9]
+	threshold_list = [0.8, 0.9]
 
 	backbone_model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
 	model_path = os.path.join(model_dir_path, "b_%s_early_exit_%s_id_%s_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode, args.loss_weight_type))
 	save_overall_temp_path = os.path.join(temp_dir_path, "overall_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	save_branches_temp_path = os.path.join(temp_dir_path, "branches_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	
-	print(model_path)
 	result_no_calib_path = os.path.join(result_dir_path, "no_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	overall_result_calib_path = os.path.join(result_dir_path, "overall_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	branches_result_calib_path = os.path.join(result_dir_path, "branches_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
@@ -111,6 +110,7 @@ if (__name__ == "__main__"):
 
 
 	for threshold in threshold_list:
+		print("Ptar: %s"%(threshold))
 		no_calib_result = testEarlyExitInference(early_exit_dnn, early_exit_dnn.n_branches, test_loader, 
 			threshold, device, model_type="no_calib")
 
