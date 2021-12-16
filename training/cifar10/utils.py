@@ -53,10 +53,10 @@ def get_model_arch(pretrained, model_name, n_classes, device):
 	return dict_model[model_name]
 
 def save_all_results_ee_calibration(no_calib_result, overall_result, branches_result, all_samples_result, resultPathDict):
-	save_result(no_calib_result, resultPath["no_calib"])
-	save_result(overall_result, resultPath["overall_calib"])
-	save_result(branches_result, resultPath["branches_calib"])
-	save_result(all_samples_result, resultPath["all_samples_calib"])
+	save_result(no_calib_result, resultPathDict["no_calib"])
+	save_result(overall_result, resultPathDict["overall_calib"])
+	save_result(branches_result, resultPathDict["branches_calib"])
+	save_result(all_samples_result, resultPathDict["all_samples_calib"])
 
 
 def save_result(result, save_path):
