@@ -78,6 +78,7 @@ if (__name__ == "__main__"):
 	save_overall_temp_path = os.path.join(temp_dir_path, "overall_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	save_branches_temp_path = os.path.join(temp_dir_path, "branches_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	
+	print(model_path)
 	result_no_calib_path = os.path.join(result_dir_path, "no_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	overall_result_calib_path = os.path.join(result_dir_path, "overall_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	branches_result_calib_path = os.path.join(result_dir_path, "branches_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
