@@ -897,7 +897,8 @@ class Early_Exit_DNN(nn.Module):
 
     x = self.stages[-1](x)
     
-    x = torch.flatten(x, 1)
+    if((self.model_name != "mobilenet") or (not self.pretrained)):
+      x = torch.flatten(x, 1)
 
     output = self.classifier(x)    
     output_list.append(output)
@@ -926,7 +927,9 @@ class Early_Exit_DNN(nn.Module):
       
     x = self.stages[-1](x)
     
-    x = torch.flatten(x, 1)
+    if((self.model_name != "mobilenet") or (not self.pretrained)):
+      x = torch.flatten(x, 1)
+
 
     output = self.classifier(x)
     output = self.temperature_scale_overall(output, temp_overall)
@@ -953,7 +956,9 @@ class Early_Exit_DNN(nn.Module):
       
     x = self.stages[-1](x)
     
-    x = torch.flatten(x, 1)
+
+    if((self.model_name != "mobilenet") or (not self.pretrained)):
+      x = torch.flatten(x, 1)
 
     output = self.classifier(x)
     output = self.temperature_scale_branches(output, temp_branches, -1)
@@ -980,7 +985,8 @@ class Early_Exit_DNN(nn.Module):
       
     x = self.stages[-1](x)
     
-    x = torch.flatten(x, 1)
+    if((self.model_name != "mobilenet") or (not self.pretrained)):
+      x = torch.flatten(x, 1)
 
     output = self.classifier(x)
     output = self.temperature_scale_branches(output, temp_all_samples, -1)
