@@ -90,9 +90,15 @@ if (__name__ == "__main__"):
 		backbone_model_path, args.n_branches, input_shape, args.exit_type, device, distribution=args.distribution)
 	early_exit_dnn = early_exit_dnn.to(device)
 
+	early_exit_dnn.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
+
+
 	resultPathDict = {"no_calib": result_no_calib_path, 
 	"overall_calib":overall_result_calib_path, "branches_calib":branches_result_calib_path, 
 	"all_samples_calib": all_result_calib_path}
+
+	temperaturePath = {"overall_calib": saveTempOverallPath, 
+	"branches_calib": saveTempBranchesPath, "all_samples_calib":saveTempBranchesAllSamplesPath}
 
 	if(args.dataset_name=="cifar10"):
 		train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
