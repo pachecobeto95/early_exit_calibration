@@ -770,7 +770,7 @@ class Early_Exit_DNN(nn.Module):
     if(self.backbone_pretrained):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
 
-    self.total_flops = self.countFlops(backbone_model)
+    self.total_flops = self.countFlops(backbone_model.network)
 
     # This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
     self.threshold_flop_list = self.where_insert_early_exits()
