@@ -512,7 +512,7 @@ class Early_Exit_DNN(nn.Module):
       backbone_model = models.resnet18(self.pretrained)
       backbone_model.fc = nn.Linear(backbone_model.fc.in_features, self.n_classes)
     else:
-      backbone_model = resnet18(self.n_classes)
+      backbone_model = resnet18(self.n_classes).to(self.device)
 
     if (self.backbone_pretrained):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
@@ -791,6 +791,7 @@ class Early_Exit_DNN(nn.Module):
       kernel_size=(1, 1), stride=(1, 1)).to(self.device)
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
+
 
 
   def early_exit_mobilenet(self):
