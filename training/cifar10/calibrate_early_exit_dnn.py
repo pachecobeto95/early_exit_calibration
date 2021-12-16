@@ -50,8 +50,7 @@ if (__name__ == "__main__"):
 	parser.add_argument('--distribution', type=str, default="linear", help='Distribution of Branches (default: 1)')
 	parser.add_argument('--exit_type', type=str, default="bnpool", 
 		choices=["bnpool", "plain"], help='Exit Block Type (default: bnpool)')
-	parser.add_argument('--loss_weight_type', type=str, default="crescent", 
-		choices=["crescent", "decrescent", "equal"], help='Loss Weight (default: decrescent)')
+
 
 
 	args = parser.parse_args()
