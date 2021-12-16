@@ -104,7 +104,7 @@ if (__name__ == "__main__"):
 
 
 	for threshold in threshold_list:
-		no_calib_result = testEarlyExitInference(early_exit_dnn, model.n_branches, test_loader, 
+		no_calib_result = testEarlyExitInference(early_exit_dnn, early_exit_dnn.n_branches, test_loader, 
 			threshold, device, model_type="no_calib")
 
 		scaled_models_dict = calibratingEEModels(early_exit_dnn, val_loader, p_tar, device, model_path, temperaturePath)
