@@ -66,7 +66,7 @@ if (__name__ == "__main__"):
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	threshold_list = [0.5, 0.6, 0.7, 0.8, 0.9]
 
-
+	backbone_model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
 	model_path = os.path.join(model_dir_path, "b_mobilenet_early_exit_%s_id_%s_%s_%s.pth"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
 	save_overall_temp_path = os.path.join(temp_dir_path, "overall_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	save_overall_temp_path = os.path.join(temp_dir_path, "branches_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
