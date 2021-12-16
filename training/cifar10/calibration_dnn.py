@@ -449,3 +449,16 @@ class ModelAllSamplesCalibration(nn.Module):
     self.save_temperature(error_measure_dict)
 
     return self
+
+def calibratingEEModels(model, val_loader, p_tar, device, model_path, temperaturePath):
+
+    overall_model = ModelOverallCalibration(model, device, model_path, saveTempPath)
+    overall_model.set_temperature(val_loader, p_tar)
+
+    branches_model = ModelBranchesCalibration(model, device, model_path, saveTempPath)
+    branches_model.set_temperature(val_loader, p_tar)
+
+    all_samples_model = ModelAllSamplesCalibration(model, device, model_path, saveTempPath)
+    all_samples_model.set_temperature(val_loader, p_tar)
+
+    return {"calib_overall": overall_model, "calib_branches": branches_model, "calib_branches_all_samples": all_samples_model}
