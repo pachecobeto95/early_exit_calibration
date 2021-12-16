@@ -787,7 +787,7 @@ class Early_Exit_DNN(nn.Module):
     
     self.stages.append(nn.Sequential(*self.layers))
     
-    self.classifier = backbone_model.network[-1][-1] if(self.backbone_pretrained) else Conv2d(1280, self.n_classes, 
+    self.classifier = backbone_model.network[-1][-1].to(self.device) if(self.backbone_pretrained) else Conv2d(1280, self.n_classes, 
       kernel_size=(1, 1), stride=(1, 1)).to(self.device)
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
