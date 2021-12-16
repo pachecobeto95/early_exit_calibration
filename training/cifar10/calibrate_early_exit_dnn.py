@@ -40,6 +40,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--batch_size_train', type=int, default=128, help='Batch Size (default: 128)')
 	parser.add_argument('--batch_size_test', type=int, default=1, help='Batch Size (default: 1)')	
 	parser.add_argument('--split_rate', type=float, default=0.1, help='Split rate of the dataset (default: 0.1)')
+	parser.add_argument('--loss_weight_type', type=str, default="crescent", 
+		choices=["crescent", "decrescent", "equal"], help='Loss Weight (default: decrescent)')
 
 
 	args = parser.parse_args()
