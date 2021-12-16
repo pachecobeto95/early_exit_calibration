@@ -897,8 +897,8 @@ class Early_Exit_DNN(nn.Module):
 
     x = self.stages[-1](x)
     
-    if((self.model_name != "mobilenet") or (not self.pretrained)):
-      x = torch.flatten(x, 1)
+    #if((self.model_name != "mobilenet") or (not self.pretrained)):
+    #  x = torch.flatten(x, 1)
 
     output = self.classifier(x)    
     output_list.append(output)
