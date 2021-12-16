@@ -46,6 +46,7 @@ if (__name__ == "__main__"):
 		choices=["crescent", "decrescent", "equal"], help='Loss Weight (default: decrescent)')
 	parser.add_argument('--backbone_pretrained', dest='backbone_pretrained', 
 		action='store_false', default=True, help='Pretrained (default:True)')
+	parser.add_argument('--n_branches', type=int, default=5, help='Number of side branches (default: 5)')
 
 
 	args = parser.parse_args()
