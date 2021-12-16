@@ -328,7 +328,7 @@ class Early_Exit_DNN(nn.Module):
     """
     This method counts the numper of Flops in a given full DNN model or intermediate DNN model.
     """
-    input = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
+    input = torch.rand(1, self.channel, self.width, self.height).to(self.device)
     flops, all_data = count_ops(model, input, print_readable=False, verbose=False)
     return flops
 
@@ -770,7 +770,7 @@ class Early_Exit_DNN(nn.Module):
     if(self.backbone_pretrained):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
 
-    self.total_flops = self.countFlops(backbone_model.network)
+    self.total_flops = self.countFlops(backbone_model)
 
     # This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
     self.threshold_flop_list = self.where_insert_early_exits()
