@@ -189,6 +189,7 @@ class MobileNetV2_2(nn.Module):
 		down_sample_rate = 8  # product of strides above
 		dropout_prob = 0.2
 		image_size = 32
+		self.device = device
 
 		block = []
 
@@ -228,7 +229,7 @@ class MobileNetV2_2(nn.Module):
 				nn.init.constant_(m.bias, 0)
 
 	def forward(self, x):
-		x = self.network(x)
+		x = self.network(x).to(self.device)
 		x = x.view(x.size(0), -1)
 
 		return x
