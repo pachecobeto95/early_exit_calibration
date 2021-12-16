@@ -74,9 +74,9 @@ if (__name__ == "__main__"):
 	threshold_list = [0.5, 0.6, 0.7, 0.8, 0.9]
 
 	backbone_model_path = os.path.join(model_dir_path, "%s_main_%s_id_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode))
-	model_path = os.path.join(model_dir_path, "b_mobilenet_early_exit_%s_id_%s_%s_%s.pth"%(args.dataset_name, args.model_id, mode, args.loss_weight_type))
+	model_path = os.path.join(model_dir_path, "b_%s_early_exit_%s_id_%s_%s_%s.pth"%(args.model_name, args.dataset_name, args.model_id, mode, args.loss_weight_type))
 	save_overall_temp_path = os.path.join(temp_dir_path, "overall_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
-	save_overall_temp_path = os.path.join(temp_dir_path, "branches_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
+	save_branches_temp_path = os.path.join(temp_dir_path, "branches_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	
 	result_no_calib_path = os.path.join(result_dir_path, "no_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	overall_result_calib_path = os.path.join(result_dir_path, "overall_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
@@ -97,8 +97,8 @@ if (__name__ == "__main__"):
 	"overall_calib":overall_result_calib_path, "branches_calib":branches_result_calib_path, 
 	"all_samples_calib": all_result_calib_path}
 
-	temperaturePath = {"overall_calib": saveTempOverallPath, 
-	"branches_calib": saveTempBranchesPath, "all_samples_calib":saveTempBranchesAllSamplesPath}
+	temperaturePath = {"overall_calib": save_overall_temp_path, 
+	"branches_calib": save_branches_temp_path, "all_samples_calib":save_branches_temp_path}
 
 	if(args.dataset_name=="cifar10"):
 		train_loader, val_loader, test_loader = loadCifar10(dataset_path, indices_dir_path, args.model_id, 
