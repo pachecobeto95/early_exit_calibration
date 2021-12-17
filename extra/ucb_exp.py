@@ -23,9 +23,11 @@ def get_row_data(row, threshold):
     delta_conf = max(conf_list) - conf_branch 
     return conf_branch, delta_conf
 
-def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose):
+def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePath, verbose):
   if (label != "all"):
     df = df[df.label == label]
+
+  df_result = pd.read_csv(savePath) if(os.path.exists(savePath)) else pd.DataFrame()
   
   df = df.sample(frac=1)
   delta = 1e-10
@@ -69,19 +71,23 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, verbose
 
   result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
             "label":[label]*len(inst_regret_list), "overhead":[overhead]*len(inst_regret_list)}
+  df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+  df_result = df_result.append(df2)
+  df_result.to_csv(savePath)
+
   return result
 
 
 def ucb_experiment(df, threshold_list, overhead_list, label_list, n_round, c, savePath, verbose=False):
-  df_result = pd.DataFrame()
+  #df_result = pd.DataFrame()
 
   config_list = list(itertools.product(*[label_list, overhead_list]))    
   
   for label, overhead in tqdm(config_list):
-    result = ucb_run_resampling(df, threshold_list, overhead, label, n_round, c, verbose)
-    df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
-    df_result = df_result.append(df2)
-    df_result.to_csv(savePath)
+    result = ucb_run_resampling(df, threshold_list, overhead, label, n_round, c, savePath, verbose)
+    #df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+    #df_result = df_result.append(df2)
+    #df_result.to_csv(savePath)
 
 if __name__ == "__main__":
 
