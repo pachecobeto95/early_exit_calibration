@@ -777,21 +777,46 @@ class Early_Exit_DNN(nn.Module):
     self.threshold_flop_list = self.where_insert_early_exits()
 
 
-    for block in range(n_blocks+1):
-      self.layers.append(backbone_model.network[block])    
+    self.layers.append(backbone_model.network[0])
+
+    if (self.is_suitable_for_exit()):
+      self.add_exit_block()
+
+    for i in range(1, 7):
+      self.layers.append(backbone_model.network[i])
+
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
+    self.append(backbone_model.network[-2])
+    if (self.is_suitable_for_exit()):
+      self.add_exit_block()
 
-    self.layers.append(backbone_model.network[-1][0])
-    self.layers.append(backbone_model.network[-1][1])
-    
+
     self.stages.append(nn.Sequential(*self.layers))
-    
-    self.classifier = backbone_model.network[-1][-1].to(self.device) if(self.backbone_pretrained) else Conv2d(1280, self.n_classes, 
-      kernel_size=(1, 1), stride=(1, 1)).to(self.device)
+    self.classifier = backbone_model.network[-1]
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
+
+    #block.append(nn.Sequential(nn.AvgPool2d(image_size//down_sample_rate),
+    #  nn.Dropout2d(dropout_prob, inplace=True),
+    #  nn.Conv2d(c[-1], n_classes, 1, bias=True)))
+
+    #for block in range(n_blocks+1):
+    #  self.layers.append(backbone_model.network[block])    
+    #  if (self.is_suitable_for_exit()):
+    #    self.add_exit_block()
+
+
+    #self.layers.append(backbone_model.network[-1][0])
+    #self.layers.append(backbone_model.network[-1][1])
+    
+    #self.stages.append(nn.Sequential(*self.layers))
+    
+    #self.classifier = backbone_model.network[-1][-1].to(self.device) if(self.backbone_pretrained) else Conv2d(1280, self.n_classes, 
+    #  kernel_size=(1, 1), stride=(1, 1)).to(self.device)
+    #self.set_device()
+    #self.softmax = nn.Softmax(dim=1)
 
 
 
