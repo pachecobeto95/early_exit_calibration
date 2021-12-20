@@ -788,7 +788,7 @@ class Early_Exit_DNN(nn.Module):
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
-    self.append(backbone_model.network[-2])
+    self.layers.append(backbone_model.network[-2])
     if (self.is_suitable_for_exit()):
       self.add_exit_block()
 
