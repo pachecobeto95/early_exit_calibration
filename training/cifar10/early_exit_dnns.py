@@ -782,15 +782,12 @@ class Early_Exit_DNN(nn.Module):
     if (self.is_suitable_for_exit()):
       self.add_exit_block()
 
-    for i in range(1, 7):
+    for i in range(1, 8):
       self.layers.append(backbone_model.network[i])
 
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
-    self.layers.append(backbone_model.network[-2])
-    if (self.is_suitable_for_exit()):
-      self.add_exit_block()
 
 
     self.stages.append(nn.Sequential(*self.layers))
