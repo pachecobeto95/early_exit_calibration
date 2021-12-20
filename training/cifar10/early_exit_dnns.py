@@ -891,7 +891,7 @@ class Early_Exit_DNN(nn.Module):
     #if((self.model_name=="mobilenet") and (self.pretrained)):
     #  x = torch.flatten(x, 1)
 
-    #x = torch.flatten(x, 1)
+    x = torch.flatten(x, 1)
     output = self.classifier(x)
     infered_conf, infered_class = torch.max(self.softmax(output), 1)
     output_list.append(output)
