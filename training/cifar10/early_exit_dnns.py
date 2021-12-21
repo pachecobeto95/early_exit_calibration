@@ -686,8 +686,7 @@ class Early_Exit_DNN(nn.Module):
 
     if(self.backbone_pretrained):
       self.classifier = backbone_model.classifier
-      print(backbone_model.classifier)
-      sys.exit()
+
     else:
       self.classifier = backbone_model.classifier
       self.classifier[0] = nn.Linear(in_features=25088, out_features=4096)
