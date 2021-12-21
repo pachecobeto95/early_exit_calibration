@@ -732,19 +732,19 @@ class Early_Exit_DNN(nn.Module):
         self.add_exit_block()
 
 
-    if(self.pretrained):
-      self.layers.append(backbone_model.avgpool)
+    #if(self.pretrained):
+    #  self.layers.append(backbone_model.avgpool)
     
     self.stages.append(nn.Sequential(*self.layers))
 
-    if(self.backbone_pretrained):
-      self.classifier = backbone_model.classifier
+    #if(self.backbone_pretrained):
+    self.classifier = backbone_model.classifier
 
-    else:
-      self.classifier = backbone_model.classifier
-      self.classifier[0] = nn.Linear(in_features=in_features, out_features=4096)
-      self.classifier[3] = nn.Linear(in_features=4096, out_features=4096)
-      self.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes)    
+    #else:
+    #  self.classifier = backbone_model.classifier
+    #  self.classifier[0] = nn.Linear(in_features=in_features, out_features=4096)
+    #  self.classifier[3] = nn.Linear(in_features=4096, out_features=4096)
+    #  self.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes)    
 
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
