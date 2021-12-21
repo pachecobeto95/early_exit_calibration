@@ -22,6 +22,7 @@ from networks.resnet import resnet18, resnet152
 from networks.vgg import vgg16_bn
 
 
+
 class EarlyExitBlock(nn.Module):
   """
   This EarlyExitBlock allows the model to terminate early when it is confident for classification.
@@ -44,10 +45,10 @@ class EarlyExitBlock(nn.Module):
     #This line defines the data shape that fully-connected layer receives.
     current_channel, current_width, current_height = self.get_current_data_shape()
 
-    self.layers = self.layers#.to(device)
+    self.layers = self.layers.to(device)
 
     #This line builds the fully-connected layer
-    self.classifier = nn.Sequential(nn.Linear(current_channel*current_width*current_height, n_classes))#.to(device)
+    self.classifier = nn.Sequential(nn.Linear(current_channel*current_width*current_height, n_classes)).to(device)
 
     self.softmax_layer = nn.Softmax(dim=1)
 
@@ -62,13 +63,59 @@ class EarlyExitBlock(nn.Module):
         
   def forward(self, x):
     for layer in self.layers:
-      x1 = layer(x)
-      x = x1
-
+      x = layer(x)
     x = x.view(x.size(0), -1)
     output = self.classifier(x)
-    #confidence = self.softmax_layer()
     return output
+
+
+#class EarlyExitBlock(nn.Module):
+  """
+  This EarlyExitBlock allows the model to terminate early when it is confident for classification.
+  """
+#  def __init__(self, input_shape, n_classes, exit_type, device):
+#    super(EarlyExitBlock, self).__init__()
+#    self.input_shape = input_shape
+
+#    _, channel, width, height = input_shape
+#    self.expansion = width * height if exit_type == 'plain' else 1
+
+#    self.layers = nn.ModuleList()
+
+#    if (exit_type == 'bnpool'):
+#      self.layers.append(nn.BatchNorm2d(channel))
+
+#    if (exit_type != 'plain'):
+#      self.layers.append(nn.AdaptiveAvgPool2d(1))
+    
+    #This line defines the data shape that fully-connected layer receives.
+#    current_channel, current_width, current_height = self.get_current_data_shape()
+
+#    self.layers = self.layers#.to(device)
+
+    #This line builds the fully-connected layer
+#    self.classifier = nn.Sequential(nn.Linear(current_channel*current_width*current_height, n_classes))#.to(device)
+
+#    self.softmax_layer = nn.Softmax(dim=1)
+
+
+#  def get_current_data_shape(self):
+#    _, channel, width, height = self.input_shape
+#    temp_layers = nn.Sequential(*self.layers)
+
+#    input_tensor = torch.rand(1, channel, width, height)
+#    _, output_channel, output_width, output_height = temp_layers(input_tensor).shape
+#    return output_channel, output_width, output_height
+        
+#  def forward(self, x):
+#    for layer in self.layers:
+#      x1 = layer(x)
+#      x = x1
+
+#    x = x.view(x.size(0), -1)
+#    output = self.classifier(x)
+#    #confidence = self.softmax_layer()
+#    return output
 
 def conv1x1(in_planes, out_planes, stride=1):
   """1x1 convolution"""
@@ -659,6 +706,9 @@ class Early_Exit_DNN(nn.Module):
     self.cost = []
     self.stage_id = 0
 
+    in_features = 25088 if(self.pretrained) else 512
+
+
     if (self.pretrained):
       backbone_model = models.vgg16_bn(self.pretrained)
       backbone_model.classifier[6] = nn.Linear(backbone_model.classifier[6].in_features, self.n_classes)
@@ -672,8 +722,9 @@ class Early_Exit_DNN(nn.Module):
 
     backbone_model_features = backbone_model.features
     
-    self.total_flops = self.countFlops(backbone_model_features)
+    self.total_flops = self.countFlops(backbone_model)
     self.threshold_flop_list = self.where_insert_early_exits()
+
 
     for layer in backbone_model_features:
       self.layers.append(layer)
@@ -691,10 +742,10 @@ class Early_Exit_DNN(nn.Module):
 
     else:
       self.classifier = backbone_model.classifier
-      self.classifier[0] = nn.Linear(in_features=512, out_features=4096)
+      self.classifier[0] = nn.Linear(in_features=in_features, out_features=4096)
       self.classifier[3] = nn.Linear(in_features=4096, out_features=4096)
-      self.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes)
-    
+      self.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes)    
+
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
 
@@ -904,6 +955,7 @@ class Early_Exit_DNN(nn.Module):
     class_list.append(infered_class)
 
     return output_list, conf_list, class_list
+
 
   def temperature_scale_overall(self, logits, temp_overall):    
     return torch.div(logits, temp_overall)
