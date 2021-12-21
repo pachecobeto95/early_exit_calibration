@@ -303,6 +303,7 @@ class ModelBranchesCalibrationAlternative(nn.Module):
       print("Exit: %s"%(i+1))
 
       if (len(logits_list[i]) == 0):
+        print("OK")
         before_temperature_nll_list.append(None), after_temperature_nll_list.append(None)
         before_ece_list.append(None), after_ece_list.append(None)
         continue
