@@ -680,7 +680,8 @@ class Early_Exit_DNN(nn.Module):
         self.add_exit_block()
 
 
-    self.layers.append(backbone_model.avgpool)
+    if(self.pretrained):
+      self.layers.append(backbone_model.avgpool)
     self.stages.append(nn.Sequential(*self.layers))
     if(self.backbone_pretrained):
       self.classifier = backbone_model.classifier
