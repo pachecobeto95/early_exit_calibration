@@ -135,6 +135,7 @@ if __name__ == "__main__":
 		print("Current Epoch: %s"%(epoch))
 
 		result = {}
+		torch.autograd.set_detect_anomaly(True)
 		result_train = trainEvalEarlyExit(early_exit_dnn, train_loader, criterion, optimizer, args.n_branches, 
 			epoch, device, loss_weights, train=True)
 		
