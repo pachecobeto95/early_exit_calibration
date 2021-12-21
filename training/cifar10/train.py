@@ -36,7 +36,7 @@ def trainEvalEarlyExit(model, dataLoader, criterion, optimizer, n_branches, epoc
 			output_list, conf_list, class_list = model(data, training=True)
 			loss = 0
 			for j, (output, inf_class, weight) in enumerate(zip(output_list, class_list, loss_weights), 1):
-				loss += weight*criterion(output, target)
+				loss = loss + weight*criterion(output, target)
 				acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
 
 			loss.backward()
