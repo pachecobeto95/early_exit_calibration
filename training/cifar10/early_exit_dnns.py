@@ -683,8 +683,10 @@ class Early_Exit_DNN(nn.Module):
     if(self.pretrained):
       self.layers.append(backbone_model.avgpool)
     self.stages.append(nn.Sequential(*self.layers))
+
     if(self.backbone_pretrained):
       self.classifier = backbone_model.classifier
+      print(backbone_model.classifier)
     else:
       self.classifier = backbone_model.classifier
       self.classifier[0] = nn.Linear(in_features=25088, out_features=4096)
