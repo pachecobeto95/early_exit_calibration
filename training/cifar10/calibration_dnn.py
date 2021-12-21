@@ -293,6 +293,7 @@ class ModelBranchesCalibrationAlternative(nn.Module):
 
       #logits_list[n] = torch.index_select(torch.cat(logits_total_list), 1, torch.tensor(new_indices).to(self.device))
       #labels_list[n] = torch.index_select(torch.cat(target_total_list), 0, torch.tensor(new_indices).to(self.device))
+      print(new_indices)
       logits_list[n] = torch.cat(logits_total_list)[new_indices]
       labels_list[n] = torch.cat(target_total_list)[new_indices]
     
