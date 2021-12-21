@@ -62,7 +62,9 @@ class EarlyExitBlock(nn.Module):
         
   def forward(self, x):
     for layer in self.layers:
-      x = layer(x)
+      x1 = layer(x)
+      x = x1
+
     x = x.view(x.size(0), -1)
     output = self.classifier(x)
     #confidence = self.softmax_layer()
