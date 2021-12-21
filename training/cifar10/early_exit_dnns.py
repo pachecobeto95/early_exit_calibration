@@ -328,7 +328,7 @@ class Early_Exit_DNN(nn.Module):
     """
     This method counts the numper of Flops in a given full DNN model or intermediate DNN model.
     """
-    input = torch.rand(1, self.channel, self.width, self.height).to(self.device)
+    input = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
     flops, all_data = count_ops(model, input, print_readable=False, verbose=False)
     return flops
 
@@ -357,7 +357,7 @@ class Early_Exit_DNN(nn.Module):
     This method answers the following question. Is the position to place an early exit?
     """
     intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers)))
-    x = torch.rand(1, 3, 224, 224).to(self.device)
+    x = torch.rand(1, 3, 224, 224)#.to(self.device)
     current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
     return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
 
@@ -368,7 +368,7 @@ class Early_Exit_DNN(nn.Module):
     input_tensor = torch.rand(1, self.channel, self.width, self.height)
 
     self.stages.append(nn.Sequential(*self.layers))
-    x = torch.rand(1, 3, 224, 224).to(self.device)
+    x = torch.rand(1, 3, 224, 224)#.to(self.device)
     feature_shape = nn.Sequential(*self.stages)(x).shape
     self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device))#.to(self.device))
     self.layers = nn.ModuleList()
@@ -662,7 +662,7 @@ class Early_Exit_DNN(nn.Module):
       backbone_model.classifier[6] = nn.Linear(backbone_model.classifier[6].in_features, self.n_classes)
 
     else:
-      backbone_model = vgg16_bn(self.n_classes).to(self.device)
+      backbone_model = vgg16_bn(self.n_classes)
 
     if (self.backbone_pretrained):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
