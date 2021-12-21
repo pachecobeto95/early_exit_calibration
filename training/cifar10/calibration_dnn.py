@@ -287,15 +287,15 @@ class ModelBranchesCalibrationAlternative(nn.Module):
 
     for n in range(self.n_exits):
       indices = indices + idx_sample_exit_list[n]
-      print(indices)
-      print(len(indices))
-      new_indices = list(np.setdiff1d(idx_sample_exit_list, indices))
+      #print(indices)
+      #print(len(indices))
+      new_indices = list(np.setdiff1d(idx_sample_exit_list[n], indices))
       #print(len(new_indices), np.array(new_indices).shape)
       #print(torch.cat(logits_total_list).shape)
 
       #logits_list[n] = torch.index_select(torch.cat(logits_total_list), 1, torch.tensor(new_indices).to(self.device))
       #labels_list[n] = torch.index_select(torch.cat(target_total_list), 0, torch.tensor(new_indices).to(self.device))
-      print(new_indices)
+      #print(new_indices)
       logits_list[n] = torch.cat(logits_total_list)[new_indices]
       labels_list[n] = torch.cat(target_total_list)[new_indices]
     
