@@ -668,10 +668,9 @@ class Early_Exit_DNN(nn.Module):
       backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
 
 
-
     backbone_model_features = backbone_model.features
     
-    self.total_flops = self.countFlops(backbone_model)
+    self.total_flops = self.countFlops(backbone_model_features)
     self.threshold_flop_list = self.where_insert_early_exits()
 
     for layer in backbone_model_features:
@@ -682,6 +681,7 @@ class Early_Exit_DNN(nn.Module):
 
     if(self.pretrained):
       self.layers.append(backbone_model.avgpool)
+    
     self.stages.append(nn.Sequential(*self.layers))
 
     if(self.backbone_pretrained):
