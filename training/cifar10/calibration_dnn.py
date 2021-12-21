@@ -312,8 +312,10 @@ class ModelBranchesCalibrationAlternative(nn.Module):
 
       optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
 
-      logit_branch = torch.cat(logits_list[i]).to(self.device)
-      label_branch = torch.cat(labels_list[i]).to(self.device)
+      #logit_branch = torch.cat(logits_list[i]).to(self.device)
+      #label_branch = torch.cat(labels_list[i]).to(self.device)
+      logit_branch = logits_list[i].to(self.device)
+      label_branch = labels_list[i].to(self.device)
 
       before_temperature_nll = nll_criterion(logit_branch, label_branch).item()
       before_temperature_nll_list.append(before_temperature_nll)
