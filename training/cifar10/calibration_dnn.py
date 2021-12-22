@@ -290,7 +290,6 @@ class ModelBranchesCalibrationAlternative(nn.Module):
       #print(indices)
       #print(len(indices))
       new_indices = list(np.setdiff1d(np.arange(5000), indices))
-      print(len(new_indices), np.array(new_indices).shape)
       #print(torch.cat(logits_total_list).shape)
 
       #logits_list[n] = torch.index_select(torch.cat(logits_total_list), 1, torch.tensor(new_indices).to(self.device))
@@ -298,6 +297,10 @@ class ModelBranchesCalibrationAlternative(nn.Module):
       #print(new_indices)
       logits_list[n] = torch.cat(logits_total_list)[new_indices]
       labels_list[n] = torch.cat(target_total_list)[new_indices]
+      if(n == self.n_exits):
+      logits_list[n] = torch.cat(logits_total_list)
+      labels_list[n] = torch.cat(target_total_list)
+
     
     for i in range(self.n_exits):
       print("Exit: %s"%(i+1))
