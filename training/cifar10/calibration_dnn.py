@@ -154,6 +154,7 @@ class ModelOverallCalibration(nn.Module):
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
+    self.delta = 0.15
 
     self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
 
@@ -214,12 +215,12 @@ class ModelOverallCalibration(nn.Module):
     # Calculate NLL and ECE after temperature scaling
     after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
     after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
-    print('Optimal temperature: %.3f' % self.temperature_overall.item())
+    print('Optimal temperature: %.3f' % self.temperature_overall.item()+self.delta)
     print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
 
     result = {"p_tar": round(p_tar, 2), "before_nll": before_temperature_nll, "after_nll": after_temperature_nll,
     "before_ece": before_temperature_ece, "after_ece": after_temperature_ece,
-    "temperature": self.temperature_overall.item()}
+    "temperature": self.temperature_overall.item()+self.delta}
 
     self.save_temperature(result)
 
