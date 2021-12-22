@@ -285,7 +285,7 @@ class ModelBranchesCalibrationAlternative(nn.Module):
     
     indices = []
 
-    for n in range(self.n_exits):
+    for n in range(self.n_exits+1):
       indices = indices + idx_sample_exit_list[n]
       #print(indices)
       #print(len(indices))
