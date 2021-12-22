@@ -298,8 +298,8 @@ class ModelBranchesCalibrationAlternative(nn.Module):
       logits_list[n] = torch.cat(logits_total_list)[new_indices]
       labels_list[n] = torch.cat(target_total_list)[new_indices]
       if(n == self.n_exits):
-      logits_list[n] = torch.cat(logits_total_list)
-      labels_list[n] = torch.cat(target_total_list)
+        logits_list[n] = torch.cat(logits_total_list)
+        labels_list[n] = torch.cat(target_total_list)
 
     
     for i in range(self.n_exits):
