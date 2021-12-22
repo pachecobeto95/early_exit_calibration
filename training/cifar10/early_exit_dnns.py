@@ -725,26 +725,25 @@ class Early_Exit_DNN(nn.Module):
     self.total_flops = self.countFlops(backbone_model)
     self.threshold_flop_list = self.where_insert_early_exits()
 
-
     for layer in backbone_model_features:
       self.layers.append(layer)
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
 
-    #if(self.pretrained):
-    #  self.layers.append(backbone_model.avgpool)
+    if(self.pretrained):
+      self.layers.append(backbone_model.avgpool)
     
     self.stages.append(nn.Sequential(*self.layers))
 
-    #if(self.backbone_pretrained):
-    self.classifier = backbone_model.classifier
+    if(self.backbone_pretrained):
+      self.classifier = backbone_model.classifier
 
-    #else:
-    #  self.classifier = backbone_model.classifier
-    #  self.classifier[0] = nn.Linear(in_features=in_features, out_features=4096)
-    #  self.classifier[3] = nn.Linear(in_features=4096, out_features=4096)
-    #  self.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes)    
+    else:
+      self.classifier = backbone_model.classifier
+      self.classifier[0] = nn.Linear(in_features=in_features, out_features=4096)
+      self.classifier[3] = nn.Linear(in_features=4096, out_features=4096)
+      self.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes)    
 
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
@@ -887,7 +886,7 @@ class Early_Exit_DNN(nn.Module):
     last_channel = 1280
     
     # Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
-    backbone_model = models.mobilenet_v2(self.pretrained)
+    backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
     backbone_model.classifier[1] = nn.Linear(last_channel, self.n_classes)
     backbone_model = backbone_model.to(self.device)
 
