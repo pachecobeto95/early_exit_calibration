@@ -518,7 +518,7 @@ class Early_Exit_DNN(nn.Module):
 
     self.threshold_flop_list = self.where_insert_early_exits()
 
-    building_first_layer = ["conv1", "bn1", "relu", "maxpool"]
+    building_first_layer = ["conv1", "bn1", "relu", "maxpool"] if (self.pretrained) else ["conv1", "bn1", "relu"]
     for layer in building_first_layer:
       self.layers.append(getattr(backbone_model, layer))
 
