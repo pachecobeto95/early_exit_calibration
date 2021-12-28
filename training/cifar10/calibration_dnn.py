@@ -154,7 +154,6 @@ class ModelOverallCalibration(nn.Module):
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
-    self.delta = 0.15
 
     self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
 
@@ -215,12 +214,12 @@ class ModelOverallCalibration(nn.Module):
     # Calculate NLL and ECE after temperature scaling
     after_temperature_nll = nll_criterion(self.temperature_scale(logits), labels).item()
     after_temperature_ece = ece_criterion(self.temperature_scale(logits), labels).item()
-    print('Optimal temperature: %.3f' % (self.temperature_overall.item()+self.delta))
+    print('Optimal temperature: %.3f' % (self.temperature_overall.item()))
     print('After temperature - NLL: %.3f, ECE: %.3f' % (after_temperature_nll, after_temperature_ece))
 
     result = {"p_tar": round(p_tar, 2), "before_nll": before_temperature_nll, "after_nll": after_temperature_nll,
     "before_ece": before_temperature_ece, "after_ece": after_temperature_ece,
-    "temperature": self.temperature_overall.item()+self.delta}
+    "temperature": self.temperature_overall.item()}
 
     self.save_temperature(result)
 
@@ -348,7 +347,7 @@ class ModelBranchesCalibrationAlternative(nn.Module):
       print("Branch: %s, Before NLL: %s, After NLL: %s"%(i+1, before_temperature_nll, after_temperature_nll))
       print("Branch: %s, Before ECE: %s, After ECE: %s"%(i+1, before_ece, after_ece))
 
-      print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()+self.delta))
+      print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()))
 
     self.temperature_branches = [temp_branch.item() for temp_branch in self.temperature_branches]
 
@@ -357,7 +356,7 @@ class ModelBranchesCalibrationAlternative(nn.Module):
                                  "before_ece_branch_%s"%(i+1): before_ece_list[i],
                                  "after_nll_branch_%s"%(i+1): after_temperature_nll_list[i],
                                  "after_ece_branch_%s"%(i+1): after_ece_list[i],
-                                 "temperature_branch_%s"%(i+1): self.temperature_branches[i]+self.delta})
+                                 "temperature_branch_%s"%(i+1): self.temperature_branches[i]})
     
     # This saves the parameter to save the temperature parameter for each side branch
     self.save_temperature(error_measure_dict)
@@ -428,7 +427,7 @@ class ModelBranchesCalibration(nn.Module):
         before_ece_list.append(None), after_ece_list.append(None)
         continue
 
-      self.temperature_branch = nn.Parameter((torch.ones(1)*1.).to(self.device))
+      self.temperature_branch = nn.Parameter((torch.ones(1)*1.5).to(self.device))
 
       optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
 
@@ -490,7 +489,6 @@ class ModelAllSamplesCalibration(nn.Module):
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
-    self.delta = 0.15
 
     self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
 
@@ -569,7 +567,7 @@ class ModelAllSamplesCalibration(nn.Module):
       print("Branch: %s, Before NLL: %s, After NLL: %s"%(i+1, before_temperature_nll, after_temperature_nll))
       print("Branch: %s, Before ECE: %s, After ECE: %s"%(i+1, before_ece, after_ece))
 
-      print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()+self.delta))
+      print("Temp Branch %s: %s"%(i+1, self.temperature_branch.item()))
 
       self.temperature_branches[i] = self.temperature_branch
 
@@ -581,7 +579,7 @@ class ModelAllSamplesCalibration(nn.Module):
                                  "before_ece_branch_%s"%(i+1): before_ece_list[i],
                                  "after_nll_branch_%s"%(i+1): after_temperature_nll_list[i],
                                  "after_ece_branch_%s"%(i+1): after_ece_list[i],
-                                 "temperature_branch_%s"%(i+1): self.temperature_branches[i]+self.delta})
+                                 "temperature_branch_%s"%(i+1): self.temperature_branches[i]})
 
     
     # This saves the parameter to save the temperature parameter for each side branch
