@@ -110,5 +110,5 @@ if __name__ == "__main__":
   verbose = False
   label_list = ["cat", "ship", "dog", "automobile"]
   c = 1.0
-  savePath = os.path.join(".", "%s_ucb_by_classses_c_%s_2022.csv"%(args.model_name, args.c, args.n_rounds))
+  savePath = os.path.join(".", "%s_ucb_by_classses_c_%s_2022.csv"%(args.model_name, args.c))
   ucb_experiment(df_result, threshold_list, overhead_list, label_list, args.n_rounds, args.c, savePath, verbose)
