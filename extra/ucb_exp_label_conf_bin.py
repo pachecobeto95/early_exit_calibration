@@ -34,7 +34,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	cum_regret, t = 0, 0
 	inst_regret_list, selected_arm_list = [], []
 
-	for n_round in tqdm(range(n_rounds)):
+	for n_round in range(n_rounds):
 		idx = random.choice(np.arange(len(df)))
 		row = df.iloc[[idx]]
 
@@ -62,6 +62,9 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		inst_regret_list.append(inst_regret)
 		selected_arm_list.append(threshold)
 
+		if (n_round%1000000 == 0):
+			print("Overhead: %s"%(overhead))
+
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
 	"overhead":[round(overhead, 2)]*len(inst_regret_list),
@@ -83,7 +86,7 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, verb
 	bin_lowers = bin_boundaries[:-1]
 	bin_uppers = bin_boundaries[1:]
 
-	for overhead in tqdm(overhead_list):
+	for overhead in overhead_list:
 		for bin_lower, bin_upper in zip(bin_lowers, bin_uppers):
 
 			df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper)] 
@@ -99,7 +102,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='UCB using Alexnet')
 	parser.add_argument('--model_id', type=int, default=2, help='Model Id (default: 2)')
 	parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
-	parser.add_argument('--n_rounds', type=int, default=5000000, help='Model Id (default: 100000)')
+	parser.add_argument('--n_rounds', type=int, default=5000000, help='Model Id (default: 5000000)')
 
 	args = parser.parse_args()
 
@@ -110,7 +113,7 @@ if __name__ == "__main__":
 	threshold_list = np.arange(0, 1.1, 0.1)
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
-	savePath = os.path.join(".", "ucb_result_c_%s_temp.csv"%(args.c))
+	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_2022.csv"%(args.c))
 
 	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, verbose)
 

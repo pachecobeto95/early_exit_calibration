@@ -39,7 +39,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePat
   t = 0
   selected_arm_list = []
 
-  for n_round in tqdm(range(n_rounds)):
+  for n_round in range(n_rounds):
     idx = random.choice(np.arange(len(df)))
     row = df.iloc[[idx]]
 
@@ -68,6 +68,8 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePat
     #print(n_actions, inst_regret, threshold, optimal_reward, reward)
     inst_regret_list.append(inst_regret)
     selected_arm_list.append(threshold)
+    if (n_round%1000000 == 0):
+      print("Label: %s, Overhead: %s"%(label, overhead))
 
   result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
             "label":[label]*len(inst_regret_list), "overhead":[overhead]*len(inst_regret_list)}
@@ -83,7 +85,7 @@ def ucb_experiment(df, threshold_list, overhead_list, label_list, n_round, c, sa
 
   config_list = list(itertools.product(*[label_list, overhead_list]))    
   
-  for label, overhead in tqdm(config_list):
+  for label, overhead in config_list:
     result = ucb_run_resampling(df, threshold_list, overhead, label, n_round, c, savePath, verbose)
     #df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
     #df_result = df_result.append(df2)
@@ -108,6 +110,5 @@ if __name__ == "__main__":
   verbose = False
   label_list = ["cat", "ship", "dog", "automobile"]
   c = 1.0
-  savePath = os.path.join(".", "%s_ucb_all_samples_c_%s_nrounds_%s.csv"%(args.model_name, args.c, args.n_rounds))
-
+  savePath = os.path.join(".", "%s_ucb_by_classses_c_%s_2022.csv"%(args.model_name, args.c, args.n_rounds))
   ucb_experiment(df_result, threshold_list, overhead_list, label_list, args.n_rounds, args.c, savePath, verbose)
