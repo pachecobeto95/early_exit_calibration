@@ -69,7 +69,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePat
     #print(n_actions, inst_regret, threshold, optimal_reward, reward)
     inst_regret_list.append(inst_regret)
     selected_arm_list.append(threshold)
-    print(n_round%1000000)
+    print(n_round%1000000==0)
     if (n_round%1000000 == 0):
       print("Label: %s, Overhead: %s"%(label, overhead), file=open(logPath, "a"))
 
