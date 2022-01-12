@@ -7,6 +7,7 @@ from statistics import mode
 import argparse
 
 def compute_reward(conf_branch, arm, delta_conf, overhead):
+  
   if(conf_branch >= arm):
     return 0
   else:
@@ -23,7 +24,7 @@ def get_row_data(row, threshold):
     delta_conf = max(conf_list) - conf_branch 
     return conf_branch, delta_conf
 
-def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePath, verbose):
+def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePath, logPath, verbose):
   if (label != "all"):
     df = df[df.label == label]
 
@@ -69,7 +70,7 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePat
     inst_regret_list.append(inst_regret)
     selected_arm_list.append(threshold)
     if (n_round%1000000 == 0):
-      print("Label: %s, Overhead: %s"%(label, overhead))
+      print("Label: %s, Overhead: %s"%(label, overhead), file=open(logPath, "a"))
 
   result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
             "label":[label]*len(inst_regret_list), "overhead":[overhead]*len(inst_regret_list)}
@@ -80,13 +81,13 @@ def ucb_run_resampling(df, threshold_list, overhead, label, n_rounds, c, savePat
   return result
 
 
-def ucb_experiment(df, threshold_list, overhead_list, label_list, n_round, c, savePath, verbose=False):
+def ucb_experiment(df, threshold_list, overhead_list, label_list, n_round, c, savePath, logPath, verbose=False):
   #df_result = pd.DataFrame()
 
   config_list = list(itertools.product(*[label_list, overhead_list]))    
   
   for label, overhead in config_list:
-    result = ucb_run_resampling(df, threshold_list, overhead, label, n_round, c, savePath, verbose)
+    result = ucb_run_resampling(df, threshold_list, overhead, label, n_round, c, savePath, logPath, verbose)
     #df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
     #df_result = df_result.append(df2)
     #df_result.to_csv(savePath)
@@ -111,4 +112,5 @@ if __name__ == "__main__":
   label_list = ["cat", "ship", "dog", "automobile"]
   c = 1.0
   savePath = os.path.join(".", "%s_ucb_by_classses_c_%s_2022.csv"%(args.model_name, args.c))
-  ucb_experiment(df_result, threshold_list, overhead_list, label_list, args.n_rounds, args.c, savePath, verbose)
+  logPath = os.path.join(".", "logUCBClasses_2022.csv")
+  ucb_experiment(df_result, threshold_list, overhead_list, label_list, args.n_rounds, args.c, savePath, logPath, verbose)

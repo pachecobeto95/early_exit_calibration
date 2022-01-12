@@ -21,7 +21,7 @@ def get_row_data(row, threshold):
 		delta_conf = max(conf_list) - conf_branch 
 		return conf_branch, delta_conf
 
-def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, savePath, verbose):
+def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, savePath, logPath, verbose):
 
 	df = df.sample(frac=1)
 	delta = 1e-10
@@ -63,7 +63,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		selected_arm_list.append(threshold)
 
 		if (n_round%1000000 == 0):
-			print("Overhead: %s"%(overhead))
+			print("Overhead: %s"%(overhead), file=open(logPath, "a"))
 
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
@@ -77,7 +77,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	return result
 
 
-def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, verbose=False):
+def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logPath, verbose=False):
 	df_result = pd.DataFrame()
 
 	#config_list = list(itertools.product(*[label_list, overhead_list]))    
@@ -92,7 +92,7 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, verb
 			df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper)] 
 			
 			if(len(df_temp.conf_branch_1.values) > 0):
-				result = run_ucb(df_temp, threshold_list, overhead, n_round, c, bin_lower, bin_upper, savePath, verbose)
+				result = run_ucb(df_temp, threshold_list, overhead, n_round, c, bin_lower, bin_upper, savePath, logPath, verbose)
 				#df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
 				#df_result = df_result.append(df2)
 				#df_result.to_csv(savePath)
@@ -114,8 +114,8 @@ if __name__ == "__main__":
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
 	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_2022.csv"%(args.c))
-
-	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, verbose)
+	logPath = os.path.join(".", "logUCBConfBin_2022.csv")
+	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, logPath, verbose)
 
 
 
