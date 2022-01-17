@@ -105,7 +105,6 @@ if (__name__ == "__main__"):
 			args.batch_size_train, args.batch_size_test, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
 	else:
-		print("oi")
 		train_loader, val_loader, test_loader = loadCifar100(dataset_path, indices_dir_path, args.model_id, 
 			args.batch_size_train, args.batch_size_test, input_size, crop_size, split_rate=args.split_rate, seed=args.seed)
 
