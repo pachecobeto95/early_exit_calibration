@@ -73,6 +73,7 @@ def loadCifar100(root_path, indices_path, model_id, batch_size_train, batch_size
 
 	transform_test = transforms.Compose([
 		transforms.Resize(input_size),
+		transforms.RandomCrop(crop_size, padding = 4),
 		transforms.ToTensor(),
 		transforms.Normalize(mean, std)])
 
