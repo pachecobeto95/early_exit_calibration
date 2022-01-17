@@ -90,6 +90,7 @@ if (__name__ == "__main__"):
 		backbone_model_path, args.n_branches, input_shape, args.exit_type, device, distribution=args.distribution)
 	early_exit_dnn = early_exit_dnn.to(device)
 
+	print(model_path)
 	early_exit_dnn.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 
 
