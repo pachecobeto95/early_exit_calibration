@@ -38,7 +38,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	indices_list = np.arange(df_size)
 	
 	for n_round in range(n_rounds):
-		print(n_round)
+		#print(n_round)
 		idx = random.choice(indices_list)
 		row = df.iloc[[idx]]
 
