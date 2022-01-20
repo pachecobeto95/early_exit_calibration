@@ -33,12 +33,12 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	avg_reward_actions, n_actions = np.zeros(amount_arms), np.zeros(amount_arms)
 	reward_actions = [[] for i in range(amount_arms)]
 	inst_regret_list, selected_arm_list = np.zeros(n_rounds), np.zeros(n_rounds)
+	cumulative_regret_list = np.zeros(n_rounds)
 
 	df_size = len(df)
 	indices_list = np.arange(df_size)
 	
 	for n_round in range(n_rounds):
-		#print(n_round)
 		idx = random.choice(indices_list)
 		row = df.iloc[[idx]]
 
@@ -63,6 +63,8 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		optimal_reward = max(0, delta_conf - overhead)
 
 		inst_regret = optimal_reward - reward
+		cumulative_regret += inst_regret
+		cumulative_regret_list[n_round] = cumulative_regret 
 
 		inst_regret_list[n_round] = round(inst_regret, 5)
 		selected_arm_list[n_round] = round(threshold, 2) 
@@ -73,8 +75,8 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
 	"overhead":[round(overhead, 2)]*df_size,
-	"bin_lower": [round(bin_lower, 2)]*df_size, "bin_upper": [round(bin_upper, 2)]*df_size}
-	
+	"bin_lower": [round(bin_lower, 2)]*df_size, "bin_upper": [round(bin_upper, 2)]*df_size,
+	"cumulative_regret": cumulative_regret_list}
 
 	return result
 
