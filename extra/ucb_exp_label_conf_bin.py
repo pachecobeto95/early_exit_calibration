@@ -34,6 +34,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	reward_actions = [[] for i in range(amount_arms)]
 	inst_regret_list, selected_arm_list = np.zeros(n_rounds), np.zeros(n_rounds)
 	cumulative_regret_list = np.zeros(n_rounds)
+	cumulative_regret = 0
 
 	df_size = len(df)
 	indices_list = np.arange(df_size)
