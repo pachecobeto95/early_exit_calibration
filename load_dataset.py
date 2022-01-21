@@ -35,8 +35,8 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
     
 	test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 
-	if (os.path.exists(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, model_id)))):
-		test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, model_id)), allow_pickle=True)
+	if (os.path.exists(os.path.join(savePath_idx, "test_idx_caltech256_id_%s.npy"%(model_id)))):
+		test_idx = np.load(os.path.join(savePath_idx, "test_idx_caltech256_id_%s.npy"%(model_id)), allow_pickle=True)
 		test_idx = np.array(list(test_idx.tolist()))
 	else:
 		_, test_idx = self.get_indices(train_set, split_ratio)
