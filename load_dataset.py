@@ -68,7 +68,7 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 	_, test_idx2 = indices[:train_size], indices[train_size:]
 
 
-	print(np.array(test_idx2)==test_idx)
+	print((np.array(test_idx2)==test_idx).all())
 	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4)
 
