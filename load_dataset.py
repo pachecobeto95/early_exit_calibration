@@ -56,9 +56,18 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 	else:
 		_, test_idx = get_indices(train_set, split_ratio)
 
-	print(len(test_idx))
-	print(len(get_indices(train_set, split_ratio)[1]))
-	print(sum(test_idx == get_indices(train_set, split_ratio)[1]))
+	print(test_idx)
+
+	indices = list(range(len(train_set)))
+
+	train_size = nr_samples - int(np.floor(split_ratio * nr_samples))
+
+	np.random.shuffle(indices)
+
+	_, test_idx = indices[:train_size], indices[train_size:]
+
+
+	print(np.array(test_idx))
 	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4)
 
