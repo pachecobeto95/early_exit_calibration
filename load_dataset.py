@@ -63,7 +63,7 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 
 	train_size = nr_samples - int(np.floor(split_ratio * nr_samples))
 
-	np.random.shuffle(indices)
+	#np.random.shuffle(indices)
 
 	_, test_idx = indices[:train_size], indices[train_size:]
 
