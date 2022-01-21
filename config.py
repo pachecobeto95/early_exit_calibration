@@ -37,8 +37,8 @@ cloud_model_root_path = os.path.join(DIR_NAME, "appCloud", "api", "services", "m
 
 #Dataset Path
 
-dataset_path = {"caltech256": os.path.join(DIR_NAME, "datasets", "caltech256", "test_dataset"), 
-"cifar100": os.path.join(DIR_NAME, "datasets", "cifar100", "test_dataset")}
+dataset_path = {"caltech256": os.path.join(DIR_NAME, "datasets", "caltech256", "256_ObjectCategories"), 
+"cifar100": os.path.join(DIR_NAME, "datasets", "cifar100")}
 
 nr_max_branches = 5
 nr_min_branches = 2
@@ -63,3 +63,4 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 models_params = {"caltech256": {"n_classes": 258}, "cifar100": {"n_classes": 100}}
 model_id = 1
 
+save_indices_path = os.path.join(DIR_NAME, "datasets", "caltech256", "indices")
