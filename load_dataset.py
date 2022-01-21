@@ -10,7 +10,7 @@ import torch
 import numpy as np
 
 
-def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, model_id=1):
+def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, model_id=1, seed=42):
 	# This method loads the Caltech-256 dataset.
 
 
@@ -26,8 +26,8 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 		])
 
 
-	torch.manual_seed(self.seed)
-	np.random.seed(seed=self.seed)
+	torch.manual_seed(seed)
+	np.random.seed(seed=seed)
 
 	train_set = datasets.ImageFolder(dataset_path)
 
