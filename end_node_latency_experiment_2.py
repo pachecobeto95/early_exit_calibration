@@ -24,7 +24,7 @@ def main(args):
 
 	nr_branches_model = args.n_branches
 	p_tar_list = np.arange(0.5, 0.95, 0.05)
-	dataset_path = dataset_path[args.dataset_name]
+	dataset_path = config.dataset_path[args.dataset_name]
 	
 	root_save_path = os.path.dirname(__file__)
 
