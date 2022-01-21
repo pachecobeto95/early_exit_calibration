@@ -13,7 +13,7 @@ from load_dataset import load_test_caltech_256
 
 def load_dataset(args, dataset_path, savePath_idx):
 	if(args.dataset_name=="caltech256"):
-		return load_test_caltech_256(args.input_dim, dataset_path, args.split_ratio, savePath_idx)
+		return load_test_caltech_256(args.input_dim, dataset_path, args.split_ratio, savePath_idx, args.model_id)
 
 	elif(args.dataset_name=="cifar100"):
 		sys.exit()
@@ -55,13 +55,14 @@ if (__name__ == "__main__"):
 		choices=["caltech256", "cifar10", "cifar100"], 
 		help='Dataset name (default: Caltech-256)')
 
-	parser.add_argument('--model_name', type=str, default=config.model_name, choices=["mobilenet", "resnet18", "resnet50", "vgg16"], 
-		help='DNN model name (default: MobileNet)')
+	parser.add_argument('--model_name', type=str, default=config.model_name, 
+		choices=["mobilenet", "resnet18", "resnet50", "vgg16"], help='DNN model name (default: MobileNet)')
 
 	parser.add_argument('--input_dim', type=int, default=224, choices=[224, 32], 
 		help='Input Dim')
 
 	parser.add_argument('--split_ratio', type=float, default=0.2, help='Split Ratio')
+	parser.add_argument('--model_id', type=int, default=1, help='Model id')
 
 	args = parser.parse_args()
 
