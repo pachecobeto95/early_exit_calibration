@@ -9,7 +9,7 @@ from PIL import Image
 
 
 
-def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx):
+def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, model_id=1):
 	# This method loads the Caltech-256 dataset.
 
 
@@ -18,7 +18,7 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx):
 	std =  [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
 	# Note that we do not apply data augmentation in the test dataset.
-	self.transformations_test = transforms.Compose([
+	transformations_test = transforms.Compose([
 		transforms.Resize(input_dim), 
 		transforms.ToTensor(), 
 		#transforms.Normalize(mean = mean, std = std),
@@ -30,12 +30,12 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx):
 
 	train_set = datasets.ImageFolder(dataset_path)
 
-	val_set = datasets.ImageFolder(dataset_path, transform=self.transformations_test)
+	val_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
     
-	test_set = datasets.ImageFolder(dataset_path, transform=self.transformations_test)
+	test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 
-	if (os.path.exists(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)))):
-		test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, self.model_id)), allow_pickle=True)
+	if (os.path.exists(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, model_id)))):
+		test_idx = np.load(os.path.join(savePath_idx, "test_idx_%s_id_%s.npy"%(dataset_name, model_id)), allow_pickle=True)
 		test_idx = np.array(list(test_idx.tolist()))
 	else:
 		_, test_idx = self.get_indices(train_set, split_ratio)
