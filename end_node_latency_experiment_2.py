@@ -33,10 +33,10 @@ def main(args):
 
 	#This line defines the number of side branches processed at the cloud
 	nr_branch_edge = np.arange(2, nr_branches_model+1)
-	print("Sending Confs")
-	sendModelConf(config.urlConfModelEdge, nr_branches_model, args.dataset_name, args.model_name)
-	sendModelConf(config.urlConfModelCloud, nr_branches_model, args.dataset_name, args.model_name)
-	print("Finish Confs")
+	#print("Sending Confs")
+	#sendModelConf(config.urlConfModelEdge, nr_branches_model, args.dataset_name, args.model_name)
+	#sendModelConf(config.urlConfModelCloud, nr_branches_model, args.dataset_name, args.model_name)
+	#print("Finish Confs")
 
 	test_loader = load_dataset(args, dataset_path, save_indices_path)
 
