@@ -6,7 +6,8 @@ from torchvision import transforms, utils, datasets
 from torch.utils.data import Dataset, DataLoader, SubsetRandomSampler, WeightedRandomSampler
 from torch.utils.data import random_split
 from PIL import Image
-
+import torch
+import numpy as np
 
 
 def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, model_id=1):
