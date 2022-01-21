@@ -58,7 +58,8 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 
 	print(test_idx)
 
-	indices = list(range(len(train_set)))
+	nr_samples = len(train_set)
+	indices = list(range(nr_samples))
 
 	train_size = nr_samples - int(np.floor(split_ratio * nr_samples))
 
