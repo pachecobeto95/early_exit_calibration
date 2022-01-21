@@ -12,7 +12,7 @@ import numpy as np
 
 
 def get_indices(train_set, split_ratio):
-	nr_samples = len(dataset)
+	nr_samples = len(train_set)
 	indices = list(range(nr_samples))
 
 	train_size = nr_samples - int(np.floor(split_ratio * nr_samples))
