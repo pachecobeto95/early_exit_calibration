@@ -18,6 +18,20 @@ def transform_image(image_bytes):
 	image = Image.open(io.BytesIO(image_bytes))
 	return my_transforms(image).unsqueeze(0).to(config.device).float()
 
+class ExpLoad:
+	def __init__(self):
+		self._exp_params = {}
+	# using property decorator
+	# a getter function
+	@property
+	def exp_params(self):
+		return self._exp_params
+
+	# a setter function
+	@exp_params.setter
+	def exp_params(self, params):
+		self._exp_params = params
+
 
 class ModelLoad():
 	def __init__(self):
@@ -74,5 +88,3 @@ class ModelLoad():
 		
 	def update_all_samples_temperature(self, p_tar):
 		self.ee_model.temperature_all_samples = self.temp_all_samples.loc[p_tar].values
-
-

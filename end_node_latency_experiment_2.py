@@ -9,6 +9,7 @@ from requests.exceptions import HTTPError, ConnectTimeout
 from glob import glob
 #import torch
 from load_dataset import load_test_caltech_256
+from torchvision.utils import save_image
 
 
 def load_dataset(args, dataset_path, savePath_idx):
@@ -17,6 +18,54 @@ def load_dataset(args, dataset_path, savePath_idx):
 
 	elif(args.dataset_name=="cifar100"):
 		sys.exit()
+
+def sendImage(img_path, url):
+	#data_dict = {"p_tar": p_tar, "t": target, "nr_branch_edge": int(nr_branch_edge)}
+
+	#files = [('img', (img_path, open(img_path, 'rb'), 'application/octet')),
+	#('data', ('data', json.dumps(data_dict), 'application/json')),]
+	my_img = {'image': open(img_path, 'rb')}
+
+	try:
+		r = requests.post(url, files=my_img, timeout=config.timeout)
+		r.raise_for_status()
+	
+	except HTTPError as http_err:
+		raise SystemExit(http_err)
+
+	except ConnectTimeout as timeout_err:
+		print("Url: ¨%s, Timeout error: %s"%(url, timeout_err))
+
+def sendConfigExp(url, target, p_tar, nr_branch_edge):
+	data_dict = {"target": target, "p_tar": p_tar, "nr_branch": nr_branch_edge}
+
+	try:
+		r = requests.post(url, json=data_dict, timeout=config.timeout)
+		r.raise_for_status()
+	
+	except HTTPError as http_err:
+		raise SystemExit(http_err)
+
+	except ConnectTimeout as timeout_err:
+		print("Timeout error: ", timeout_err)
+
+def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge):
+	if (not os.path.exists(config.save_img_dir_path)):
+		os.makedirs(config.save_img_dir_path)
+
+	for i, (data, target) in enumerate(test_loader, 1):
+		filepath = os.path.join(config.save_img_dir_path, "%s.jpg"%(i))
+		save_image(data, filepath)
+
+		for nr_branch_edge in nr_branch_edge_list:
+
+			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
+			for p_tar in p_tar_list:
+				sendConfigExp(config.url_config_exp, target, p_tar, nr_branch_edge)
+				sendImage(filepath, config.url_edge_no_calib)
+				sendImage(filepath, config.url_edge_overall_calib)
+				sendImage(filepath, config.url_edge_branches_calib)
+
 
 def main(args):
 	#Number of side branches that exists in the early-exit DNNs
@@ -39,6 +88,7 @@ def main(args):
 	#print("Finish Confs")
 
 	test_loader = load_dataset(args, dataset_path, save_indices_path)
+	inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge)
 
 
 

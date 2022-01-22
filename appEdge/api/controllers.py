@@ -14,6 +14,13 @@ def edgeModelConfiguration():
 	model.load_temperature()
 	return jsonify({"status": "ok"}), 200
 
+
+@api.route("/edge/expConfiguration", methods=["POST"])
+def edgeExpConfiguration():
+	data = request.json
+	exp.exp_params = request.json
+	return jsonify({"status": "ok"}), 200
+
 # Define url for the user send the image
 @api.route('/edge/edgeInference', methods=["POST"])
 def edge_inference():
@@ -22,10 +29,13 @@ def edge_inference():
 	"""	
 	fileImg = request.files['img']
 
-	json_data = json.load(request.files['data'])
+	#json_data = json.load(request.files['data'])
 
 	#This functions process the DNN inference
-	result = edgeProcessing.edgeInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
+	#result = edgeProcessing.edgeInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
+	return jsonify({"status": "ok"}), 200
+	
+	result = edgeProcessing.edgeInference(fileImg)
 
 
 	if (result["status"] ==  "ok"):

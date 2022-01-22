@@ -7,11 +7,12 @@ import datetime
 import time, io
 import torchvision.transforms as transforms
 from PIL import Image
-from .utils import ModelLoad, transform_image
+from .utils import ModelLoad, transform_image, ExpLoad
 import pandas as pd
 
 
 model = ModelLoad()
+exp = ExpLoad()
 
 def edgeNoCalibInference(fileImg, p_tar, nr_branch_edge):
 

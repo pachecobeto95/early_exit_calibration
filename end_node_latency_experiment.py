@@ -53,14 +53,17 @@ def sendImageToCloud(img_path, url):
 		print("Url: ¨%s, Timeout error: %s"%(url, timeout_err))
 
 
-def sendImage(img_path, url, p_tar, nr_branch_edge):
-	data_dict = {"p_tar": p_tar, "nr_branch_edge": nr_branch_edge}
+def sendImage(img_path, url):
+	#data_dict = {"p_tar": p_tar, "nr_branch_edge": int(nr_branch_edge)}
 
-	files = [('img', (img_path, open(img_path, 'rb'), 'application/octet')),
-	('data', ('data', json.dumps(data_dict), 'application/json')),]
+	#files = [('img', (img_path, open(img_path, 'rb'), 'application/octet')),
+	#('data', ('data', json.dumps(data_dict), 'application/json')),]
+
+	my_img = {'image': open(img_path, 'rb')}
 
 	try:
-		r = requests.post(url, files=files, timeout=config.timeout)
+		#r = requests.post(url, files=files, timeout=config.timeout)
+		r = requests.post(url, files=my_img, timeout=config.timeout)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
@@ -68,6 +71,19 @@ def sendImage(img_path, url, p_tar, nr_branch_edge):
 
 	except ConnectTimeout as timeout_err:
 		print("Url: ¨%s, Timeout error: %s"%(url, timeout_err))
+
+def sendConfigExp(url, p_tar, nr_branch_edge):
+	data_dict = {"p_tar": p_tar, "nr_branch": nr_branch_edge}
+
+	try:
+		r = requests.post(url, json=data_dict, timeout=config.timeout)
+		r.raise_for_status()
+	
+	except HTTPError as http_err:
+		raise SystemExit(http_err)
+
+	except ConnectTimeout as timeout_err:
+		print("Timeout error: ", timeout_err)
 
 def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
 
@@ -79,10 +95,10 @@ def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
 
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
-				sendImage(img_path, config.url_edge_no_calib, p_tar, int(5))
-				sendImage(img_path, config.url_edge_overall_calib, p_tar, int(5))
-				sendImage(img_path, config.url_edge_branches_calib, p_tar, int(5))
-				sendImage(img_path, config.url_edge_all_samples_calib, p_tar, int(5))
+				sendConfigExp(config.url_config_exp, p_tar, nr_branch_edge)
+				sendImage(img_path, config.url_edge_no_calib)
+				sendImage(img_path, config.url_edge_overall_calib)
+				sendImage(img_path, config.url_edge_branches_calib)
 
 
 		#start = time.time()
