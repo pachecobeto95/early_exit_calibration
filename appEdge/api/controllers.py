@@ -47,7 +47,8 @@ def edge_inference():
 def edge_inference_no_calib():
 
 	fileImg = request.files['img']
-	json_data = json.load(request.files['data'])
+	#json_data = json.load(request.files['data'])
+	return jsonify({"status": "ok"}), 200
 
 	result = edgeProcessing.edgeNoCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
 
@@ -61,7 +62,9 @@ def edge_inference_no_calib():
 def edge_inference_overall_calib():
 
 	fileImg = request.files['img']
-	json_data = json.load(request.files['data'])
+	return jsonify({"status": "ok"}), 200
+
+	#json_data = json.load(request.files['data'])
 
 	model.update_overall_temperature(json_data["p_tar"])
 
@@ -77,7 +80,9 @@ def edge_inference_overall_calib():
 def edge_inference_branches_calib():
 
 	fileImg = request.files['img']
-	json_data = json.load(request.files['data'])
+	#json_data = json.load(request.files['data'])
+	return jsonify({"status": "ok"}), 200
+
 
 	model.update_branches_temperature(json_data["p_tar"])
 
@@ -92,7 +97,8 @@ def edge_inference_branches_calib():
 def edge_inference_all_samples_calib():
 
 	fileImg = request.files['img']
-	json_data = json.load(request.files['data'])
+	#json_data = json.load(request.files['data'])
+	return jsonify({"status": "ok"}), 200
 
 	model.update_all_samples_temperature(json_data["p_tar"])
 
