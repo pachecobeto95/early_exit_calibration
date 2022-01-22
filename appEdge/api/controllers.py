@@ -1,7 +1,7 @@
 from flask import Blueprint, g, render_template, request, jsonify, session, redirect, url_for, current_app as app
 import json, os, time, sys, config, requests
 from .services import edgeProcessing
-from .services.edgeProcessing import model
+from .services.edgeProcessing import model, exp
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -17,7 +17,6 @@ def edgeModelConfiguration():
 
 @api.route("/edge/expConfiguration", methods=["POST"])
 def edgeExpConfiguration():
-	data = request.json
 	exp.exp_params = request.json
 	return jsonify({"status": "ok"}), 200
 
@@ -34,7 +33,7 @@ def edge_inference():
 	#This functions process the DNN inference
 	#result = edgeProcessing.edgeInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
 	return jsonify({"status": "ok"}), 200
-	
+
 	result = edgeProcessing.edgeInference(fileImg)
 
 
