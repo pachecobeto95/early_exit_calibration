@@ -37,7 +37,7 @@ def sendImage(img_path, url):
 		print("Url: ¨%s, Timeout error: %s"%(url, timeout_err))
 
 def sendConfigExp(url, target, p_tar, nr_branch_edge):
-	data_dict = {"target": target, "p_tar": p_tar, "nr_branch": nr_branch_edge}
+	data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": nr_branch_edge}
 
 	try:
 		r = requests.post(url, json=data_dict, timeout=config.timeout)
