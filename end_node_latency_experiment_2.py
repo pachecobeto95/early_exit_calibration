@@ -24,7 +24,7 @@ def sendImage(img_path, url):
 
 	#files = [('img', (img_path, open(img_path, 'rb'), 'application/octet')),
 	#('data', ('data', json.dumps(data_dict), 'application/json')),]
-	my_img = {'image': open(img_path, 'rb')}
+	my_img = {'img': open(img_path, 'rb')}
 
 	try:
 		r = requests.post(url, files=my_img, timeout=config.timeout)
