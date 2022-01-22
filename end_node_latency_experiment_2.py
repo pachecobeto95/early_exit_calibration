@@ -49,7 +49,7 @@ def sendConfigExp(url, target, p_tar, nr_branch_edge):
 	except ConnectTimeout as timeout_err:
 		print("Timeout error: ", timeout_err)
 
-def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge):
+def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
 	if (not os.path.exists(config.save_img_dir_path)):
 		os.makedirs(config.save_img_dir_path)
 
