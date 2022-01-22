@@ -38,7 +38,7 @@ def sendImage(img_path, url):
 
 def sendConfigExp(url, target, p_tar, nr_branch_edge):
 	#data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": nr_branch_edge}
-	data_dict = {"p_tar": p_tar, "nr_branch": nr_branch_edge}
+	data_dict = {"p_tar": 0.5, "nr_branch": 5}
 
 	try:
 		r = requests.post(url, json=data_dict, timeout=config.timeout)
