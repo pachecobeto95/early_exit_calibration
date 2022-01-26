@@ -64,7 +64,7 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
 		os.makedirs(config.save_img_dir_path)
 
 	for i, (data, target) in enumerate(test_loader, 1):
-		filepath = os.path.join(config.save_img_dir_path, "%s.jpg"%(i))
+		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))
 		save_image(data, filepath)
 
 		for nr_branch_edge in nr_branch_edge_list:
@@ -72,6 +72,7 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
 				sendConfigExp(config.url_config_exp, target, p_tar, nr_branch_edge)
+				sys.exit()
 				sendImage(filepath, config.url_edge_no_calib)
 				sendImage(filepath, config.url_edge_overall_calib)
 				sendImage(filepath, config.url_edge_branches_calib)
@@ -95,7 +96,6 @@ def main(args):
 	sendModelConf(config.urlConfModelEdge, config.nr_branch_model, args.dataset_name, args.model_name)
 	#sendModelConf(config.urlConfModelCloud, nr_branches_model, args.dataset_name, args.model_name)
 	#print("Finish Confs")
-	sys.exit()
 
 	test_loader = load_dataset(args, dataset_path, save_indices_path)
 	inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge)
