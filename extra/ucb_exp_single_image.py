@@ -77,8 +77,8 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
-	"overhead":[round(overhead, 2)]*df_size,
-	"bin_lower": [round(bin_lower, 2)]*df_size, "bin_upper": [round(bin_upper, 2)]*df_size,
+	"overhead":[round(overhead, 2)]*n_rounds,
+	"bin_lower": [round(bin_lower, 2)]*n_rounds, "bin_upper": [round(bin_upper, 2)]*n_rounds,
 	"cumulative_regret": cumulative_regret_list}
 
 	return result
