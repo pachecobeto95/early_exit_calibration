@@ -45,7 +45,7 @@ class ModelLoad():
 
 		if(self.model_params["dataset_name"] == "caltech256"):
 			model_file_name = "ee_%s_branches_%s_id_%s.pth"%(self.model_params["model_name"], 
-				self.model_params["model_name"], config.model_id_dict[self.model_params["model_name"]])
+				self.model_params["n_branches"], config.model_id_dict[self.model_params["model_name"]])
 
 		elif((self.model_params["dataset_name"] == "cifar100") or (self.model_params["dataset_name"] == "cifar10")):
 			
