@@ -39,5 +39,5 @@ if (not os.path.exists(save_path)):
 	os.makedirs(save_path)
 
 for i, (data, target) in tqdm(enumerate(test_loader, 1)):
-  save_image(data, os.path.join(save_path, "%s.jpg"%(i)))
+  save_image(data, os.path.join(save_path, "%s_%s.jpg"%(i, target.item())))
 
