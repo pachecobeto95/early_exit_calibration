@@ -40,10 +40,25 @@ class ModelLoad():
 
 	def load_model(self):
 		self.ee_model = Early_Exit_DNN(self.model_params["model_name"], self.model_params["n_classes"], config.pretrained, 
-			config.n_branches, config.input_shape, config.exit_type, config.device, distribution=config.distribution)
+			self.model_params["n_branches"], self.model_params["input_shape"], config.exit_type, config.device, 
+			distribution=config.distribution)
 
-		model_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], self.model_params["model_name"], 
-			"models", "ee_%s_branches_%s_id_%s.pth"%(self.model_params["model_name"], config.n_branches, config.model_id))
+		if(self.model_params["dataset_name"] == "caltech256"):
+			model_file_name = "ee_%s_branches_%s_id_%s.pth"%(self.model_params["model_name"], 
+				self.model_params["model_name"], config.model_id_dict[self.model_params["model_name"]])
+
+		elif((self.model_params["dataset_name"] == "cifar100") or (self.model_params["dataset_name"] == "cifar10")):
+			
+			model_file_name = "b_%s_early_exit_%s_id_1_%s_%s.pth"%(self.model_params["model_name"],
+				self.model_params["dataset_name"], 
+				self.model_params["pretrained"], self.model_params["weight_loss_type"])
+		else:
+			print("Error")
+
+		#./appEdge/api/services/models/caltech256/mobilenet/models/
+		model_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], 
+			self.model_params["model_name"], 
+			"models", model_file_name)
 		
 		self.ee_model.load_state_dict(torch.load(model_path, map_location=config.device)["model_state_dict"])
 

@@ -38,9 +38,7 @@ cloud_model_root_path = os.path.join(DIR_NAME, "appCloud", "api", "services", "m
 
 
 #Dataset Path
-
-dataset_path = {"caltech256": os.path.join(DIR_NAME, "datasets", "caltech256", "256_ObjectCategories"), 
-"cifar100": os.path.join(DIR_NAME, "datasets", "cifar100")}
+dataset_root_path = os.path.join(DIR_NAME, "datasets")
 
 save_img_dir_path = os.path.join(DIR_NAME, "datasets", "caltech256", "test_dataset")
 
@@ -48,7 +46,7 @@ nr_max_branches = 5
 nr_min_branches = 2
 model_name = "mobilenet"
 dataset_name = "caltech256"
-nr_branch_model = nr_branch_model = 5
+nr_branch_model = 5
 input_dim = 224
 input_resize = 224
 input_shape = (3, input_dim, input_dim)
@@ -60,11 +58,17 @@ distribution = "linear"
 disabled_branches = [1]
 
 timeout = 30
+model_id = 1
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-models_params = {"caltech256": {"n_classes": 258}, "cifar100": {"n_classes": 100}}
-model_id = 1
+models_params = {"caltech256": {"n_classes": 258, "input_shape":(3, 224, 224),
+"dataset_path": os.path.join(dataset_root_path, "caltech256", "256_ObjectCategories"), 
+"indices": os.path.join(DIR_NAME, "datasets", "caltech256", "indices", "test_idx_caltech256_id_1.npy")}, 
+"cifar100": {"n_classes": 100, "input_shape":(3, 32, 32),
+"indices": os.path.join(DIR_NAME, "datasets", "cifar100", "indices"),
+"dataset_path": os.path.join(dataset_root_path, "cifar100")}
+}
 
-save_indices_path = os.path.join(DIR_NAME, "datasets", "caltech256", "indices")
+model_id_dict = {"mobilenet": 1, "resnet18": 2, "vgg16": 1, "resnet152": 1}
