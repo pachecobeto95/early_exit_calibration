@@ -14,7 +14,7 @@ from torchvision.utils import save_image
 
 def load_dataset(args, dataset_path, savePath_idx):
 	if(args.dataset_name=="caltech256"):
-		return load_test_caltech_256(args.input_dim, dataset_path, args.split_ratio, savePath_idx, args.model_id)
+		return load_test_caltech_256(config.input_dim, dataset_path, args.split_ratio, savePath_idx, args.model_id)
 
 	elif(args.dataset_name=="cifar100"):
 		sys.exit()
