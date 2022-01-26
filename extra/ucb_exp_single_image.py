@@ -93,7 +93,8 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 
 	for overhead in overhead_list:
 		for bin_lower, bin_upper in zip(bin_lowers, bin_uppers):
-			print("Overhead: %s, Bin:[%s, %s]"%(overhead, bin_lower, bin_upper), file=open(logPath, "a"))
+			print("Overhead: %s, Bin:[%s, %s]"%(round(overhead, 2), round(bin_lower, 2), round(bin_upper, 2)), 
+				file=open(logPath, "a"))
 
 			df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper)] 
 			
