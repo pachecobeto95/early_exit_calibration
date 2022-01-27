@@ -64,7 +64,7 @@ def sendConfigExp(url, target, p_tar, nr_branch_edge):
 	print(target.item(), type(target.item()))
 	print(p_tar, type(p_tar))
 	print(nr_branch_edge, type(nr_branch_edge))
-	data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": nr_branch_edge}
+	data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": int(nr_branch_edge)}
 	sendData(url, data_dict)
 
 
