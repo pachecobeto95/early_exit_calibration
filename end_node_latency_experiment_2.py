@@ -61,9 +61,7 @@ def sendModelConf(url, n_branches, dataset_name, model_name):
 	sendData(url, data_dict)
 
 def sendConfigExp(url, target, p_tar, nr_branch_edge):
-	print(target.item(), type(target.item()))
-	print(p_tar, type(p_tar))
-	print(nr_branch_edge, type(nr_branch_edge))
+
 	data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": int(nr_branch_edge)}
 	sendData(url, data_dict)
 
@@ -81,8 +79,8 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
 				sendConfigExp(config.url_config_exp, target, p_tar, nr_branch_edge)
-				sys.exit()
 				sendImage(filepath, config.url_edge_no_calib)
+				sys.exit()
 				sendImage(filepath, config.url_edge_overall_calib)
 				sendImage(filepath, config.url_edge_branches_calib)
 
