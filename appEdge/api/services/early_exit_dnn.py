@@ -221,7 +221,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
   def __init__(self, model_name: str, n_classes: int, 
                pretrained: bool, n_branches: int, input_shape:tuple, 
                exit_type: str, device, distribution="linear"):
-    super(Early_Exit_DNN, self).__init__()
+    super(Early_Exit_DNN_CALTECH, self).__init__()
 
     """
     This classes builds an early-exit DNNs architectures
@@ -790,7 +790,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
 class Early_Exit_DNN_CIFAR(nn.Module):
   def __init__(self, model_name: str, n_classes: int, 
                pretrained: bool, n_branches: int, input_shape:tuple, exit_type: str, device, distribution="linear"):
-    super(Early_Exit_DNN, self).__init__()
+    super(Early_Exit_DNN_CIFAR, self).__init__()
 
     """
     This classes builds an early-exit DNNs architectures
