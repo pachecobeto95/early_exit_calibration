@@ -263,8 +263,8 @@ class Early_Exit_DNN_CALTECH(nn.Module):
 
     architecture_dnn_model_dict = {"mobilenet": self.early_exit_mobilenet,
                                    "resnet18": self.early_exit_resnet18,
-                                   "vgg16": self.early_exit_vgg16, 
-                                   "inceptionV3": self.early_exit_inceptionV3}
+                                   "vgg16": self.early_exit_vgg16,
+                                   "resnet152": self.early_exit_resnet152}
 
     self.pool_size = 7 if (self.model_name == "vgg16") else 1
     return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
@@ -367,11 +367,46 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     self.layers.to(self.device)
     self.classifier.to(self.device)
 
-  def set_device_resnet50(self):
-    self.stages.to(self.device)
-    self.exits.to(self.device)
-    self.layers.to(self.device)
-    self.classifier.to(self.device)
+  def early_exit_resnet152(self):
+    self.stages = nn.ModuleList()
+    self.exits = nn.ModuleList()
+    self.layers = nn.ModuleList()
+    self.cost = []
+    self.stage_id = 0
+
+    self.inplanes = 64
+
+    n_blocks = 4
+
+    backbone_model = models.resnet152(self.pretrained)
+
+    # This obtains the flops total of the backbone model
+    self.total_flops = self.countFlops(backbone_model)
+
+    self.threshold_flop_list = self.where_insert_early_exits()
+
+    building_first_layer = ["conv1", "bn1", "relu", "maxpool"]
+    for layer in building_first_layer:
+      self.layers.append(getattr(backbone_model, layer))
+
+    if (self.is_suitable_for_exit()):
+      self.add_exit_block()
+
+    for i in range(1, n_blocks+1):
+      
+      block_layer = getattr(backbone_model, "layer%s"%(i))
+
+      for l in block_layer:
+        self.layers.append(l)
+
+        if (self.is_suitable_for_exit()):
+          self.add_exit_block()
+    
+    self.layers.append(nn.AdaptiveAvgPool2d(1))
+    self.classifier = nn.Sequential(nn.Linear(2048, self.n_classes))
+    self.stages.append(nn.Sequential(*self.layers))
+    self.softmax = nn.Softmax(dim=1)
+    self.set_device()
 
   def early_exit_alexnet(self):
     """
