@@ -19,6 +19,8 @@ def edgeNoCalibInference(fileImg):
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	response_request = {"status": "ok"}
+	p_tar, nr_branch_edge = exp.exp_params["p_tar"], exp.exp_params["nr_branch"]
+
 	start = time.time()
 	image_bytes = fileImg.read()
 
