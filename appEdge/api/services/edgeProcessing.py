@@ -56,6 +56,7 @@ def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_overall_calib_inference(tensor_img, p_tar, nr_branch_edge)
+	return response_request
 
 	if (not isTerminate):
 		response_request = sendToCloud(config.url_cloud_overall_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
@@ -71,6 +72,8 @@ def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 
 def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 	response_request = {"status": "ok"}
+	p_tar, nr_branch_edge = exp.exp_params["p_tar"], exp.exp_params["nr_branch"]
+
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -81,6 +84,7 @@ def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge)
+	return response_request
 
 	if (not isTerminate):
 		response_request = sendToCloud(config.url_cloud_branches_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
@@ -95,29 +99,29 @@ def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 	return response_request
 
 
-def edgeAllSamplesCalibInference(fileImg, p_tar, nr_branch_edge):
-	response_request = {"status": "ok"}
+#def edgeAllSamplesCalibInference(fileImg, p_tar, nr_branch_edge):
+#	response_request = {"status": "ok"}
 
 	#This line reads the fileImg, obtaining pixel matrix.
-	start = time.time()
-	image_bytes = fileImg.read()
+#	start = time.time()
+#	image_bytes = fileImg.read()
 
 	#Starts measuring the inference time
-	tensor_img = transform_image(image_bytes) #transform input data, which resizes the input image
+#	tensor_img = transform_image(image_bytes) #transform input data, which resizes the input image
 
 	#Run the Early-exit dnn inference
-	output, conf_list, class_list, isTerminate = ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge)
+#	output, conf_list, class_list, isTerminate = ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge)
 
-	if (not isTerminate):
-		response_request = sendToCloud(config.url_cloud_all_samples_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
+#	if (not isTerminate):
+#		response_request = sendToCloud(config.url_cloud_all_samples_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
 
-	inference_time = time.time() - start
-	return response_request
+#	inference_time = time.time() - start
+#	return response_request
 
-	if(response_request["status"] == "ok"):
-		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
+#	if(response_request["status"] == "ok"):
+#		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
 	
-	return response_request
+#	return response_request
 
 
 
@@ -145,13 +149,13 @@ def ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge):
 
 	return output, conf_list, class_list, isTerminate
 
-def ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge):
-	model.ee_model.eval()
+#def ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge):
+#	model.ee_model.eval()
 
-	with torch.no_grad():
-		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeAllSamplesCalibInference(tensor_img, p_tar, nr_branch_edge)
+#	with torch.no_grad():
+#		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeAllSamplesCalibInference(tensor_img, p_tar, nr_branch_edge)
 
-	return output, conf_list, class_list, isTerminate
+#	return output, conf_list, class_list, isTerminate
 
 
 def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
@@ -165,13 +169,10 @@ def sendToCloud(url, feature_map, conf_list, class_list, p_tar, nr_branch_edge):
 	"""
 
 	conf_list = [0 if math.isnan(x) else x for x in conf_list] if(np.nan in conf_list) else conf_list
-	print(conf_list)
 
 	data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": conf_list, "p_tar": p_tar, 
 	"nr_branch_edge": nr_branch_edge, "class_list": class_list}
-	#print(conf_list, class_list)
-	#data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": [1], "p_tar": 1, 
-	#"nr_branch_edge": 1, "class_list": [1]}
+
 
 	try:
 		response = requests.post(url, json=data, timeout=config.timeout)

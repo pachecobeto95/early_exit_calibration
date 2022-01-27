@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from PIL import Image
-from .early_exit_dnn import Early_Exit_DNN
+from .early_exit_dnn import Early_Exit_DNN_CALTECH, Early_Exit_DNN_CIFAR
 import pandas as pd
 
 def transform_image(image_bytes):
@@ -39,16 +39,20 @@ class ModelLoad():
 		self.n_exits = config.n_branches + 1
 
 	def load_model(self):
-		self.ee_model = Early_Exit_DNN(self.model_params["model_name"], self.model_params["n_classes"], config.pretrained, 
-			self.model_params["n_branches"], self.model_params["input_shape"], config.exit_type, config.device, 
-			distribution=config.distribution)
 
 		if(self.model_params["dataset_name"] == "caltech256"):
+
+			self.ee_model = Early_Exit_DNN_CALTECH(self.model_params["model_name"], self.model_params["n_classes"], config.pretrained, 
+				self.model_params["n_branches"], self.model_params["input_shape"], config.exit_type, config.device, config.distribution)
+
 			model_file_name = "ee_%s_branches_%s_id_%s.pth"%(self.model_params["model_name"], 
 				self.model_params["n_branches"], config.model_id_dict[self.model_params["model_name"]])
 
 		elif((self.model_params["dataset_name"] == "cifar100") or (self.model_params["dataset_name"] == "cifar10")):
 			
+			self.ee_model = Early_Exit_DNN_CIFAR(self.model_params["model_name"], self.model_params["n_classes"],self.model_params["pretrained"], self.model_params["n_branches"], self.model_params["n_branches"], 
+				config.exit_type, config.device, config.distribution)
+
 			model_file_name = "b_%s_early_exit_%s_id_1_%s_%s.pth"%(self.model_params["model_name"],
 				self.model_params["dataset_name"], 
 				self.model_params["pretrained"], self.model_params["weight_loss_type"])
