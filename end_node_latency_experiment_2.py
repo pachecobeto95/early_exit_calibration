@@ -49,14 +49,19 @@ def sendData(url, data):
 		print("Timeout error: ", timeout_err)
 
 def sendModelConf(url, n_branches, dataset_name, model_name):
+	
+	pretrained_str = "ft" if (model_name=="") else "scratch"
+	
 	data_dict = {"n_branches": n_branches, "dataset_name": dataset_name, "model_name": model_name, 
 	"n_classes": config.models_params[dataset_name]["n_classes"], 
-	"input_shape": config.models_params[dataset_name]["input_shape"]}
+	"input_shape": config.models_params[dataset_name]["input_shape"],
+	"model_id": config.model_id_dict[model_name],
+	"pretrained": pretrained_str}
+
 	sendData(url, data_dict)
 
 def sendConfigExp(url, target, p_tar, nr_branch_edge):
-	#data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": nr_branch_edge}
-	data_dict = {"p_tar": p_tar, "nr_branch": 5}
+	data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": nr_branch_edge}
 	sendData(url, data_dict)
 
 
