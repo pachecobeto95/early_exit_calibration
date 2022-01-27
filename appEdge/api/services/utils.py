@@ -55,7 +55,6 @@ class ModelLoad():
 		else:
 			print("Error")
 
-		#./appEdge/api/services/models/caltech256/mobilenet/models/
 		model_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], 
 			self.model_params["model_name"], 
 			"models", model_file_name)
@@ -78,22 +77,30 @@ class ModelLoad():
 		return df_temp.where(pd.notnull(df_temp), None)
 
 	def load_temperature(self):
-		overall_calib_temp_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], 
-			self.model_params["model_name"], "temperature", "temp_overall_id_%s.csv"%(config.model_id))
-		
-		branches_calib_temp_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], 
-			self.model_params["model_name"], "temperature", "temp_branches_id_%s.csv"%(config.model_id))
+		#./appEdge/api/services/models/caltech256/mobilenet/temperature/
+		temp_root_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], self.model_params["model_name"],
+			"temperature")
 
-		all_samples_calib_temp_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], 
-			self.model_params["model_name"], "temperature", "temp_all_samples_id_%s.csv"%(config.model_id))
+		if(self.model_params["dataset_name"] == "caltech256"):
+			overall_calib_path = os.path.join(temp_root_path, "temp_overall_id_%s.csv"%(self.model_params["model_id"]))
+			branches_calib_path = os.path.join(temp_root_path, "temp_branches_id_%s.csv"%(self.model_params["model_id"]))			
+
+		elif(self.model_params["dataset_name"] == "cifar100"):
+			overall_calib_path = os.path.join(temp_root_path, 
+				"overall_temperature_%s_early_exit_cifar100_id_1_%s.csv"%(self.model_params["model_id"], self.model_params["pretrained"]))
+			
+			branches_calib_path = os.path.join(temp_root_path, 
+				"branches_temperature_%s_early_exit_cifar100_id_1_%s.csv"%(self.model_params["model_id"], self.model_params["pretrained"]))
+			
+		else:
+			print("Error")
+
 
 		df_overall_calib = pd.read_csv(overall_calib_temp_path)
 		df_branches_calib = pd.read_csv(branches_calib_temp_path)
-		df_all_samples_calib = pd.read_csv(all_samples_calib_temp_path)
 
 		self.overall_temp = self.get_temperature(df_overall_calib, overall=True)
 		self.temp_branches = self.get_temperature(df_branches_calib)
-		self.temp_all_samples = self.get_temperature(df_all_samples_calib)
 
 	def update_overall_temperature(self, p_tar):
 		self.ee_model.temperature_overall = self.overall_temp.loc[p_tar].item()
