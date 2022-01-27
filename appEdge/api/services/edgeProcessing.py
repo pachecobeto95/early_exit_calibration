@@ -14,7 +14,8 @@ import pandas as pd
 model = ModelLoad()
 exp = ExpLoad()
 
-def edgeNoCalibInference(fileImg, p_tar, nr_branch_edge):
+
+def edgeNoCalibInference(fileImg):
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	response_request = {"status": "ok"}
@@ -26,7 +27,7 @@ def edgeNoCalibInference(fileImg, p_tar, nr_branch_edge):
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge)
-	print(conf_list, class_list)
+	return response_request
 
 	if (not isTerminate):
 		response_request = sendToCloud(config.url_cloud_no_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
