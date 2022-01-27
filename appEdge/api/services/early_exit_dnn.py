@@ -13,9 +13,9 @@ from pthflops import count_ops
 from torch import Tensor
 from typing import Callable, Any, Optional, List, Type, Union
 import functools
-from networks.mobilenet import MobileNetV2_2
-from networks.resnet import resnet18, resnet152
-from networks.vgg import vgg16_bn
+from .networks.mobilenet import MobileNetV2_2
+from .networks.resnet import resnet18, resnet152
+from .networks.vgg import vgg16_bn
 
 
 class EarlyExitBlock(nn.Module):
