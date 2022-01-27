@@ -96,8 +96,8 @@ class ModelLoad():
 			print("Error")
 
 
-		df_overall_calib = pd.read_csv(overall_calib_temp_path)
-		df_branches_calib = pd.read_csv(branches_calib_temp_path)
+		df_overall_calib = pd.read_csv(overall_calib_path)
+		df_branches_calib = pd.read_csv(branches_calib_path)
 
 		self.overall_temp = self.get_temperature(df_overall_calib, overall=True)
 		self.temp_branches = self.get_temperature(df_branches_calib)
