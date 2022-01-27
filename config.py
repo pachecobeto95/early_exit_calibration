@@ -4,6 +4,8 @@ DIR_NAME = os.path.dirname(__file__)
 
 DEBUG = True
 
+
+
 # Edge URL Configuration 
 HOST_EDGE = "146.164.69.144"
 #HOST_EDGE = "192.168.0.20"
@@ -17,7 +19,7 @@ url_edge_overall_calib = "%s/api/edge/edgeOverallCalibInference"%(URL_EDGE)
 url_edge_branches_calib = "%s/api/edge/edgeBranchesCalibInference"%(URL_EDGE)
 url_edge_all_samples_calib = "%s/api/edge/edgeAllSamplesCalibInference"%(URL_EDGE)
 
-url_config_exp = "%s/api/edge/expConfiguration"%(URL_EDGE)
+url_edge_config_exp = "%s/api/edge/expConfiguration"%(URL_EDGE)
 
 edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
@@ -33,6 +35,8 @@ url_cloud_no_calib = "%s/api/cloud/cloudNoCalibInference"%(URL_CLOUD)
 url_cloud_overall_calib = "%s/api/cloud/cloudOverallCalibInference"%(URL_CLOUD)
 url_cloud_branches_calib = "%s/api/cloud/cloudBranchesCalibInference"%(URL_CLOUD)
 url_cloud_all_samples_calib = "%s/api/cloud/cloudAllSamplesCalibInference"%(URL_CLOUD)
+
+url_cloud_config_exp = "%s/api/cloud/expConfiguration"%(URL_CLOUD)
 
 cloud_model_root_path = os.path.join(DIR_NAME, "appCloud", "api", "services", "models")
 

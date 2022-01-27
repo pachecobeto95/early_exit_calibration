@@ -5,7 +5,8 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from PIL import Image
-from .early_exit_dnn import Early_Exit_DNN
+#from .early_exit_dnn import Early_Exit_DNN
+from .early_exit_dnn import Early_Exit_DNN_CALTECH, Early_Exit_DNN_CIFAR
 import pandas as pd
 
 
@@ -20,6 +21,21 @@ def transform_image(image_bytes):
 	image = Image.open(io.BytesIO(image_bytes))
 	return my_transforms(image).unsqueeze(0).to(config.device).float()
 
+class ExpLoad:
+	def __init__(self):
+		self._exp_params = {}
+	# using property decorator
+	# a getter function
+	@property
+	def exp_params(self):
+		return self._exp_params
+
+	# a setter function
+	@exp_params.setter
+	def exp_params(self, params):
+		self._exp_params = params
+
+
 class ModelLoad():
 	def __init__(self):
 		self.model_params = None
@@ -27,15 +43,34 @@ class ModelLoad():
 
 
 	def load_model(self):
-		self.ee_model = Early_Exit_DNN(self.model_params["model_name"], self.model_params["n_classes"], config.pretrained, 
-			config.n_branches, 
-			config.input_shape, config.exit_type, config.device, distribution=config.distribution)
 
-		model_path = os.path.join(config.cloud_model_root_path, self.model_params["dataset_name"], self.model_params["model_name"],
-			"models", "ee_%s_branches_%s_id_%s.pth"%(self.model_params["model_name"], 
-			config.n_branches, config.model_id))
+		model_name, n_classes = self.model_params["model_name"], self.model_params["n_classes"]
+		n_branches, input_shape = self.model_params["n_branches"], self.model_params["input_shape"]
+		model_id, pretrained = self.model_params["model_id"], self.model_params["pretrained"]
+		self.dataset_name = self.model_params["dataset_name"]
+
+		if(dataset_name == "caltech256"):
+
+			self.ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, config.pretrained, n_branches, input_shape, config.exit_type, 
+				config.device, config.distribution)
+
+			model_file_name = "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id)
+
+		elif((dataset_name == "cifar100") or (dataset_name == "cifar10")):
+			
+			self.ee_model = Early_Exit_DNN_CIFAR(model_name, n_classes, pretrained, n_branches, input_shape, config.exit_type, config.device, 
+				config.distribution)
+
+			model_file_name = "b_%s_early_exit_%s_id_1_%s_%s.pth"%(model_name,
+				dataset_name, pretrained, self.model_params["weight_loss_type"])
+		else:
+			print("Error")
+
+		model_path = os.path.join(config.edge_model_root_path, dataset_name, model_name, "models", model_file_name)
 		
 		self.ee_model.load_state_dict(torch.load(model_path, map_location=config.device)["model_state_dict"])
+		self.ee_model.eval()
+
 
 
 	def get_temperature(self, df, overall=False):
@@ -49,22 +84,30 @@ class ModelLoad():
 		return df[select_temp_branches]
 
 	def load_temperature(self):
-		overall_calib_temp_path = os.path.join(config.cloud_model_root_path, self.model_params["dataset_name"], 
-			self.model_params["model_name"], "temperature", "temp_overall_id_%s.csv"%(config.model_id))
-		
-		branches_calib_temp_path = os.path.join(config.cloud_model_root_path, self.model_params["dataset_name"], 
-			self.model_params["model_name"], "temperature", "temp_branches_id_%s.csv"%(config.model_id))
+		#./appEdge/api/services/models/caltech256/mobilenet/temperature/
+		temp_root_path = os.path.join(config.edge_model_root_path, self.model_params["dataset_name"], self.model_params["model_name"],
+			"temperature")
 
-		all_samples_calib_temp_path = os.path.join(config.cloud_model_root_path, self.model_params["dataset_name"], 
-			self.model_params["model_name"], "temperature", "temp_all_samples_id_%s.csv"%(config.model_id))
+		if(self.dataset_name == "caltech256"):
+			overall_calib_path = os.path.join(temp_root_path, "temp_overall_id_%s.csv"%(self.model_params["model_id"]))
+			branches_calib_path = os.path.join(temp_root_path, "temp_branches_id_%s.csv"%(self.model_params["model_id"]))			
 
-		df_overall_calib = pd.read_csv(overall_calib_temp_path)
-		df_branches_calib = pd.read_csv(branches_calib_temp_path)
-		df_all_samples_calib = pd.read_csv(all_samples_calib_temp_path)
+		elif(self.dataset_name == "cifar100"):
+			overall_calib_path = os.path.join(temp_root_path, 
+				"overall_temperature_%s_early_exit_cifar100_id_1_%s.csv"%(self.model_params["model_id"], self.model_params["pretrained"]))
+			
+			branches_calib_path = os.path.join(temp_root_path, 
+				"branches_temperature_%s_early_exit_cifar100_id_1_%s.csv"%(self.model_params["model_id"], self.model_params["pretrained"]))
+			
+		else:
+			print("Error")
+
+
+		df_overall_calib = pd.read_csv(overall_calib_path)
+		df_branches_calib = pd.read_csv(branches_calib_path)
 
 		self.overall_temp = self.get_temperature(df_overall_calib, overall=True)
 		self.temp_branches = self.get_temperature(df_branches_calib)
-		self.temp_all_samples = self.get_temperature(df_all_samples_calib)
 
 	def update_overall_temperature(self, p_tar):
 		self.ee_model.temperature_overall = self.overall_temp.loc[p_tar].item()
@@ -74,4 +117,3 @@ class ModelLoad():
 		
 	def update_all_samples_temperature(self, p_tar):
 		self.ee_model.temperature_all_samples = self.temp_all_samples.loc[p_tar].values
-
