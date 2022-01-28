@@ -7,7 +7,7 @@ DEBUG = True
 
 
 # Edge URL Configuration 
-HOST_EDGE = "146.164.69.144"
+HOST_EDGE = "146.164.69.165"
 #HOST_EDGE = "192.168.0.20"
 PORT_EDGE = 5001
 URL_EDGE = "http://%s:%s"%(HOST_EDGE, PORT_EDGE)
