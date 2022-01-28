@@ -29,6 +29,7 @@ def edgeNoCalibInference(fileImg):
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge)
+	print(conf_list, isTerminate)
 
 	if (not isTerminate):
 		response_request = sendToCloud(config.url_cloud_no_calib, output, conf_list, class_list)
