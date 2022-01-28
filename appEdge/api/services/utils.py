@@ -8,15 +8,17 @@ from PIL import Image
 from .early_exit_dnn import Early_Exit_DNN_CALTECH, Early_Exit_DNN_CIFAR
 import pandas as pd
 
-def transform_image(image_bytes):
-	imagenet_mean = [0.457342265910642, 0.4387686270106377, 0.4073427106250871]
-	imagenet_std = [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
-	my_transforms = transforms.Compose([transforms.Resize(224),
-		transforms.ToTensor(),
-		transforms.Normalize(imagenet_mean, imagenet_std)])
+def transform_image(image_bytes, model):
+	#imagenet_mean = [0.457342265910642, 0.4387686270106377, 0.4073427106250871]
+	#imagenet_std = [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
+	#my_transforms = transforms.Compose([transforms.Resize(model_params["input_shape"][1]),
+	#	transforms.ToTensor(),
+	#	transforms.Normalize(imagenet_mean, imagenet_std)])
+
 
 	image = Image.open(io.BytesIO(image_bytes))
-	return my_transforms(image).unsqueeze(0).to(config.device).float()
+	return model.input_transformation(image).unsqueeze(0).to(config.device).float()
+
 
 class ExpLoad:
 	def __init__(self):
@@ -37,6 +39,27 @@ class ModelLoad():
 	def __init__(self):
 		self.model_params = None
 		self.n_exits = config.n_branches + 1
+
+	def transform_input_configuration(self):
+
+		if(self.model_params["dataset_name"]=="caltech256"):
+			mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
+
+			self.input_transformation = transforms.Compose([
+				transforms.Resize(self.model_params["input_shape"][1]), 
+				transforms.ToTensor(), 
+				transforms.Normalize(mean = mean, std = std),
+				])
+
+		else:
+			mean, std = [0.4914, 0.4822, 0.4465], [0.247, 0.243, 0.261]
+
+			self.input_transformation = transforms.Compose([
+				transforms.Resize(self.model_params["input_shape"][1]),
+				transforms.RandomCrop(self.model_params["input_shape"][1], padding = 4),
+				transforms.ToTensor(),
+				transforms.Normalize(mean, std)])
+
 
 	def load_model(self):
 

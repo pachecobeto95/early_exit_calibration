@@ -12,6 +12,7 @@ def edgeModelConfiguration():
 	model.model_params = data
 	model.load_model()
 	model.load_temperature()
+	model.transform_input_configuration()
 	return jsonify({"status": "ok"}), 200
 
 
