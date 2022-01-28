@@ -19,7 +19,7 @@ def edgeNoCalibInference(fileImg):
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	response_request = {"status": "ok"}
-	p_tar, nr_branch_edge = exp.exp_params["p_tar"], exp.exp_params["nr_branch"]
+	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], exp.exp_params["model_name"]
 
 	start = time.time()
 	image_bytes = fileImg.read()
@@ -36,14 +36,14 @@ def edgeNoCalibInference(fileImg):
 	inference_time = time.time() - start
 
 	if(response_request["status"] == "ok"):
-		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
+		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, model_name, isTerminate, calibration_type="no_calib")
 	
 	return response_request
 
 
 def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 	response_request = {"status": "ok"}
-	p_tar, nr_branch_edge = exp.exp_params["p_tar"], exp.exp_params["nr_branch"]
+	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], exp.exp_params["model_name"]
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -62,14 +62,14 @@ def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 	return response_request
 
 	if(response_request["status"] == "ok"):
-		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
+		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, model_name, isTerminate, calibration_type="overall_calib")
 	
 	return response_request
 
 
 def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 	response_request = {"status": "ok"}
-	p_tar, nr_branch_edge = exp.exp_params["p_tar"], exp.exp_params["nr_branch"]
+	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], exp.exp_params["model_name"]
 
 
 	#This line reads the fileImg, obtaining pixel matrix.
@@ -90,9 +90,25 @@ def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 	return response_request
 	
 	if(response_request["status"] == "ok"):
-		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
+		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, model_name, isTerminate, calibration_type="branches_calib")
 	
 	return response_request
+
+def saveInferenceTime(inference_time,  p_tar, nr_branch_edge, model_name, isTerminate, calibration_type):
+	
+	result = {"inference_time": inference_time,"p_tar": p_tar, "nr_branch_edge": nr_branch_edge,
+	"early_inference": isTerminate, "calibration_type": calibration_type}
+	
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model_name))
+
+	if (not os.path.exists(result_path)):
+		df = pd.DataFrame()
+	else:
+		df = pd.read_csv(result_path)	
+		df = df.loc[:, ~df.columns.str.contains('^Unnamed')] 
+	
+	df = df.append(pd.Series(result), ignore_index=True)
+	df.to_csv(result_path)
 
 
 #def edgeAllSamplesCalibInference(fileImg, p_tar, nr_branch_edge):
