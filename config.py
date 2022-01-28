@@ -76,3 +76,6 @@ models_params = {"caltech256": {"n_classes": 258, "input_shape":(3, 224, 224),
 }
 
 model_id_dict = {"mobilenet": 1, "resnet18": 2, "vgg16": 1, "resnet152": 3}
+
+RESULTS_INFERENCE_TIME_EDGE = os.path.join(DIR_NAME, "appEdge", "api", "services", "result")
+
