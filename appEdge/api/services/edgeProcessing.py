@@ -19,7 +19,7 @@ def edgeNoCalibInference(fileImg):
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	response_request = {"status": "ok"}
-	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], exp.exp_params["model_name"]
+	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], model.model_params["model_name"]
 
 	start = time.time()
 	image_bytes = fileImg.read()
@@ -43,7 +43,7 @@ def edgeNoCalibInference(fileImg):
 
 def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 	response_request = {"status": "ok"}
-	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], exp.exp_params["model_name"]
+	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], model.model_params["model_name"]
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -69,7 +69,7 @@ def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 
 def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
 	response_request = {"status": "ok"}
-	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], exp.exp_params["model_name"]
+	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], model.model_params["model_name"]
 
 
 	#This line reads the fileImg, obtaining pixel matrix.
