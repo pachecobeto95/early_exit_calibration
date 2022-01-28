@@ -49,24 +49,24 @@ class ModelLoad():
 		model_id, pretrained = self.model_params["model_id"], self.model_params["pretrained"]
 		self.dataset_name = self.model_params["dataset_name"]
 
-		if(dataset_name == "caltech256"):
+		if(self.dataset_name == "caltech256"):
 
 			self.ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, config.pretrained, n_branches, input_shape, config.exit_type, 
 				config.device, config.distribution)
 
 			model_file_name = "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id)
 
-		elif((dataset_name == "cifar100") or (dataset_name == "cifar10")):
+		elif((self.dataset_name == "cifar100") or (self.dataset_name == "cifar10")):
 			
 			self.ee_model = Early_Exit_DNN_CIFAR(model_name, n_classes, pretrained, n_branches, input_shape, config.exit_type, config.device, 
 				config.distribution)
 
 			model_file_name = "b_%s_early_exit_%s_id_1_%s_%s.pth"%(model_name,
-				dataset_name, pretrained, self.model_params["weight_loss_type"])
+				self.dataset_name, pretrained, self.model_params["weight_loss_type"])
 		else:
 			print("Error")
 
-		model_path = os.path.join(config.edge_model_root_path, dataset_name, model_name, "models", model_file_name)
+		model_path = os.path.join(config.edge_model_root_path, self.dataset_name, model_name, "models", model_file_name)
 		
 		self.ee_model.load_state_dict(torch.load(model_path, map_location=config.device)["model_state_dict"])
 		self.ee_model.eval()
