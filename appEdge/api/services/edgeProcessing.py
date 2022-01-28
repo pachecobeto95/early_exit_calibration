@@ -25,7 +25,7 @@ def edgeNoCalibInference(fileImg):
 	image_bytes = fileImg.read()
 
 	#Starts measuring the inference time
-	tensor_img = transform_image(image_bytes, model.model_params) #transform input data, which resizes the input image
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge)
