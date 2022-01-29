@@ -28,7 +28,7 @@ def sendImage(img_path, url):
 	my_img = {'img': open(img_path, 'rb')}
 
 	try:
-		r = requests.post(url, files=my_img, timeout=config.timeout)
+		r = requests.post(url, files=my_img, timeout=1000)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
