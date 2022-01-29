@@ -47,6 +47,7 @@ def edge_inference():
 @api.route('edge/edgeNoCalibInference', methods=["POST"])
 def edge_inference_no_calib():
 
+	print("HUAUAHHUAHUHAHUHAU")
 	fileImg = request.files['img']
 
 	result = edgeProcessing.edgeNoCalibInference(fileImg)
