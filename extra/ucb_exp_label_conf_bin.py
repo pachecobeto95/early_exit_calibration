@@ -75,8 +75,8 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
-	"overhead":[round(overhead, 2)]*df_size,
-	"bin_lower": [round(bin_lower, 2)]*df_size, "bin_upper": [round(bin_upper, 2)]*df_size,
+	"overhead":[round(overhead, 2)]*n_rounds,
+	"bin_lower": [round(bin_lower, 2)]*n_rounds, "bin_upper": [round(bin_upper, 2)]*n_rounds,
 	"cumulative_regret": cumulative_regret_list}
 
 	return result
@@ -84,8 +84,6 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logPath, verbose=False):
 	df_result = pd.DataFrame()
-
-	#config_list = list(itertools.product(*[label_list, overhead_list]))    
 	
 	bin_boundaries = np.arange(0.1, 1.1, 0.1)
 	bin_lowers = bin_boundaries[:-1]
@@ -93,6 +91,8 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 
 	for overhead in overhead_list:
 		for bin_lower, bin_upper in zip(bin_lowers, bin_uppers):
+			print("Overhead: %s, Bin:[%s, %s]"%(round(overhead, 2), round(bin_lower, 2), round(bin_upper, 2)), 
+				file=open(logPath, "a"))
 
 			df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper)] 
 			
@@ -118,9 +118,6 @@ if __name__ == "__main__":
 	threshold_list = np.arange(0, 1.1, 0.1)
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
-	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_2022_2.csv"%(args.c))
+	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_current.csv"%(args.c))
 	logPath = os.path.join(".", "logUCBConfBin_2022.txt")
 	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, logPath, verbose)
-
-
-
