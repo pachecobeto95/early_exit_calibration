@@ -80,7 +80,7 @@ def cloud_overall_calib_inference():
 	"""
 
 	data = request.json
-	#model.update_overall_temperature(data_from_edge["p_tar"])
+	model.update_overall_temperature(config.p_tar_calib)
 
 	result = cloudProcessing.cloudOverallCalibInference(data["feature"], data["conf"], data["class_list"])
 
@@ -99,7 +99,7 @@ def cloud_branches_calib_inference():
 	"""
 
 	data = request.json
-	#model.update_branches_temperature(data_from_edge["p_tar"])
+	model.update_branches_temperature(config.p_tar_calib)
 
 	result = cloudProcessing.cloudBranchesCalibInference(data["feature"], data["conf"], data["class_list"])
 

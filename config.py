@@ -56,6 +56,7 @@ input_resize = 224
 input_shape = (3, input_dim, input_dim)
 pretrained = False
 n_branches = 5
+p_tar_calib = 0.8
 exit_type = "bnpool"
 distribution = "linear"
 
