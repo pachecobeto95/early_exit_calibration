@@ -30,11 +30,7 @@ def edge_inference():
 	"""	
 	fileImg = request.files['img']
 
-	#json_data = json.load(request.files['data'])
-
 	#This functions process the DNN inference
-	#result = edgeProcessing.edgeInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
-	return jsonify({"status": "ok"}), 200
 
 	result = edgeProcessing.edgeInference(fileImg)
 
@@ -63,11 +59,10 @@ def edge_inference_no_calib():
 def edge_inference_overall_calib():
 
 	fileImg = request.files['img']
-	return jsonify({"status": "ok"}), 200
 
 	#json_data = json.load(request.files['data'])
 
-	model.update_overall_temperature(json_data["p_tar"])
+	model.update_overall_temperature(config.p_tar_calib)
 
 	result = edgeProcessing.edgeOverallCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
 
@@ -81,11 +76,8 @@ def edge_inference_overall_calib():
 def edge_inference_branches_calib():
 
 	fileImg = request.files['img']
-	#json_data = json.load(request.files['data'])
-	return jsonify({"status": "ok"}), 200
 
-
-	model.update_branches_temperature(json_data["p_tar"])
+	model.update_branches_temperature(config.p_tar_calib)
 
 	result = edgeProcessing.edgeBranchesCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
 
@@ -94,21 +86,21 @@ def edge_inference_branches_calib():
 	else:
 		return jsonify(result), 500
 
-@api.route('edge/edgeAllSamplesCalibInference', methods=["POST"])
-def edge_inference_all_samples_calib():
+#@api.route('edge/edgeAllSamplesCalibInference', methods=["POST"])
+#def edge_inference_all_samples_calib():
 
-	fileImg = request.files['img']
+#	fileImg = request.files['img']
 	#json_data = json.load(request.files['data'])
-	return jsonify({"status": "ok"}), 200
+#	return jsonify({"status": "ok"}), 200
 
-	model.update_all_samples_temperature(json_data["p_tar"])
+#	model.update_all_samples_temperature(json_data["p_tar"])
 
-	result = edgeProcessing.edgeAllSamplesCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
+#	result = edgeProcessing.edgeAllSamplesCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
 
-	if (result["status"] ==  "ok"):
-		return jsonify(result), 200
-	else:
-		return jsonify(result), 500
+#	if (result["status"] ==  "ok"):
+#		return jsonify(result), 200
+#	else:
+#		return jsonify(result), 500
 
 @api.route('/edge/testJson', methods=["POST"])
 def edge_test_json():
