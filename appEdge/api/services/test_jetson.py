@@ -54,7 +54,7 @@ std =  [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
 # Note that we do not apply data augmentation in the test dataset.
 transformations_test = transforms.Compose([
-	transforms.Resize(input_dim),
+	transforms.Resize(224),
 	transforms.ToTensor(), 
 	transforms.Normalize(mean = mean, std = std),
 	])
