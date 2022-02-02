@@ -1,7 +1,6 @@
-import torch, os, sys, config
+import torch, os, sys, config, time
 import torchvision
 from .early_exit_dnn import Early_Exit_DNN_CALTECH
-
 
 
 
@@ -11,6 +10,8 @@ n_classes = 258
 n_branches = 5
 input_shape = (3, 224, 224)
 seed = 42
+p_tar = 0.7
+nr_branch_edge = 5
 
 dataset_path = config.models_params["caltech256"]["dataset_path"]
 	
@@ -52,4 +53,10 @@ test_idx = np.array(list(test_idx.tolist()))
 test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4)
 
+for i, (data, target) in enumerate(test_loader, 1):
+	start = time.time()
+	output, conf_list, class_list, isTerminate = ee_model.forwardEdgeNoCalibInference(data, p_tar, nr_branch_edge)
+	end = time.time()
+
+	print("Duration: %s"%(end-start))
 
