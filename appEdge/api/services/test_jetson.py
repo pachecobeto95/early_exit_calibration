@@ -3,6 +3,8 @@ import torchvision
 from early_exit_dnn import Early_Exit_DNN_CALTECH
 import torchvision.transforms as transforms
 import numpy as np
+from torchvision import transforms, utils, datasets
+from torch.utils.data import Dataset, DataLoader, SubsetRandomSampler, WeightedRandomSampler
 
 
 
