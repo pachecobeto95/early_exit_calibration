@@ -1,5 +1,5 @@
 import torchvision
-import os, sys, time, math, config
+import os, sys, time, math#, config
 from torchvision import transforms, utils, datasets
 from PIL import Image
 import torch
@@ -759,8 +759,8 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
       x = self.stages[i](x)
 
-      if (i+1 in config.disabled_branches):
-        continue
+      #if (i+1 in config.disabled_branches):
+      #  continue
 
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
