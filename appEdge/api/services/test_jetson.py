@@ -2,7 +2,7 @@ import torch, os, sys, time
 import torchvision
 from early_exit_dnn import Early_Exit_DNN_CALTECH
 import torchvision.transforms as transforms
-
+import numpy as np
 
 
 
