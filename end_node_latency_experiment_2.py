@@ -21,14 +21,11 @@ def load_dataset(args, dataset_path, savePath_idx):
 		sys.exit()
 
 def sendImage(img_path, url):
-	#data_dict = {"p_tar": p_tar, "t": target, "nr_branch_edge": int(nr_branch_edge)}
 
-	#files = [('img', (img_path, open(img_path, 'rb'), 'application/octet')),
-	#('data', ('data', json.dumps(data_dict), 'application/json')),]
 	my_img = {'img': open(img_path, 'rb')}
 
 	try:
-		r = requests.post(url, files=my_img, timeout=1000)
+		r = requests.post(url, files=my_img, timeout=config.timeout)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
@@ -39,7 +36,7 @@ def sendImage(img_path, url):
 
 def sendData(url, data):
 	try:
-		r = requests.post(url, json=data, timeout=1000)
+		r = requests.post(url, json=data, timeout=config.timeout)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
@@ -89,7 +86,7 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
 
-	p_tar_list = np.arange(0.5, 0.95, 0.05)
+	p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9]
 	dataset_path = config.models_params[args.dataset_name]["dataset_path"]
 	
 	root_save_path = os.path.dirname(__file__)

@@ -54,15 +54,10 @@ def sendImageToCloud(img_path, url):
 
 
 def sendImage(img_path, url):
-	#data_dict = {"p_tar": p_tar, "nr_branch_edge": int(nr_branch_edge)}
-
-	#files = [('img', (img_path, open(img_path, 'rb'), 'application/octet')),
-	#('data', ('data', json.dumps(data_dict), 'application/json')),]
 
 	my_img = {'image': open(img_path, 'rb')}
 
 	try:
-		#r = requests.post(url, files=files, timeout=config.timeout)
 		r = requests.post(url, files=my_img, timeout=config.timeout)
 		r.raise_for_status()
 	
@@ -72,11 +67,10 @@ def sendImage(img_path, url):
 	except ConnectTimeout as timeout_err:
 		print("Url: ¨%s, Timeout error: %s"%(url, timeout_err))
 
-def sendConfigExp(url, p_tar, nr_branch_edge):
-	data_dict = {"p_tar": p_tar, "nr_branch": nr_branch_edge}
 
+def sendData(url, data):
 	try:
-		r = requests.post(url, json=data_dict, timeout=config.timeout)
+		r = requests.post(url, json=data, timeout=config.timeout)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
@@ -84,6 +78,26 @@ def sendConfigExp(url, p_tar, nr_branch_edge):
 
 	except ConnectTimeout as timeout_err:
 		print("Timeout error: ", timeout_err)
+
+
+
+def sendModelConf(url, n_branches, dataset_name, model_name):
+	
+	pretrained_str = "ft" if (model_name=="") else "scratch"
+	
+	data_dict = {"n_branches": n_branches, "dataset_name": dataset_name, "model_name": model_name, 
+	"n_classes": config.models_params[dataset_name]["n_classes"], 
+	"input_shape": config.models_params[dataset_name]["input_shape"],
+	"model_id": config.model_id_dict[model_name],
+	"pretrained": pretrained_str}
+
+	sendData(url, data_dict)
+
+def sendConfigExp(url, target, p_tar, nr_branch_edge):
+
+	data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": int(nr_branch_edge)}
+	sendData(url, data_dict)
+
 
 def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
 
@@ -95,17 +109,12 @@ def inferenceTimeExperiment(imgs_files_list, p_tar_list, nr_branch_edge_list):
 
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
-				sendConfigExp(config.url_config_exp, p_tar, nr_branch_edge)
+
+				sendConfigExp(config.url_edge_config_exp, target, p_tar, nr_branch_edge)
+				sendConfigExp(config.url_cloud_config_exp, target, p_tar, nr_branch_edge)
 				sendImage(img_path, config.url_edge_no_calib)
 				sendImage(img_path, config.url_edge_overall_calib)
 				sendImage(img_path, config.url_edge_branches_calib)
-
-
-		#start = time.time()
-		#sendImageToCloud(img_path, config.urlOnlyCloudProcessing)
-		#end = time.time()
-		#cloud_inference_time = end-start
-		#saveInferenceTimeCloud(cloud_inference_time)
 
  
 
@@ -116,7 +125,7 @@ def main(args):
 	nr_branches_model = args.n_branches
 
 	imgs_files_list = list(glob(os.path.join(config.dataset_path[args.dataset_name], "*")))
-	p_tar_list = np.arange(0.7, 0.95, 0.05)
+	p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9]
 
 	#This line defines the number of side branches processed at the cloud
 	nr_branch_edge = np.arange(2, nr_branches_model+1)

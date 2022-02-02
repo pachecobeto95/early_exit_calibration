@@ -71,14 +71,14 @@ class ModelLoad():
 		if(dataset_name == "caltech256"):
 
 			self.ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, config.pretrained, n_branches, input_shape, config.exit_type, 
-				config.device, config.distribution)
+				config.device, config.disabled_branches, config.distribution)
 
 			model_file_name = "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id)
 
 		elif((dataset_name == "cifar100") or (dataset_name == "cifar10")):
 			
 			self.ee_model = Early_Exit_DNN_CIFAR(model_name, n_classes, pretrained, n_branches, input_shape, config.exit_type, config.device, 
-				config.distribution)
+				config.disabled_branches, config.distribution)
 
 			model_file_name = "b_%s_early_exit_%s_id_1_%s_%s.pth"%(model_name,
 				dataset_name, pretrained, self.model_params["weight_loss_type"])

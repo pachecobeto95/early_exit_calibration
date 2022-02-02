@@ -13,9 +13,9 @@ from pthflops import count_ops
 from torch import Tensor
 from typing import Callable, Any, Optional, List, Type, Union
 import functools
-from networks.mobilenet import MobileNetV2_2
-from networks.resnet import resnet18, resnet152
-from networks.vgg import vgg16_bn
+from .networks.mobilenet import MobileNetV2_2
+from .networks.resnet import resnet18, resnet152
+from .networks.vgg import vgg16_bn
 
 
 class EarlyExitBlock(nn.Module):
@@ -220,7 +220,7 @@ class DownSample(nn.Module):
 class Early_Exit_DNN_CALTECH(nn.Module):
   def __init__(self, model_name: str, n_classes: int, 
                pretrained: bool, n_branches: int, input_shape:tuple, 
-               exit_type: str, device, distribution="linear"):
+               exit_type: str, device, disabled_branches, distribution="linear"):
     super(Early_Exit_DNN_CALTECH, self).__init__()
 
     """
@@ -248,6 +248,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     self.distribution = distribution
     self.device = device
     self.channel, self.width, self.height = input_shape
+    self.disabled_branches = disabled_branches
     self.temperature_overall = None
     self.temperature_branches = None
     self.temperature_all_samples = None
@@ -759,8 +760,8 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
       x = self.stages[i](x)
 
-      #if (i+1 in config.disabled_branches):
-      #  continue
+      if (i+1 in self.disabled_branches):
+        continue
 
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
@@ -781,7 +782,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
       x = self.stages[i](x)
 
-      if (i+1 in config.disabled_branches):
+      if (i+1 in self.disabled_branches):
         continue
 
       output_branch = exitBlock(x)
@@ -805,7 +806,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
       x = self.stages[i](x)
 
-      if (i+1 in config.disabled_branches):
+      if (i+1 in self.disabled_branches):
         continue
       
       output_branch = exitBlock(x)
@@ -824,7 +825,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
 
 class Early_Exit_DNN_CIFAR(nn.Module):
   def __init__(self, model_name: str, n_classes: int, 
-               pretrained: bool, n_branches: int, input_shape:tuple, exit_type: str, device, distribution="linear"):
+               pretrained: bool, n_branches: int, input_shape:tuple, exit_type: str, device, disabled_branches, distribution="linear"):
     super(Early_Exit_DNN_CIFAR, self).__init__()
 
     """
@@ -857,6 +858,7 @@ class Early_Exit_DNN_CIFAR(nn.Module):
     self.temperature_overall = None
     self.temperature_branches = None
     self.temperature_all_samples = None
+    self.disabled_branches = disabled_branches
 
     build_early_exit_dnn = self.select_dnn_architecture_model()
     build_early_exit_dnn()
