@@ -75,8 +75,8 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
 
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
-				sendConfigExp(config.url_edge_config_exp, target, p_tar, nr_branch_edge)
-				sendConfigExp(config.url_cloud_config_exp, target, p_tar, nr_branch_edge)
+				sendConfigExp(config.url_edge_config_exp, target, p_tar, 5)
+				sendConfigExp(config.url_cloud_config_exp, target, p_tar, 5)
 				sendImage(filepath, config.url_edge_no_calib)
 				#pass
 				#sendImage(filepath, config.url_edge_overall_calib)
