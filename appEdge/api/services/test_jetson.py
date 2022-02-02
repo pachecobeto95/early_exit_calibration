@@ -35,7 +35,8 @@ dataset_path = models_params["caltech256"]["dataset_path"]
 	
 save_indices_path = models_params["caltech256"]["indices"]
 
-edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
+#edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
+edge_model_root_path = os.path.join(DIR_NAME, "models")
 
 
 ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, 
