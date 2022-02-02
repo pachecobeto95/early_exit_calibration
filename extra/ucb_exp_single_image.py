@@ -39,11 +39,11 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 	df_size = len(df)
 	indices_list = np.arange(df_size)
-	idx = 0	
+	idx = random.choice(indices_list)
+	row = df.iloc[[idx]]
 
 	for n_round in range(n_rounds):
 
-		row = df.iloc[[idx]]
 
 		if (n_round < amount_arms):
 			action = n_round
