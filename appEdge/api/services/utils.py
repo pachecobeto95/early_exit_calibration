@@ -17,6 +17,7 @@ def transform_image(image_bytes, model):
 
 
 	image = Image.open(io.BytesIO(image_bytes))
+	print(config.device)
 	return model.input_transformation(image).unsqueeze(0).to(config.device).float()
 
 

@@ -363,6 +363,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     This method sets the device that will run the DNN model.
     """
 
+    print(self.device)
     self.stages.to(self.device)
     self.exits.to(self.device)
     self.layers.to(self.device)
