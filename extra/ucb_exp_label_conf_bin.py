@@ -11,7 +11,9 @@ def compute_reward(conf_branch, arm, delta_conf, overhead):
 
 def get_row_data(row, threshold):
 	conf_branch = row.conf_branch_1.item()
-	conf_final = row.conf_branch_2.item()
+	#conf_final = row.conf_branch_2.item()
+	conf_final = max(row.conf_branch_2.item(), conf_branch)
+ 
 	return conf_branch, conf_final-conf_branch
 	if(conf_final >= threshold):
 		delta_conf = conf_final - conf_branch
