@@ -36,7 +36,7 @@ def sendImage(img_path, url):
 
 def sendData(url, data):
 	try:
-		r = requests.post(url, json=data, timeout=config.timeout)
+		r = requests.post(url, json=data, timeout=1000)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
