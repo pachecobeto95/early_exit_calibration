@@ -78,6 +78,7 @@ test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4)
 
 for i, (data, target) in enumerate(test_loader, 1):
+	data, target = data.cuda(), target.cuda()
 	start = time.time()
 	output, conf_list, class_list, isTerminate = ee_model.forwardEdgeNoCalibInference(data, p_tar, nr_branch_edge)
 	end = time.time()
