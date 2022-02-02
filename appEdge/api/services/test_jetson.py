@@ -5,6 +5,9 @@ from early_exit_dnn import Early_Exit_DNN_CALTECH
 
 
 
+DIR_NAME = os.path.dirname(__file__)
+dataset_root_path = os.path.join(DIR_NAME, "datasets")
+
 model_name = "mobilenet"
 n_classes = 258
 n_branches = 5
@@ -12,19 +15,34 @@ input_shape = (3, 224, 224)
 seed = 42
 p_tar = 0.7
 nr_branch_edge = 5
+pretrained = False
+exit_type = "bnpool"
+distribution = "linear"
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-dataset_path = config.models_params["caltech256"]["dataset_path"]
+print("Device: %s"%(device))
+
+models_params = {"caltech256": {"n_classes": 258, "input_shape":(3, 224, 224),
+"dataset_path": os.path.join(dataset_root_path, "caltech256", "256_ObjectCategories"), 
+"indices": os.path.join(DIR_NAME, "datasets", "caltech256", "indices", "test_idx_caltech256_id_1.npy")}, 
+"cifar100": {"n_classes": 100, "input_shape":(3, 32, 32),
+"indices": os.path.join(DIR_NAME, "datasets", "cifar100", "indices"),
+"dataset_path": os.path.join(dataset_root_path, "cifar100")}
+}
+
+
+dataset_path = models_params["caltech256"]["dataset_path"]
 	
-save_indices_path = config.models_params["caltech256"]["indices"]
+save_indices_path = models_params["caltech256"]["indices"]
 
 
-ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, config.pretrained, n_branches, input_shape, config.exit_type, 
-	config.device, config.distribution)
+ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, 
+	device, distribution)
 
 model_path = os.path.join(config.edge_model_root_path, "caltech256", "mobilenet", "models", 
 	"ee_mobilenet_branches_5_id_1.pth")
 
-ee_model.load_state_dict(torch.load(model_path, map_location=config.device)["model_state_dict"])
+ee_model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 ee_model.eval()
 
 mean = [0.457342265910642, 0.4387686270106377, 0.4073427106250871]
