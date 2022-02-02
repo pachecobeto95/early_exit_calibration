@@ -71,7 +71,7 @@ val_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
     
 test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 
-test_idx_path = os.path.join(savePath_idx, "test_idx_caltech256_id_%s.npy"%(model_id))
+test_idx_path = save_indices_path
 test_idx = np.load(test_idx_path, allow_pickle=True)
 test_idx = np.array(list(test_idx.tolist()))
 test_data = torch.utils.data.Subset(test_set, indices=test_idx)
