@@ -34,9 +34,9 @@ models_params = {"caltech256": {"n_classes": 258, "input_shape":(3, 224, 224),
 }
 
 
-dataset_path = models_params["caltech256"]["dataset_path"]
+dataset_path = os.path.join(dataset_root_path, "256_ObjectCategories")
 	
-save_indices_path = models_params["caltech256"]["indices"]
+save_indices_path = os.path.join(DIR_NAME, "indices", "test_idx_caltech256_id_1.npy")
 
 #edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 edge_model_root_path = os.path.join(DIR_NAME, "models")
