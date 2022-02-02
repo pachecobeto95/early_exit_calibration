@@ -54,7 +54,9 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		threshold = threshold_list[action]
 
 		conf_branch = row.conf_branch_1.item()
-		delta_conf = row.conf_branch_2.item() - conf_branch	
+		conf_final = max(row.conf_branch_2.item(), conf_branch)
+
+		delta_conf = conf_final - conf_branch	
 
 		reward = compute_reward(conf_branch, threshold, delta_conf, overhead)
 
