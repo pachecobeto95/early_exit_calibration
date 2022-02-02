@@ -35,11 +35,13 @@ dataset_path = models_params["caltech256"]["dataset_path"]
 	
 save_indices_path = models_params["caltech256"]["indices"]
 
+edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
+
 
 ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, 
 	device, distribution)
 
-model_path = os.path.join(config.edge_model_root_path, "caltech256", "mobilenet", "models", 
+model_path = os.path.join(edge_model_root_path, "caltech256", "mobilenet", "models", 
 	"ee_mobilenet_branches_5_id_1.pth")
 
 ee_model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
