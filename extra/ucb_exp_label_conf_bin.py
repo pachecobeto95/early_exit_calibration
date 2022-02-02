@@ -120,6 +120,6 @@ if __name__ == "__main__":
 	threshold_list = np.arange(0, 1.1, 0.1)
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
-	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_current.csv"%(args.c))
+	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_current_2.csv"%(args.c))
 	logPath = os.path.join(".", "logUCBConfBin_2022.txt")
 	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, logPath, verbose)
