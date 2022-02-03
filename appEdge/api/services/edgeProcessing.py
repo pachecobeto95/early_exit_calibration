@@ -51,7 +51,7 @@ def edgeOverallCalibInference(fileImg):
 	image_bytes = fileImg.read()
 
 	#Starts measuring the inference time
-	tensor_img = transform_image(image_bytes) #transform input data, which resizes the input image
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_overall_calib_inference(tensor_img, p_tar, nr_branch_edge)
@@ -78,7 +78,7 @@ def edgeBranchesCalibInference(fileImg):
 	image_bytes = fileImg.read()
 
 	#Starts measuring the inference time
-	tensor_img = transform_image(image_bytes) #transform input data, which resizes the input image
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge)
