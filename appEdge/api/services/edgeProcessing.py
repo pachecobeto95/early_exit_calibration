@@ -42,7 +42,7 @@ def edgeNoCalibInference(fileImg):
 	return response_request
 
 
-def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
+def edgeOverallCalibInference(fileImg):
 	response_request = {"status": "ok"}
 	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], model.model_params["model_name"]
 
@@ -68,7 +68,7 @@ def edgeOverallCalibInference(fileImg, p_tar, nr_branch_edge):
 	return response_request
 
 
-def edgeBranchesCalibInference(fileImg, p_tar, nr_branch_edge):
+def edgeBranchesCalibInference(fileImg):
 	response_request = {"status": "ok"}
 	p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], model.model_params["model_name"]
 
