@@ -108,28 +108,3 @@ def cloud_branches_calib_inference():
 
 	else:
 		return jsonify(result), 500
-
-@api.route('/cloud/cloudAllSamplesCalibInference', methods=["POST"])
-def cloud_all_samples_calib_inference():
-	"""
-	This function receives an image or feature map from edge device (Access Point)
-	This functions is run in the cloud.
-	"""
-
-	data_from_edge = request.json
-	model.update_all_samples_temperature(data_from_edge["p_tar"])
-
-	result = cloudProcessing.cloudAllSamplesCalibInference(data_from_edge["feature"], data_from_edge["conf"], data_from_edge["class_list"], 
-		data_from_edge["p_tar"], data_from_edge["nr_branch_edge"])
-
-	if (result["status"] ==  "ok"):
-		return jsonify(result), 200
-
-	else:
-		return jsonify(result), 500
-
-
-
-
-
-

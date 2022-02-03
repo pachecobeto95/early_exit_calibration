@@ -29,7 +29,7 @@ def edgeNoCalibInference(fileImg):
 
 	#Run the Early-exit dnn inference
 	output, conf_list, class_list, isTerminate = ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge)
-	print(conf_list, isTerminate)
+	#print(conf_list, isTerminate)
 
 	if (not isTerminate):
 		response_request = sendToCloud(config.url_cloud_no_calib, output, conf_list, class_list)
@@ -139,21 +139,21 @@ def saveInferenceTime(inference_time,  p_tar, nr_branch_edge, model_name, isTerm
 
 
 def ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge):
-	#model.ee_model.eval()
+
 	with torch.no_grad():
 		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeNoCalibInference(tensor_img, p_tar, nr_branch_edge)
 
 	return output, conf_list, class_list, isTerminate
 
 def ee_dnn_overall_calib_inference(tensor_img, p_tar, nr_branch_edge):
-	#model.ee_model.eval()
+
 	with torch.no_grad():
 		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeOverallCalibInference(tensor_img, p_tar, nr_branch_edge)
 
 	return output, conf_list, class_list, isTerminate
 
 def ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge):
-	#model.ee_model.eval()
+
 	with torch.no_grad():
 		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeBranchesCalibInference(tensor_img, p_tar, nr_branch_edge)
 
@@ -178,7 +178,7 @@ def sendToCloud(url, feature_map, conf_list, class_list):
 	conf_list (list): this list contains the confidence obtained for each early exit during Early-exit DNN inference
 	"""
 
-	conf_list = [0 if math.isnan(x) else x for x in conf_list] if(np.nan in conf_list) else conf_list
+	#conf_list = [0 if math.isnan(x) else x for x in conf_list] if(np.nan in conf_list) else conf_list
 
 	data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": conf_list, "class_list": class_list}
 
