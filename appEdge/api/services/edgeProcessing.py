@@ -59,8 +59,6 @@ def edgeOverallCalibInference(fileImg):
 	if (not isTerminate):
 		response_request = sendToCloud(config.url_cloud_overall_calib, output, conf_list, class_list)
 
-	inference_time = time.time() - start
-	return response_request
 
 	if(response_request["status"] == "ok"):
 		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, model_name, isTerminate, calibration_type="overall_calib")
@@ -87,8 +85,6 @@ def edgeBranchesCalibInference(fileImg):
 		response_request = sendToCloud(config.url_cloud_branches_calib, output, conf_list, class_list)
 
 	inference_time = time.time() - start
-
-	return response_request
 	
 	if(response_request["status"] == "ok"):
 		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, model_name, isTerminate, calibration_type="branches_calib")
