@@ -63,11 +63,13 @@ def sendConfigExp(url, target, p_tar, nr_branch_edge):
 	sendData(url, data_dict)
 
 
-def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
+def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPath):
 	if (not os.path.exists(config.save_img_dir_path)):
 		os.makedirs(config.save_img_dir_path)
 
+	test_set_size = len(test_loader)
 	for i, (data, target) in enumerate(test_loader, 1):
+		print("Image: %s/%s"%(i, test_set_size))
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))
 		save_image(data, filepath)
 
@@ -75,12 +77,11 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
 
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
-				sendConfigExp(config.url_edge_config_exp, target, p_tar, 5)
-				sendConfigExp(config.url_cloud_config_exp, target, p_tar, 5)
+				sendConfigExp(config.url_edge_config_exp, target, p_tar, nr_branch_edge)
+				sendConfigExp(config.url_cloud_config_exp, target, p_tar, nr_branch_edge)
 				sendImage(filepath, config.url_edge_no_calib)
 				sendImage(filepath, config.url_edge_overall_calib)
 				sendImage(filepath, config.url_edge_branches_calib)
-				sys.exit()
 
 
 def main(args):
@@ -89,6 +90,8 @@ def main(args):
 
 	p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9]
 	dataset_path = config.models_params[args.dataset_name]["dataset_path"]
+
+	logPath = "./logTest_%s_%s.txt"%(args.model_name, args.dataset_name)
 	
 	root_save_path = os.path.dirname(__file__)
 
@@ -103,7 +106,7 @@ def main(args):
 	print("Finish Confs")
 
 	test_loader = load_dataset(args, dataset_path, save_indices_path)
-	inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge)
+	inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge, logPath)
 
 
 
