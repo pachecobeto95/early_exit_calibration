@@ -44,7 +44,6 @@ def edge_inference():
 @api.route('edge/edgeNoCalibInference', methods=["POST"])
 def edge_inference_no_calib():
 
-	print("HUAUAHHUAHUHAHUHAU")
 	fileImg = request.files['img']
 
 	result = edgeProcessing.edgeNoCalibInference(fileImg)
@@ -60,11 +59,9 @@ def edge_inference_overall_calib():
 
 	fileImg = request.files['img']
 
-	#json_data = json.load(request.files['data'])
-
 	model.update_overall_temperature(config.p_tar_calib)
 
-	result = edgeProcessing.edgeOverallCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
+	result = edgeProcessing.edgeOverallCalibInference(fileImg)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
@@ -79,7 +76,7 @@ def edge_inference_branches_calib():
 
 	model.update_branches_temperature(config.p_tar_calib)
 
-	result = edgeProcessing.edgeBranchesCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
+	result = edgeProcessing.edgeBranchesCalibInference(fileImg)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
