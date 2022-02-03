@@ -8,7 +8,7 @@ api = Blueprint("api", __name__, url_prefix="/api")
 
 @api.route("/edge/modelConfiguration", methods=["POST"])
 def edgeModelConfiguration():
-	print("PQP")
+
 	data = request.json
 	model.model_params = data
 	model.load_model()
