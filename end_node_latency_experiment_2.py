@@ -78,9 +78,9 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list):
 				sendConfigExp(config.url_edge_config_exp, target, p_tar, 5)
 				sendConfigExp(config.url_cloud_config_exp, target, p_tar, 5)
 				sendImage(filepath, config.url_edge_no_calib)
-				#pass
-				#sendImage(filepath, config.url_edge_overall_calib)
-				#sendImage(filepath, config.url_edge_branches_calib)
+				sendImage(filepath, config.url_edge_overall_calib)
+				sendImage(filepath, config.url_edge_branches_calib)
+				sys.exit()
 
 
 def main(args):
