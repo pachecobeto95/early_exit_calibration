@@ -75,8 +75,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		selected_arm_list[n_round] = round(threshold, 2) 
 
 		if (n_round%100000 == 0):
-			print("N Round: %s, Overhead: %s, Bin:[%s, %s]"%(n_round, overhead, bin_lower, bin_upper), 
-				file=open(logPath, "a"))
+			print("N Round: %s, Overhead: %s, Bin:[%s, %s]"%(n_round, overhead, bin_lower, bin_upper))
 
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
