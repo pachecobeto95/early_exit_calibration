@@ -68,6 +68,7 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 		os.makedirs(config.save_img_dir_path)
 
 	test_set_size = len(test_loader)
+
 	for i, (data, target) in enumerate(test_loader, 1):
 		print("Image: %s/%s"%(i, test_set_size))
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))
@@ -88,7 +89,7 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
 
-	p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9]
+	p_tar_list = [0.7, 0.8, 0.9]
 	dataset_path = config.models_params[args.dataset_name]["dataset_path"]
 
 	logPath = "./logTest_%s_%s.txt"%(args.model_name, args.dataset_name)
