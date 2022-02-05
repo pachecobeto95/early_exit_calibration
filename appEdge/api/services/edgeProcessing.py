@@ -12,7 +12,6 @@ import pandas as pd
 
 
 model = ModelLoad()
-model_name = model.model_params["model_name"]
 exp = ExpLoad()
 
 
@@ -101,7 +100,7 @@ def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibr
 	result = {"inference_time": inference_time,"p_tar": data_dict["p_tar"], "nr_branch_edge": data_dict["nr_branch"],
 	"early_inference": isTerminate, "calibration_type": calibration_type, "correct": correct}
 	
-	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model_name))
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
 
 	if (not os.path.exists(result_path)):
 		df = pd.DataFrame()
@@ -111,32 +110,6 @@ def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibr
 	
 	df = df.append(pd.Series(result), ignore_index=True)
 	df.to_csv(result_path)
-
-
-#def edgeAllSamplesCalibInference(fileImg, p_tar, nr_branch_edge):
-#	response_request = {"status": "ok"}
-
-	#This line reads the fileImg, obtaining pixel matrix.
-#	start = time.time()
-#	image_bytes = fileImg.read()
-
-	#Starts measuring the inference time
-#	tensor_img = transform_image(image_bytes) #transform input data, which resizes the input image
-
-	#Run the Early-exit dnn inference
-#	output, conf_list, class_list, isTerminate = ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge)
-
-#	if (not isTerminate):
-#		response_request = sendToCloud(config.url_cloud_all_samples_calib, output, conf_list, class_list, p_tar, nr_branch_edge)
-
-#	inference_time = time.time() - start
-#	return response_request
-
-#	if(response_request["status"] == "ok"):
-#		saveInferenceTime(inference_time,  p_tar, nr_branch_edge, isTerminate)
-	
-#	return response_request
-
 
 
 def ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge):
