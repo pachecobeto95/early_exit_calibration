@@ -45,7 +45,7 @@ def edge_inference():
 def edge_inference_no_calib():
 
 	fileImg = request.files['img']
-	data_dict = request.files['data']
+	data_dict = json.load(request.files['data'])
 
 	#result = edgeProcessing.edgeNoCalibInference(fileImg)
 	result = edgeProcessing.edgeNoCalibInference(fileImg, data_dict)
@@ -60,7 +60,7 @@ def edge_inference_no_calib():
 def edge_inference_overall_calib():
 
 	fileImg = request.files['img']
-	data_dict = request.files['data']
+	data_dict = json.load(request.files['data'])
 
 	model.update_overall_temperature(config.p_tar_calib)
 
@@ -77,7 +77,7 @@ def edge_inference_overall_calib():
 def edge_inference_branches_calib():
 
 	fileImg = request.files['img']
-	data_dict = request.files['data']
+	data_dict = json.load(request.files['data'])
 
 	model.update_branches_temperature(config.p_tar_calib)
 
