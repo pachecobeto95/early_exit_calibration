@@ -24,7 +24,7 @@ def sendImage(img_path, url, target, p_tar, nr_branch_edge):
 
 	#my_img = {'img': open(img_path, 'rb')}
 
-	data_dict = {"p_tar": p_tar, "nr_branch": nr_branch_edge, "target": target.item()}
+	data_dict = {"p_tar": p_tar, "nr_branch": int(nr_branch_edge), "target": target.item()}
 
 	files = [
 	('img', (img_path, open(img_path, 'rb'), 'application/octet')),
