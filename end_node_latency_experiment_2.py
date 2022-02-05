@@ -77,9 +77,9 @@ def warmUpDnnInference(test_loader):
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))	
 		save_image(data, filepath)
 
-		sendImage(filepath, config.url_edge_no_calib)
-		sendImage(filepath, config.url_edge_overall_calib)
-		sendImage(filepath, config.url_edge_branches_calib)
+		sendImage(filepath, config.url_edge_no_calib, target, 1, 5)
+		sendImage(filepath, config.url_edge_overall_calib, target, 1, 5)
+		sendImage(filepath, config.url_edge_branches_calib, target, 1, 5)
 
 
 def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPath):
