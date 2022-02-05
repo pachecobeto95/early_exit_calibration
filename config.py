@@ -80,3 +80,4 @@ model_id_dict = {"mobilenet": 1, "resnet18": 2, "vgg16": 1, "resnet152": 4}
 
 RESULTS_INFERENCE_TIME_EDGE = os.path.join(DIR_NAME, "appEdge", "api", "services", "result")
 
+warmUpSize = 5

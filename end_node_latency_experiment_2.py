@@ -20,12 +20,18 @@ def load_dataset(args, dataset_path, savePath_idx):
 	elif(args.dataset_name=="cifar100"):
 		sys.exit()
 
-def sendImage(img_path, url):
+def sendImage(img_path, url, target, p_tar, nr_branch_edge):
 
-	my_img = {'img': open(img_path, 'rb')}
+	#my_img = {'img': open(img_path, 'rb')}
+
+	data_dict = {"p_tar": p_tar, "nr_branch": nr_branch_edge, "target": target.item()}
+
+	files = [
+	('img', (filePath, open(img_path, 'rb'), 'application/octet')),
+	('data', ('data', json.dumps(data_dict), 'application/json')),]
 
 	try:
-		r = requests.post(url, files=my_img, timeout=config.timeout)
+		r = requests.post(url, files=files, timeout=config.timeout)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
@@ -62,12 +68,27 @@ def sendConfigExp(url, target, p_tar, nr_branch_edge):
 	data_dict = {"target": target.item(), "p_tar": p_tar, "nr_branch": int(nr_branch_edge)}
 	sendData(url, data_dict)
 
+def warmUpDnnInference(test_loader):
+	
+	for i, (data, target) in enumerate(test_loader, 1):
+		if(i >= config.warmUpSize):
+			break
+
+		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))	
+		save_image(data, filepath)
+
+		sendImage(filepath, config.url_edge_no_calib)
+		sendImage(filepath, config.url_edge_overall_calib)
+		sendImage(filepath, config.url_edge_branches_calib)
+
 
 def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPath):
 	if (not os.path.exists(config.save_img_dir_path)):
 		os.makedirs(config.save_img_dir_path)
 
 	test_set_size = len(test_loader)
+
+	warmUpDnnInference(test_loader)
 
 	for i, (data, target) in enumerate(test_loader, 1):
 		print("Image: %s/%s"%(i, test_set_size))
@@ -78,11 +99,11 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
-				sendConfigExp(config.url_edge_config_exp, target, p_tar, nr_branch_edge)
+				#sendConfigExp(config.url_edge_config_exp, target, p_tar, nr_branch_edge)
 				sendConfigExp(config.url_cloud_config_exp, target, p_tar, nr_branch_edge)
-				sendImage(filepath, config.url_edge_no_calib)
-				sendImage(filepath, config.url_edge_overall_calib)
-				sendImage(filepath, config.url_edge_branches_calib)
+				sendImage(filepath, config.url_edge_no_calib, target, p_tar, nr_branch_edge)
+				sendImage(filepath, config.url_edge_overall_calib, target, p_tar, nr_branch_edge)
+				sendImage(filepath, config.url_edge_branches_calib, target, p_tar, nr_branch_edge)
 
 
 def main(args):

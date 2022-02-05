@@ -45,8 +45,10 @@ def edge_inference():
 def edge_inference_no_calib():
 
 	fileImg = request.files['img']
+	data_dict = request.files['data']
 
-	result = edgeProcessing.edgeNoCalibInference(fileImg)
+	#result = edgeProcessing.edgeNoCalibInference(fileImg)
+	result = edgeProcessing.edgeNoCalibInference(fileImg, data_dict)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
@@ -58,10 +60,12 @@ def edge_inference_no_calib():
 def edge_inference_overall_calib():
 
 	fileImg = request.files['img']
+	data_dict = request.files['data']
 
 	model.update_overall_temperature(config.p_tar_calib)
 
-	result = edgeProcessing.edgeOverallCalibInference(fileImg)
+	#result = edgeProcessing.edgeOverallCalibInference(fileImg)
+	result = edgeProcessing.edgeOverallCalibInference(fileImg, data_dict)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
@@ -73,44 +77,15 @@ def edge_inference_overall_calib():
 def edge_inference_branches_calib():
 
 	fileImg = request.files['img']
+	data_dict = request.files['data']
 
 	model.update_branches_temperature(config.p_tar_calib)
 
-	result = edgeProcessing.edgeBranchesCalibInference(fileImg)
+	#result = edgeProcessing.edgeBranchesCalibInference(fileImg)
+	result = edgeProcessing.edgeBranchesCalibInference(fileImg, data_dict)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
 	else:
 		return jsonify(result), 500
 
-#@api.route('edge/edgeAllSamplesCalibInference', methods=["POST"])
-#def edge_inference_all_samples_calib():
-
-#	fileImg = request.files['img']
-	#json_data = json.load(request.files['data'])
-#	return jsonify({"status": "ok"}), 200
-
-#	model.update_all_samples_temperature(json_data["p_tar"])
-
-#	result = edgeProcessing.edgeAllSamplesCalibInference(fileImg, json_data["p_tar"], json_data["nr_branch_edge"])
-
-#	if (result["status"] ==  "ok"):
-#		return jsonify(result), 200
-#	else:
-#		return jsonify(result), 500
-
-@api.route('/edge/testJson', methods=["POST"])
-def edge_test_json():
-	"""
-	This function tests the server to receive a simple json post request.
-	"""	
-
-	post_data = request.json
-
-	result = {"status": "ok"}
-
-	if (result["status"] ==  "ok"):
-		return jsonify(result), 200
-
-	else:
-		return jsonify(result), 500
