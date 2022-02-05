@@ -20,11 +20,11 @@ def load_dataset(args, dataset_path, savePath_idx):
 	elif(args.dataset_name=="cifar100"):
 		sys.exit()
 
-def sendImage(img_path, url, target, p_tar, nr_branch_edge):
+def sendImage(img_path, url, target, p_tar, nr_branch_edge, warmUp=False):
 
 	#my_img = {'img': open(img_path, 'rb')}
 
-	data_dict = {"p_tar": p_tar, "nr_branch": int(nr_branch_edge), "target": target.item()}
+	data_dict = {"p_tar": p_tar, "nr_branch": int(nr_branch_edge), "target": target.item(), "warmUp": warmUp}
 
 	files = [
 	('img', (img_path, open(img_path, 'rb'), 'application/octet')),
@@ -77,9 +77,9 @@ def warmUpDnnInference(test_loader):
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))	
 		save_image(data, filepath)
 		sendConfigExp(config.url_cloud_config_exp, target, 1, 5)
-		sendImage(filepath, config.url_edge_no_calib, target, 1, 5)
-		sendImage(filepath, config.url_edge_overall_calib, target, 1, 5)
-		sendImage(filepath, config.url_edge_branches_calib, target, 1, 5)
+		sendImage(filepath, config.url_edge_no_calib, target, 1, 5, warmUp=True)
+		#sendImage(filepath, config.url_edge_overall_calib, target, 1, 5, warmUp=True)
+		#sendImage(filepath, config.url_edge_branches_calib, target, 1, 5, warmUp=True)
 
 
 def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPath):

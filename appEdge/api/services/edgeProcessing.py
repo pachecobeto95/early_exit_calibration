@@ -34,7 +34,8 @@ def edgeNoCalibInference(fileImg, data_dict):
 
 	inference_time = time.time() - start
 
-	if(response_request["status"] == "ok"):
+	#if(response_request["status"] == "ok"):
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
 		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, calibration_type="no_calib")
 	
 	return response_request
@@ -59,7 +60,9 @@ def edgeOverallCalibInference(fileImg, data_dict):
 
 	inference_time = time.time() - start
 
-	if(response_request["status"] == "ok"):
+	#if(response_request["status"] == "ok"):
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+
 		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, calibration_type="overall_calib")
 	
 	return response_request
@@ -85,7 +88,7 @@ def edgeBranchesCalibInference(fileImg, data_dict):
 
 	inference_time = time.time() - start
 	
-	if(response_request["status"] == "ok"):
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
 		saveInferenceTime(inference_time, class_list,  data_dict, isTerminate, calibration_type="branches_calib")
 	
 	return response_request
