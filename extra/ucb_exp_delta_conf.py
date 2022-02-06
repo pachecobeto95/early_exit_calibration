@@ -52,7 +52,9 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		threshold = threshold_list[action]
 
 		conf_branch = row.conf_branch_1.item()
-		delta_conf = row.conf_branch_2.item() - conf_branch	
+		conf_final = max(row.conf_branch_2.item(), conf_branch)
+
+		delta_conf = conf_final - conf_branch	
 
 		reward = compute_reward(conf_branch, threshold, delta_conf, overhead)
 
@@ -71,7 +73,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		selected_arm_list[n_round] = round(threshold, 2) 
 
 		if (n_round%100000 == 0):
-			print("N Round: %s, Overhead: %s"%(n_round, overhead), file=open(logPath, "a"))
+			print("N Round: %s, Overhead: %s"%(n_round, overhead))
 
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
@@ -81,9 +83,6 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 	return result
 
-
-def compute_delta_conf(x, y):
-	return y - x
 	
 def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logPath, verbose=False):
 	df_result = pd.DataFrame()
@@ -93,9 +92,6 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 	bin_boundaries = np.arange(0.1, 1.1, 0.1)
 	bin_lowers = bin_boundaries[:-1]
 	bin_uppers = bin_boundaries[1:]
-
-	df["delta_conf"] = compute_delta_conf(df["conf_branch_1"], df["conf_branch_2"])
-
 
 	for overhead in overhead_list:
 		for bin_lower, bin_upper in zip(bin_lowers, bin_uppers):
