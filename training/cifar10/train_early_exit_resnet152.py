@@ -138,10 +138,13 @@ if __name__ == "__main__":
 		result = {}
 		result_train = trainEvalEarlyExit(early_exit_dnn, train_loader, criterion, optimizer, args.n_branches, 
 			epoch, device, loss_weights, train=True)
+
+		print(result_train)
 		
 		result_val = trainEvalEarlyExit(early_exit_dnn, val_loader, criterion, optimizer, args.n_branches, 
 			epoch, device, loss_weights, train=False)
 		
+		print(result_val)
 		scheduler.step()
 		result.update(result_train), result.update(result_val) 
 
