@@ -93,13 +93,14 @@ def ucb_experiment(df, threshold_list, overhead_list, n_epochs, c, savePath, log
 	#bin_lowers = bin_boundaries[:-1]
 	#bin_uppers = bin_boundaries[1:]
 	bin_list = [[0.4, 0.5], [0.1, 0.2]]
-	
+
 
 	for overhead, bins in zip(overhead_list, bin_list):
+		bin_lower, bin_upper = bins[0], bin[1]
+
 		print("Overhead: %s, Bin:[%s, %s]"%(round(overhead, 2), round(bin_lower, 2), round(bin_upper, 2)), 
 			file=open(logPath, "a"))
 
-		bin_lower, bin_upper = bins[0], bin[1]
 
 		for n_rounds in range(n_rounds):
 
