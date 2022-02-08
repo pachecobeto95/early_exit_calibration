@@ -96,7 +96,7 @@ def ucb_experiment(df, threshold_list, overhead_list, n_epochs, c, savePath, log
 
 
 	for overhead, bins in zip(overhead_list, bin_list):
-		bin_lower, bin_upper = bins[0], bin[1]
+		bin_lower, bin_upper = bins[0], bins[1]
 
 		print("Overhead: %s, Bin:[%s, %s]"%(round(overhead, 2), round(bin_lower, 2), round(bin_upper, 2)), 
 			file=open(logPath, "a"))
