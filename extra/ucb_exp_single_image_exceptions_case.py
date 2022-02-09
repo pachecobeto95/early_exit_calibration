@@ -22,7 +22,7 @@ def get_row_data(row, threshold):
 		delta_conf = max(conf_list) - conf_branch 
 		return conf_branch, delta_conf
 
-def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, savePath, logPath, verbose):
+def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, savePath, logPath, sample_id):
 
 	df = df.sample(frac=1)
 	delta = 1e-10
@@ -38,9 +38,9 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	cumulative_regret = 0
 
 	df_size = len(df)
-	indices_list = np.arange(df_size)
-	idx = random.choice(indices_list)
-	row = df.iloc[[idx]]
+	#indices_list = np.arange(df_size)
+	#idx = random.choice(indices_list)
+	row = df.iloc[[sample_id]]
 
 	for n_round in range(n_rounds):
 
@@ -101,13 +101,15 @@ def ucb_experiment(df, threshold_list, overhead_list, n_epochs, c, savePath, log
 		print("Overhead: %s, Bin:[%s, %s]"%(round(overhead, 2), round(bin_lower, 2), round(bin_upper, 2)), 
 			file=open(logPath, "a"))
 
+		df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper)] 
+		df_size = len(df_temp)
+		indices_list = np.arange(df_size)
+		sample_id = random.choice(indices_list)
 
 		for n_rounds in range(n_rounds):
-
-			df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper)] 
 			
 			if(len(df_temp.conf_branch_1.values) > 0):
-				result = run_ucb(df_temp, threshold_list, overhead, n_epochs, c, bin_lower, bin_upper, savePath, logPath, verbose)
+				result = run_ucb(df_temp, threshold_list, overhead, n_epochs, c, bin_lower, bin_upper, savePath, logPath, sample_id)
 				
 				#Save Results
 				df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
@@ -131,6 +133,6 @@ if __name__ == "__main__":
 	threshold_list = np.arange(0, 1.1, 0.1)
 	overhead_list = [0.4, 0.8]
 	verbose = False
-	savePath = os.path.join(".", "ucb_single_image_bin_conf_result_c_%s_exception_cases.csv"%(args.c))
+	savePath = os.path.join(".", "ucb_single_image_bin_conf_result_c_%s_exception_cases_2.csv"%(args.c))
 	logPath = os.path.join(".", "logUCBSingleImageExceptionCases.txt")
 	ucb_experiment(df_result, threshold_list, overhead_list, args.n_epochs, args.c, savePath, logPath, args.n_rounds, verbose)
