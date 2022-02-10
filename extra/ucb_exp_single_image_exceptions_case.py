@@ -24,7 +24,7 @@ def get_row_data(row, threshold):
 
 def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, savePath, logPath, sample_id):
 
-	df = df.sample(frac=1)
+	#df = df.sample(frac=1)
 	delta = 1e-10
 
 	df_result = pd.read_csv(savePath) if(os.path.exists(savePath)) else pd.DataFrame()
