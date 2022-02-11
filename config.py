@@ -25,7 +25,7 @@ edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "mod
 
 # Cloud URL Configuration 
 HOST_CLOUD = "146.164.69.144"
-HOST_CLOUD = "3.14.5.116"
+#HOST_CLOUD = "3.14.5.116"
 #HOST_CLOUD = "192.168.0.20"
 PORT_CLOUD = 3001
 URL_CLOUD = "http://%s:%s"%(HOST_CLOUD, PORT_CLOUD)
