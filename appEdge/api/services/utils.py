@@ -68,6 +68,8 @@ class ModelLoad():
 		model_id, dataset_name = self.model_params["model_id"], self.model_params["dataset_name"]
 		pretrained = self.model_params["pretrained"]
 
+		print(dataset_name)
+
 		if(dataset_name == "caltech256"):
 
 			self.ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, config.pretrained, n_branches, input_shape, config.exit_type, 
@@ -86,7 +88,7 @@ class ModelLoad():
 			print("Error")
 
 		model_path = os.path.join(config.edge_model_root_path, dataset_name, model_name, "models", model_file_name)
-		
+		print(model_path)
 		self.ee_model.load_state_dict(torch.load(model_path, map_location=config.device)["model_state_dict"])
 		self.ee_model.eval()
 
