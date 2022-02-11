@@ -24,10 +24,10 @@ url_edge_config_exp = "%s/api/edge/expConfiguration"%(URL_EDGE)
 edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
 # Cloud URL Configuration 
-#HOST_CLOUD = "146.164.69.144"
+HOST_CLOUD = "146.164.69.144"
 HOST_CLOUD = "3.14.5.116"
 #HOST_CLOUD = "192.168.0.20"
-PORT_CLOUD = 3001
+#PORT_CLOUD = 3001
 URL_CLOUD = "http://%s:%s"%(HOST_CLOUD, PORT_CLOUD)
 URL_CLOUD_DNN_INFERENCE = "%s/api/cloud/cloudInference"%(URL_CLOUD)
 urlConfModelCloud = "%s/api/cloud/modelConfiguration"%(URL_CLOUD)
