@@ -14,7 +14,6 @@ import pandas as pd
 model = ModelLoad()
 exp = ExpLoad()
 
-df = pd.DataFrame()
 
 def edgeNoCalibInference(fileImg, data_dict):
 
@@ -112,10 +111,10 @@ def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibr
 	#	df = pd.read_csv(result_path)	
 	#	df = df.loc[:, ~df.columns.str.contains('^Unnamed')] 
 	
-	df = df.append(pd.Series(result), ignore_index=True)
-	
-	if(len(df)%100 == 0):
-		df.to_csv(result_path)
+	#df = df.append(pd.Series(result), ignore_index=True)
+	df = pd.DataFrame(result.items(), columns=list(result.keys()))
+
+	df.to_csv(result_path, mode='a', header=not os.path.exists(result_path))
 
 
 def ee_dnn_no_calib_inference(tensor_img, p_tar, nr_branch_edge):
