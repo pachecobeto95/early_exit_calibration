@@ -113,7 +113,8 @@ def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibr
 	
 	#df = df.append(pd.Series(result), ignore_index=True)
 	#df = pd.DataFrame(list(result.values()), columns=list(result.keys()))
-	df = pd.DataFrame.from_dict(result)
+	#df = pd.DataFrame.from_dict(result)
+	df = pd.DataFrame(result, index=[0])
 
 	df.to_csv(result_path, mode='a', header=not os.path.exists(result_path))
 
