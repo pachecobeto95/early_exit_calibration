@@ -20,11 +20,11 @@ def load_dataset(args, dataset_path, savePath_idx):
 	elif(args.dataset_name=="cifar100"):
 		sys.exit()
 
-def sendImage(img_path, url, target, p_tar, nr_branch_edge, warmUp=False):
+def sendImage(img_path, idx, url, target, p_tar, nr_branch_edge, warmUp=False):
 
 	#my_img = {'img': open(img_path, 'rb')}
 
-	data_dict = {"p_tar": p_tar, "nr_branch": int(nr_branch_edge), "target": target.item(), "warmUp": warmUp}
+	data_dict = {"p_tar": p_tar, "nr_branch": int(nr_branch_edge), "target": target.item(), "warmUp": warmUp, "id": idx}
 
 	files = [
 	('img', (img_path, open(img_path, 'rb'), 'application/octet')),
@@ -101,9 +101,9 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 			for p_tar in p_tar_list:
 				#sendConfigExp(config.url_edge_config_exp, target, p_tar, nr_branch_edge)
 				sendConfigExp(config.url_cloud_config_exp, target, p_tar, nr_branch_edge)
-				sendImage(filepath, config.url_edge_no_calib, target, p_tar, nr_branch_edge)
-				sendImage(filepath, config.url_edge_overall_calib, target, p_tar, nr_branch_edge)
-				sendImage(filepath, config.url_edge_branches_calib, target, p_tar, nr_branch_edge)
+				sendImage(filepath, i, config.url_edge_no_calib, target, p_tar, nr_branch_edge)
+				sendImage(filepath, i, config.url_edge_overall_calib, target, p_tar, nr_branch_edge)
+				sendImage(filepath, i, config.url_edge_branches_calib, target, p_tar, nr_branch_edge)
 
 
 def main(args):
