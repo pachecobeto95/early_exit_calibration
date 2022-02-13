@@ -100,8 +100,8 @@ def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibr
 	else:
 		correct = np.nan
 
-	result = {"inference_time": inference_time,"p_tar": data_dict["p_tar"], "nr_branch_edge": data_dict["nr_branch"],
-	"early_inference": isTerminate, "calibration_type": calibration_type, "correct": correct}
+	result = {"id": data_dict["id"], "inference_time": inference_time,"p_tar": data_dict["p_tar"], 
+	"nr_branch_edge": data_dict["nr_branch"], "early_inference": isTerminate, "calibration_type": calibration_type, "correct": correct}
 	
 	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
 
