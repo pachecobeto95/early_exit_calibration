@@ -97,10 +97,8 @@ def edgeBranchesCalibInference(fileImg, data_dict):
 
 def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibration_type):
 	
-	if(isTerminate):
-		correct = 1 if(inf_class == data_dict["target"]) else 0
-	else:
-		correct = np.nan
+
+	correct = 1 if(inf_class == data_dict["target"]) else 0
 
 	result = {"id": data_dict["id"], "inference_time": inference_time,"p_tar": data_dict["p_tar"], 
 	"nr_branch_edge": data_dict["nr_branch"], "early_inference": isTerminate, "calibration_type": calibration_type, "correct": correct}
