@@ -61,8 +61,10 @@ def edgeOverallCalibInference(fileImg, data_dict):
 	inference_time = time.time() - start
 
 	#if(response_request["status"] == "ok"):
-	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+	print(response_request["status"], data_dict["warmUp"], data_dict["p_tar"])
 
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+		print("ENTROU")
 		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, calibration_type="overall_calib")
 	
 	return response_request
@@ -105,15 +107,6 @@ def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibr
 	
 	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
 
-	#if (not os.path.exists(result_path)):
-	#	df = pd.DataFrame()
-	#else:
-	#	df = pd.read_csv(result_path)	
-	#	df = df.loc[:, ~df.columns.str.contains('^Unnamed')] 
-	
-	#df = df.append(pd.Series(result), ignore_index=True)
-	#df = pd.DataFrame(list(result.values()), columns=list(result.keys()))
-	#df = pd.DataFrame.from_dict(result)
 	df = pd.DataFrame([result])
 	df.to_csv(result_path, mode='a', header=not os.path.exists(result_path))
 
