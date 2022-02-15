@@ -10,6 +10,7 @@ from glob import glob
 #import torch
 from load_dataset import load_test_caltech_256
 from torchvision.utils import save_image
+import logging
 
 
 def load_dataset(args, dataset_path, savePath_idx):
@@ -48,6 +49,7 @@ def sendData(url, data):
 	except HTTPError as http_err:
 		raise SystemExit(http_err)
 	except requests.Timeout:
+		logging.warning("Timeout")
 		pass
 	#except ConnectTimeout as timeout_err:
 	#	print("Timeout error: ", timeout_err)
@@ -94,7 +96,9 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 
 	for i, (data, target) in enumerate(test_loader, 1):
 		#print("Image: %s/%s"%(i, test_set_size), file=logPathOpen)
-		print("Image: %s/%s"%(i, test_set_size))
+		#print("Image: %s/%s"%(i, test_set_size))
+		logging.debug("Image: %s/%s"%(i, test_set_size))
+
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))
 		save_image(data, filepath)
 
@@ -117,6 +121,8 @@ def main(args):
 	dataset_path = config.models_params[args.dataset_name]["dataset_path"]
 
 	logPath = "./logTest_%s_%s.txt"%(args.model_name, args.dataset_name)
+
+	logging.basicConfig(filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 	
 	root_save_path = os.path.dirname(__file__)
 
@@ -125,10 +131,14 @@ def main(args):
 	#This line defines the number of side branches processed at the edge
 	nr_branch_edge = np.arange(2, config.nr_branch_model+1)
 
-	print("Sending Confs")
+	#print("Sending Confs")
+	logging.debug("Sending Confs")
+
 	sendModelConf(config.urlConfModelEdge, config.nr_branch_model, args.dataset_name, args.model_name)
 	sendModelConf(config.urlConfModelCloud, config.nr_branch_model, args.dataset_name, args.model_name)
-	print("Finish Confs")
+	
+	#print("Finish Confs")
+	logging.debug("Finish Confs")
 
 	test_loader = load_dataset(args, dataset_path, save_indices_path)
 	inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge, logPath)
