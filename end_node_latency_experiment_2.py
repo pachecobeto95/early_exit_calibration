@@ -92,8 +92,8 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 	logPathOpen = open(logPath, "a")
 
 	for i, (data, target) in enumerate(test_loader, 1):
-		#print("Image: %s/%s"%(i, test_set_size), file=logPathOpen)
-		print("Image: %s/%s"%(i, test_set_size))
+		print("Image: %s/%s"%(i, test_set_size), file=logPathOpen)
+		#print("Image: %s/%s"%(i, test_set_size))
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))
 		save_image(data, filepath)
 
