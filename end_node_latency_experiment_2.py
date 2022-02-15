@@ -47,9 +47,10 @@ def sendData(url, data):
 	
 	except HTTPError as http_err:
 		raise SystemExit(http_err)
-
-	except ConnectTimeout as timeout_err:
-		print("Timeout error: ", timeout_err)
+	except requests.Timeout:
+		pass
+	#except ConnectTimeout as timeout_err:
+	#	print("Timeout error: ", timeout_err)
 
 def sendModelConf(url, n_branches, dataset_name, model_name):
 	
@@ -92,8 +93,8 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 	logPathOpen = open(logPath, "a")
 
 	for i, (data, target) in enumerate(test_loader, 1):
-		print("Image: %s/%s"%(i, test_set_size), file=logPathOpen)
-		#print("Image: %s/%s"%(i, test_set_size))
+		#print("Image: %s/%s"%(i, test_set_size), file=logPathOpen)
+		print("Image: %s/%s"%(i, test_set_size))
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))
 		save_image(data, filepath)
 
