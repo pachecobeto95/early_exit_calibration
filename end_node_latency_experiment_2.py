@@ -31,7 +31,7 @@ def sendImage(img_path, idx, url, target, p_tar, nr_branch_edge, warmUp=False):
 	('data', ('data', json.dumps(data_dict), 'application/json')),]
 
 	try:
-		r = requests.post(url, files=files, timeout=config.timeout)
+		r = requests.post(url, files=files, timeout=1000)
 		r.raise_for_status()
 	
 	except HTTPError as http_err:
@@ -92,7 +92,8 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 	logPathOpen = open(logPath, "a")
 
 	for i, (data, target) in enumerate(test_loader, 1):
-		print("Image: %s/%s"%(i, test_set_size), file=logPathOpen)
+		#print("Image: %s/%s"%(i, test_set_size), file=logPathOpen)
+		print("Image: %s/%s"%(i, test_set_size))
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))
 		save_image(data, filepath)
 
