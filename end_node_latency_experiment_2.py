@@ -120,9 +120,9 @@ def main(args):
 	p_tar_list = [0.7, 0.8, 0.9]
 	dataset_path = config.models_params[args.dataset_name]["dataset_path"]
 
-	logPath = "./logTest_%s_%s.txt"%(args.model_name, args.dataset_name)
+	logPath = "./logTest_%s_%s.log"%(args.model_name, args.dataset_name)
 
-	logging.basicConfig(filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 	
 	root_save_path = os.path.dirname(__file__)
 
