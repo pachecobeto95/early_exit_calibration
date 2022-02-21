@@ -21,6 +21,10 @@ url_edge_all_samples_calib = "%s/api/edge/edgeAllSamplesCalibInference"%(URL_EDG
 
 url_edge_config_exp = "%s/api/edge/expConfiguration"%(URL_EDGE)
 
+url_edge_no_calib_only_edge = "%s/api/edge/edgeNoCalibInferenceOnlyEdge"%(URL_EDGE)
+url_edge_overall_calib_only_edge = "%s/api/edge/edgeOverallCalibInferenceOnlyEdge"%(URL_EDGE) 
+url_edge_branches_calib_only_edge = "%s/api/edge/edgeBranchesCalibInferenceOnlyEdge"%(URL_EDGE)
+
 edge_model_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
 # Cloud URL Configuration 

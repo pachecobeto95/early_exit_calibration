@@ -74,10 +74,7 @@ def warmUpDnnInference(test_loader):
 
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))	
 		save_image(data, filepath)
-		#sendConfigExp(config.url_cloud_config_exp, target, 1, 5)
-		sendImage(filepath, i, config.url_edge_no_calib, target, 1, 5, warmUp=True)
-		#sendImage(filepath, config.url_edge_overall_calib, target, 1, 5, warmUp=True)
-		#sendImage(filepath, config.url_edge_branches_calib, target, 1, 5, warmUp=True)
+		sendImage(filepath, i, config.url_edge_no_calib_only_edge, target, 1, 5, warmUp=True)
 
 
 def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPath):
@@ -100,7 +97,6 @@ def inferenceTimeExperiment(test_loader, p_tar_list, nr_branch_edge_list, logPat
 			# For a given number of branches processed in edge, this loop changes the threshold p_tar configuration.
 			for p_tar in p_tar_list:
 				sendConfigExp(config.url_edge_config_exp, target, p_tar, nr_branch_edge)
-				#sendConfigExp(config.url_cloud_config_exp, target, p_tar, nr_branch_edge)
 				sendImage(filepath, i, config.url_edge_no_calib_only_edge, target, p_tar, nr_branch_edge)
 				sendImage(filepath, i, config.url_edge_overall_calib_only_edge, target, p_tar, nr_branch_edge)
 				sendImage(filepath, i, config.url_edge_branches_calib_only_edge, target, p_tar, nr_branch_edge)
