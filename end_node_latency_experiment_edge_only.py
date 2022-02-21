@@ -74,7 +74,7 @@ def warmUpDnnInference(test_loader):
 
 		filepath = os.path.join(config.save_img_dir_path, "%s_%s.jpg"%(target.item(), i))	
 		save_image(data, filepath)
-		sendConfigExp(config.url_cloud_config_exp, target, 1, 5)
+		#sendConfigExp(config.url_cloud_config_exp, target, 1, 5)
 		sendImage(filepath, i, config.url_edge_no_calib, target, 1, 5, warmUp=True)
 		#sendImage(filepath, config.url_edge_overall_calib, target, 1, 5, warmUp=True)
 		#sendImage(filepath, config.url_edge_branches_calib, target, 1, 5, warmUp=True)
