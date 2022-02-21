@@ -58,7 +58,7 @@ def edgeNoCalibInferenceOnlyEdge(fileImg, data_dict):
 
 	#Run the Early-exit dnn inference
 	with torch.no_grad():
-		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeNoCalibInference(tensor_img, p_tar, nr_branch_edge)
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeNoCalibInference(tensor_img, data_dict["p_tar"], data_dict["nr_branch"])
 
 
 	inference_time = time.time() - start
@@ -110,7 +110,7 @@ def edgeOverallCalibInferenceOnlyEdge(fileImg, data_dict):
 
 	#Run the Early-exit dnn inference
 	with torch.no_grad():
-		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeOverallCalibInference(tensor_img, p_tar, nr_branch_edge)
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeOverallCalibInference(tensor_img, data_dict["p_tar"], data_dict["nr_branch"])
 
 
 	inference_time = time.time() - start
@@ -163,7 +163,7 @@ def edgeBranchesCalibInferenceOnlyEdge(fileImg, data_dict):
 
 	#Run the Early-exit dnn inference
 	with torch.no_grad():
-		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeBranchesCalibInference(tensor_img, p_tar, nr_branch_edge)
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeBranchesCalibInference(tensor_img,data_dict["p_tar"], data_dict["nr_branch"])
 
 	inference_time = time.time() - start
 	
