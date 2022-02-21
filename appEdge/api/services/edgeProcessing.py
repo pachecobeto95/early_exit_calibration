@@ -48,7 +48,7 @@ def edgeNoCalibInferenceOnlyEdge(fileImg, data_dict):
 	#This line reads the fileImg, obtaining pixel matrix.
 	response_request = {"status": "ok"}
 
-	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
 
 	start = time.time()
 	image_bytes = fileImg.read()
@@ -99,7 +99,7 @@ def edgeOverallCalibInference(fileImg, data_dict):
 def edgeOverallCalibInferenceOnlyEdge(fileImg, data_dict):
 	response_request = {"status": "ok"}
 
-	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -151,7 +151,7 @@ def edgeBranchesCalibInference(fileImg, data_dict):
 def edgeBranchesCalibInferenceOnlyEdge(fileImg, data_dict):
 	response_request = {"status": "ok"}
 	
-	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
 
 
 	#This line reads the fileImg, obtaining pixel matrix.
