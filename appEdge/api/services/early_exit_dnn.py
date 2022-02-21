@@ -774,6 +774,50 @@ class Early_Exit_DNN_CALTECH(nn.Module):
       
     return x, conf_list, class_list, False
 
+  def forwardEdgeOnlyNoCalibInference(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
+      x = self.stages[i](x)
+
+      if (i+1 in self.disabled_branches):
+        continue
+
+      output_branch = exitBlock(x)
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      if (conf_branch.item() >= p_tar):
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
+
+      else:
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+
+
+    for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
+        x = self.stages[i](x)
+
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    
+    if (conf.item() >= p_tar):
+      return output, conf.item(), infered_class.item(), True
+
+    else:
+
+      # If any exit can reach the p_tar value, the output is give by the more confidence output.
+      # If evaluation, it returns max(output), max(conf) and the number of the early exit.
+
+      conf_list.append(conf.item()), class_list.append(infered_class.item())
+      max_conf = np.argmax(conf_list)
+      return output, conf_list[max_conf], class_list[max_conf], True
+
+
+
 
   def forwardEdgeOverallCalibInference(self, x, p_tar, nr_branch_edge):
     conf_list, class_list = [], []
@@ -798,6 +842,56 @@ class Early_Exit_DNN_CALTECH(nn.Module):
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
     return x, conf_list, class_list, False
+
+
+  def forwardOnlyEdgeOverallCalibInference(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
+      x = self.stages[i](x)
+
+      if (i+1 in self.disabled_branches):
+        continue
+
+      output_branch = exitBlock(x)
+      
+      output_branch = self.temperature_scale_overall(output_branch)
+
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      if (conf_branch.item() >= p_tar):
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
+
+      else:
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+      
+
+    for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
+        x = self.stages[i](x)
+
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)
+    output = self.temperature_scale_overall(output)
+
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    
+    # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
+    # This also happens in the last exit
+    if (conf.item() >= p_tar):
+      return output, conf.item(), infered_class.item(), True
+    else:
+
+      # If any exit can reach the p_tar value, the output is give by the more confidence output.
+      # If evaluation, it returns max(output), max(conf) and the number of the early exit.
+
+      conf_list.append(conf.item()), class_list.append(infered_class.item())
+      max_conf = np.argmax(conf_list)      
+      return output, conf_list[max_conf], class_list[max_conf], True
+
     
   def forwardEdgeBranchesCalibInference(self, x, p_tar, nr_branch_edge):
     conf_list, class_list = [], []
@@ -821,6 +915,53 @@ class Early_Exit_DNN_CALTECH(nn.Module):
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
     return x, conf_list, class_list, False
+
+
+  def forwardOnlyEdgeBranchesCalibInference(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
+      x = self.stages[i](x)
+
+      if (i+1 in self.disabled_branches):
+        continue
+      
+      output_branch = exitBlock(x)
+      output_branch = self.temperature_scale_branches(output_branch, self.temperature_branches, i)
+
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      if (conf_branch.item() >= p_tar):
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
+
+      else:
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+      
+    for i, exitBlock in enumerate(self.exits[int(nr_branch_edge):], int(nr_branch_edge)):
+        x = self.stages[i](x)
+
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)
+    output = self.temperature_scale_overall(output)
+
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    
+    # Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
+    # This also happens in the last exit
+    if (conf.item() >= p_tar):
+      return output, conf.item(), infered_class.item(), True
+    else:
+
+      # If any exit can reach the p_tar value, the output is give by the more confidence output.
+      # If evaluation, it returns max(output), max(conf) and the number of the early exit.
+
+      conf_list.append(conf.item()), class_list.append(infered_class.item())
+      max_conf = np.argmax(conf_list)      
+      return output, conf_list[max_conf], class_list[max_conf], True
 
 
 class Early_Exit_DNN_CIFAR(nn.Module):

@@ -55,6 +55,20 @@ def edge_inference_no_calib():
 	else:
 		return jsonify(result), 500
 
+@api.route('edge/edgeNoCalibInferenceOnlyEdge', methods=["POST"])
+def edge_inference_no_calib_only_edge():
+
+	fileImg = request.files['img']
+	data_dict = json.load(request.files['data'])
+
+	#result = edgeProcessing.edgeNoCalibInference(fileImg)
+	result = edgeProcessing.edgeNoCalibInferenceOnlyEdge(fileImg, data_dict)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+	else:
+		return jsonify(result), 500
+
 
 @api.route('edge/edgeOverallCalibInference', methods=["POST"])
 def edge_inference_overall_calib():
@@ -72,6 +86,21 @@ def edge_inference_overall_calib():
 	else:
 		return jsonify(result), 500
 
+@api.route('edge/edgeOverallCalibInferenceOnlyEdge', methods=["POST"])
+def edge_inference_overall_calib_only_edge():
+
+	fileImg = request.files['img']
+	data_dict = json.load(request.files['data'])
+
+	model.update_overall_temperature(config.p_tar_calib)
+
+	#result = edgeProcessing.edgeOverallCalibInference(fileImg)
+	result = edgeProcessing.edgeOverallCalibInferenceOnlyEdge(fileImg, data_dict)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+	else:
+		return jsonify(result), 500
 
 @api.route('edge/edgeBranchesCalibInference', methods=["POST"])
 def edge_inference_branches_calib():
@@ -83,6 +112,22 @@ def edge_inference_branches_calib():
 
 	#result = edgeProcessing.edgeBranchesCalibInference(fileImg)
 	result = edgeProcessing.edgeBranchesCalibInference(fileImg, data_dict)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+	else:
+		return jsonify(result), 500
+
+
+@api.route('edge/edgeBranchesCalibInferenceOnlyEdge', methods=["POST"])
+def edge_inference_branches_calib_only_edge():
+
+	fileImg = request.files['img']
+	data_dict = json.load(request.files['data'])
+
+	model.update_branches_temperature(config.p_tar_calib)
+
+	result = edgeProcessing.edgeBranchesCalibInferenceOnlyEdge(fileImg, data_dict)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200

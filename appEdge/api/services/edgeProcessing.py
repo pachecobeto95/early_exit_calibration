@@ -20,6 +20,8 @@ def edgeNoCalibInference(fileImg, data_dict):
 	#This line reads the fileImg, obtaining pixel matrix.
 	response_request = {"status": "ok"}
 
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
+
 	start = time.time()
 	image_bytes = fileImg.read()
 
@@ -36,14 +38,42 @@ def edgeNoCalibInference(fileImg, data_dict):
 
 	#if(response_request["status"] == "ok"):
 	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
-		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, calibration_type="no_calib")
+		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, result_path, calibration_type="no_calib")
 	
 	return response_request
 
 
+def edgeNoCalibInferenceOnlyEdge(fileImg, data_dict):
+
+	#This line reads the fileImg, obtaining pixel matrix.
+	response_request = {"status": "ok"}
+
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
+
+	start = time.time()
+	image_bytes = fileImg.read()
+
+	#Starts measuring the inference time
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
+
+	#Run the Early-exit dnn inference
+	with torch.no_grad():
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeNoCalibInference(tensor_img, p_tar, nr_branch_edge)
+
+
+	inference_time = time.time() - start
+
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, resultPath, calibration_type="no_calib")
+	
+	return response_request
+
+
+
 def edgeOverallCalibInference(fileImg, data_dict):
 	response_request = {"status": "ok"}
-	#p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], model.model_params["model_name"]
+
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -60,19 +90,42 @@ def edgeOverallCalibInference(fileImg, data_dict):
 
 	inference_time = time.time() - start
 
-	#if(response_request["status"] == "ok"):
-	#print(response_request["status"], data_dict["warmUp"], data_dict["p_tar"])
-
 	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
-		#print("ENTROU")
-		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, calibration_type="overall_calib")
+		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, result_path, calibration_type="overall_calib")
 	
 	return response_request
 
 
+def edgeOverallCalibInferenceOnlyEdge(fileImg, data_dict):
+	response_request = {"status": "ok"}
+
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
+
+	#This line reads the fileImg, obtaining pixel matrix.
+	start = time.time()
+	image_bytes = fileImg.read()
+
+	#Starts measuring the inference time
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
+
+	#Run the Early-exit dnn inference
+	with torch.no_grad():
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeOverallCalibInference(tensor_img, p_tar, nr_branch_edge)
+
+
+	inference_time = time.time() - start
+
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, resultPath, calibration_type="overall_calib")
+	
+	return response_request
+
+
+
 def edgeBranchesCalibInference(fileImg, data_dict):
 	response_request = {"status": "ok"}
-	#p_tar, nr_branch_edge, model_name = exp.exp_params["p_tar"], exp.exp_params["nr_branch"], model.model_params["model_name"]
+
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
 
 
 	#This line reads the fileImg, obtaining pixel matrix.
@@ -91,21 +144,42 @@ def edgeBranchesCalibInference(fileImg, data_dict):
 	inference_time = time.time() - start
 	
 	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
-		saveInferenceTime(inference_time, class_list,  data_dict, isTerminate, calibration_type="branches_calib")
+		saveInferenceTime(inference_time, class_list,  data_dict, isTerminate, result_path, calibration_type="branches_calib")
 	
 	return response_request
 
-def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, calibration_type):
+def edgeBranchesCalibInferenceOnlyEdge(fileImg, data_dict):
+	response_request = {"status": "ok"}
 	
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME, "inference_time_results_%s_only_edge.csv"%(model.model_params["model_name"]))
 
+
+	#This line reads the fileImg, obtaining pixel matrix.
+	start = time.time()
+	image_bytes = fileImg.read()
+
+	#Starts measuring the inference time
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
+
+	#Run the Early-exit dnn inference
+	with torch.no_grad():
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeBranchesCalibInference(tensor_img, p_tar, nr_branch_edge)
+
+	inference_time = time.time() - start
+	
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+		saveInferenceTime(inference_time, class_list,  data_dict, isTerminate, resultPath, calibration_type="branches_calib")
+	
+	return response_request
+
+
+def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, result_path, calibration_type):
+	
 	correct = 1 if(inf_class == data_dict["target"]) else 0
 
 	result = {"id": data_dict["id"], "inference_time": inference_time,"p_tar": data_dict["p_tar"], 
 	"nr_branch_edge": data_dict["nr_branch"], "early_inference": isTerminate, "calibration_type": calibration_type, "correct": correct}
 	
-	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
-	#print(result_path)
-
 	df = pd.DataFrame([result])
 	df.to_csv(result_path, mode='a', header=not os.path.exists(result_path))
 
@@ -131,15 +205,6 @@ def ee_dnn_branches_calib_inference(tensor_img, p_tar, nr_branch_edge):
 
 	return output, conf_list, class_list, isTerminate
 
-#def ee_dnn_all_samples_calib_inference(tensor_img, p_tar, nr_branch_edge):
-#	model.ee_model.eval()
-
-#	with torch.no_grad():
-#		output, conf_list, class_list, isTerminate = model.ee_model.forwardEdgeAllSamplesCalibInference(tensor_img, p_tar, nr_branch_edge)
-
-#	return output, conf_list, class_list, isTerminate
-
-
 def sendToCloud(url, feature_map, conf_list, class_list):
 	"""
 	This functions sends output data from a partitioning layer from edge device to cloud server.
@@ -149,8 +214,6 @@ def sendToCloud(url, feature_map, conf_list, class_list):
 	feature_map (Tensor): output data from partitioning layer
 	conf_list (list): this list contains the confidence obtained for each early exit during Early-exit DNN inference
 	"""
-
-	#conf_list = [0 if math.isnan(x) else x for x in conf_list] if(np.nan in conf_list) else conf_list
 
 	data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": conf_list, "class_list": class_list}
 
