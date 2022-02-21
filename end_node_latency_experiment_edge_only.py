@@ -124,7 +124,7 @@ def main(args):
 
 	print("Sending Confs")
 	sendModelConf(config.urlConfModelEdge, config.nr_branch_model, args.dataset_name, args.model_name)
-	sendModelConf(config.urlConfModelCloud, config.nr_branch_model, args.dataset_name, args.model_name)
+	#sendModelConf(config.urlConfModelCloud, config.nr_branch_model, args.dataset_name, args.model_name)
 	print("Finish Confs")
 
 	test_loader = load_dataset(args, dataset_path, save_indices_path)
