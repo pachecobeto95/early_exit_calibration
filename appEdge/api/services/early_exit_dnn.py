@@ -774,7 +774,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
       
     return x, conf_list, class_list, False
 
-  def forwardEdgeOnlyNoCalibInference(self, x, p_tar, nr_branch_edge):
+  def forwardOnlyEdgeNoCalibInference(self, x, p_tar, nr_branch_edge):
     conf_list, class_list = [], []
     n_exits = self.n_branches + 1
 
