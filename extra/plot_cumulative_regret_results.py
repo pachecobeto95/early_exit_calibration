@@ -26,7 +26,7 @@ def plotCumulativeRegretConfBin(df, overhead_list, bin_lowers, bin_uppers, param
 			plt.legend(frameon=False)
 
 
-	plt.savefig(os.path.join(savePath, "cumulative_regret_conf_bin_overhead_%s.pdf"%(overhead)))
+		plt.savefig(os.path.join(savePath, "cumulative_regret_conf_bin_overhead_%s.pdf"%(overhead)))
 
 
 result_conf_bin_path = "./ucb_bin_conf_result_c_1.0_current_2.csv"
