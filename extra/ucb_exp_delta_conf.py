@@ -88,7 +88,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logPath, verbose=False):
 	df_result = pd.DataFrame()
 	
-	bin_boundaries = np.arange(0.1, 1.1, 0.1)
+	bin_boundaries = np.arange(0, 1.1, 0.1)
 	bin_lowers = bin_boundaries[:-1]
 	bin_uppers = bin_boundaries[1:]
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='UCB using Alexnet')
 	parser.add_argument('--model_id', type=int, default=2, help='Model Id (default: 2)')
 	parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
-	parser.add_argument('--n_rounds', type=int, default=2000000, help='Model Id (default: 2000000)')
+	parser.add_argument('--n_rounds', type=int, default=1000000, help='Model Id (default: 2000000)')
 
 	args = parser.parse_args()
 
