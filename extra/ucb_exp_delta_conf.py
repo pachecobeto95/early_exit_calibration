@@ -98,9 +98,12 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 			
 			if(len(df_temp.delta_conf.values) > 0):
 				result = run_ucb(df_temp, threshold_list, overhead, n_round, c, bin_lower, bin_upper, savePath, logPath, verbose)
-				df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
-				df_result = df_result.append(df2)
-				df_result.to_csv(savePath)
+				#df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+				#df_result = df_result.append(df2)
+				#df_result.to_csv(savePath)
+				df = pd.DataFrame([result])
+				df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
+
 
 if __name__ == "__main__":
 
@@ -118,9 +121,6 @@ if __name__ == "__main__":
 	threshold_list = np.arange(0, 1.1, 0.1)
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
-	savePath = os.path.join(".", "ucb_bin_delta_conf_result_c_%s.csv"%(args.c))
+	savePath = os.path.join(".", "ucb_bin_delta_conf_result_c_%s_id_%s.csv"%(args.c, args.model_id))
 	logPath = os.path.join(".", "logUCBDeltaConfBin.txt")
 	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, logPath, verbose)
-
-
-
