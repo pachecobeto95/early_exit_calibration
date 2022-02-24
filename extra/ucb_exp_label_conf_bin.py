@@ -4,6 +4,7 @@ import itertools, argparse
 from tqdm import tqdm
 import os, sys, random
 from statistics import mode
+import logging
 
 def compute_reward(conf_branch, arm, delta_conf, overhead):
 	return 0 if (conf_branch >= arm) else delta_conf - overhead
@@ -11,7 +12,6 @@ def compute_reward(conf_branch, arm, delta_conf, overhead):
 
 def get_row_data(row, threshold):
 	conf_branch = row.conf_branch_1.item()
-	#conf_final = row.conf_branch_2.item()
 	conf_final = max(row.conf_branch_2.item(), conf_branch)
  
 	return conf_branch, conf_final-conf_branch
@@ -95,23 +95,24 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 
 	for overhead in overhead_list:
 		for bin_lower, bin_upper in zip(bin_lowers, bin_uppers):
-			print("Overhead: %s, Bin:[%s, %s]"%(round(overhead, 2), round(bin_lower, 2), round(bin_upper, 2)), 
-				file=open(logPath, "a"))
+			logging.debug("Overhead: %s, Bin: [%s, %s]"%(overhead, bin_lower, bin_upper))
 
 			df_temp = df[(df.conf_branch_1 >= bin_lower) & (df.conf_branch_1 <= bin_upper)] 
 			
 			if(len(df_temp.conf_branch_1.values) > 0):
 				result = run_ucb(df_temp, threshold_list, overhead, n_round, c, bin_lower, bin_upper, savePath, logPath, verbose)
-				df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
-				df_result = df_result.append(df2)
-				df_result.to_csv(savePath)
+				#df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+				#df_result = df_result.append(df2)
+				#df_result.to_csv(savePath)
+				df = pd.DataFrame([result])
+				df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
 
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='UCB using Alexnet')
 	parser.add_argument('--model_id', type=int, default=2, help='Model Id (default: 2)')
 	parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
-	parser.add_argument('--n_rounds', type=int, default=2000000, help='Model Id (default: 2000000)')
+	parser.add_argument('--n_rounds', type=int, default=1000000, help='Model Id (default: 2000000)')
 
 	args = parser.parse_args()
 
@@ -122,6 +123,8 @@ if __name__ == "__main__":
 	threshold_list = np.arange(0, 1.1, 0.1)
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
-	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_current_2.csv"%(args.c))
+	savePath = os.path.join(".", "ucb_bin_conf_result_c_%s_current_2_id_%s.csv"%(args.c, args.model_id))
 	logPath = os.path.join(".", "logUCBConfBin_2022.txt")
+	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+
 	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, logPath, verbose)
