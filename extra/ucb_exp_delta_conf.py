@@ -4,6 +4,7 @@ import itertools, argparse
 from tqdm import tqdm
 import os, sys, random
 from statistics import mode
+import logging
 
 def compute_reward(conf_branch, arm, delta_conf, overhead):
 	return 0 if (conf_branch >= arm) else delta_conf - overhead
@@ -94,6 +95,8 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 	for overhead in overhead_list:
 		for bin_lower, bin_upper in zip(bin_lowers, bin_uppers):
 
+			logging.debug("Overhead: %s, Bin: [%s, %s]"%(overhead, bin_lower, bin_upper))
+
 			df_temp = df[(df.delta_conf >= bin_lower) & (df.delta_conf <= bin_upper)] 
 			
 			if(len(df_temp.delta_conf.values) > 0):
@@ -122,5 +125,8 @@ if __name__ == "__main__":
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
 	savePath = os.path.join(".", "ucb_bin_delta_conf_result_c_%s_id_%s.csv"%(args.c, args.model_id))
-	logPath = os.path.join(".", "logUCBDeltaConfBin.txt")
+	logPath = os.path.join(".", "logUCBDeltaConfBin_%s.txt"%(args.model_id))
+
+	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+
 	ucb_experiment(df_result, threshold_list, overhead_list, args.n_rounds, args.c, savePath, logPath, verbose)
