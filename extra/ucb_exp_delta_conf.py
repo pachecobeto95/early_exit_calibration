@@ -104,7 +104,7 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 				#df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
 				#df_result = df_result.append(df2)
 				#df_result.to_csv(savePath)
-				df = pd.DataFrame([result])
+				df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
 				df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
 
 
