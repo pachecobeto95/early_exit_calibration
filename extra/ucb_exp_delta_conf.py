@@ -101,11 +101,11 @@ def ucb_experiment(df, threshold_list, overhead_list, n_round, c, savePath, logP
 			
 			if(len(df_temp.delta_conf.values) > 0):
 				result = run_ucb(df_temp, threshold_list, overhead, n_round, c, bin_lower, bin_upper, savePath, logPath, verbose)
-				#df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
-				#df_result = df_result.append(df2)
-				#df_result.to_csv(savePath)
-				df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
-				df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
+				df2 = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+				df_result = df_result.append(df2)
+				df_result.to_csv(savePath)
+				#df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+				#df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
 
 
 if __name__ == "__main__":
