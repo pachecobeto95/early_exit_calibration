@@ -816,7 +816,22 @@ class Early_Exit_DNN_CALTECH(nn.Module):
       max_conf = np.argmax(conf_list)
       return output, conf_list[max_conf], class_list[max_conf], True
 
+  def forwardOnlyEdgeNoCalibInferenceStandardDNN(self, x, p_tar, nr_branch_edge):
 
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits):
+      x = self.stages[i](x)
+
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    
+    return output, conf.item(), infered_class.item(), True
 
 
   def forwardEdgeOverallCalibInference(self, x, p_tar, nr_branch_edge):
@@ -892,6 +907,25 @@ class Early_Exit_DNN_CALTECH(nn.Module):
       max_conf = np.argmax(conf_list)      
       return output, conf_list[max_conf], class_list[max_conf], True
 
+
+  def forwardOnlyEdgeOverallCalibInferenceStandardDNN(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits):
+      x = self.stages[i](x)
+
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)
+    output = self.temperature_scale_overall(output)
+
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    
+    return output, conf.item(), infered_class.item(), True
+
     
   def forwardEdgeBranchesCalibInference(self, x, p_tar, nr_branch_edge):
     conf_list, class_list = [], []
@@ -962,6 +996,26 @@ class Early_Exit_DNN_CALTECH(nn.Module):
       conf_list.append(conf.item()), class_list.append(infered_class.item())
       max_conf = np.argmax(conf_list)      
       return output, conf_list[max_conf], class_list[max_conf], True
+
+
+  def forwardOnlyEdgeBranchesCalibInferenceStandardDNN(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits):
+      x = self.stages[i](x)
+
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)
+    output = self.temperature_scale_overall(output, self.temperature_branches, -1)
+
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    
+    return output, conf.item(), infered_class.item(), True
+
 
 
 class Early_Exit_DNN_CIFAR(nn.Module):

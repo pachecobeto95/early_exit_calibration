@@ -70,6 +70,20 @@ def edge_inference_no_calib_only_edge():
 		return jsonify(result), 500
 
 
+@api.route('edge/edgeNoCalibInferenceOnlyEdgeStandardDNN', methods=["POST"])
+def edge_inference_no_calib_only_edge_standard_dnn():
+
+	fileImg = request.files['img']
+	data_dict = json.load(request.files['data'])
+
+	result = edgeProcessing.edgeNoCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+	else:
+		return jsonify(result), 500
+
+
 @api.route('edge/edgeOverallCalibInference', methods=["POST"])
 def edge_inference_overall_calib():
 
@@ -101,6 +115,23 @@ def edge_inference_overall_calib_only_edge():
 		return jsonify(result), 200
 	else:
 		return jsonify(result), 500
+
+
+@api.route('edge/edgeOverallCalibInferenceOnlyEdgeStandardDNN', methods=["POST"])
+def edge_inference_overall_calib_only_edge_standard_dnn():
+
+	fileImg = request.files['img']
+	data_dict = json.load(request.files['data'])
+
+	model.update_overall_temperature(config.p_tar_calib)
+
+	result = edgeProcessing.edgeOverallCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+	else:
+		return jsonify(result), 500
+
 
 @api.route('edge/edgeBranchesCalibInference', methods=["POST"])
 def edge_inference_branches_calib():
@@ -134,3 +165,18 @@ def edge_inference_branches_calib_only_edge():
 	else:
 		return jsonify(result), 500
 
+
+@api.route('edge/edgeBranchesCalibInferenceOnlyEdgeStandardDNN', methods=["POST"])
+def edge_inference_branches_calib_only_edge_standard_dnn():
+
+	fileImg = request.files['img']
+	data_dict = json.load(request.files['data'])
+
+	model.update_branches_temperature(config.p_tar_calib)
+
+	result = edgeProcessing.edgeBranchesCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+	else:
+		return jsonify(result), 500

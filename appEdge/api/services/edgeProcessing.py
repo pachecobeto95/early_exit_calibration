@@ -36,7 +36,6 @@ def edgeNoCalibInference(fileImg, data_dict):
 
 	inference_time = time.time() - start
 
-	#if(response_request["status"] == "ok"):
 	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
 		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, result_path, calibration_type="no_calib")
 	
@@ -68,6 +67,32 @@ def edgeNoCalibInferenceOnlyEdge(fileImg, data_dict):
 	
 	return response_request
 
+
+def edgeNoCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict):
+
+	#This line reads the fileImg, obtaining pixel matrix.
+	response_request = {"status": "ok"}
+
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_only_edge_standard_dnn.csv"%(model.model_params["model_name"]))
+
+	start = time.time()
+	image_bytes = fileImg.read()
+
+	#Starts measuring the inference time
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
+
+	#Run the Early-exit dnn inference
+	with torch.no_grad():
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeNoCalibInferenceStandardDNN(tensor_img, data_dict["p_tar"], 
+			data_dict["nr_branch"])
+
+
+	inference_time = time.time() - start
+
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, resultPath, calibration_type="no_calib")
+	
+	return response_request
 
 
 def edgeOverallCalibInference(fileImg, data_dict):
@@ -121,6 +146,30 @@ def edgeOverallCalibInferenceOnlyEdge(fileImg, data_dict):
 	return response_request
 
 
+def edgeOverallCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict):
+	response_request = {"status": "ok"}
+
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_only_edge_standard_dnn.csv"%(model.model_params["model_name"]))
+
+	#This line reads the fileImg, obtaining pixel matrix.
+	start = time.time()
+	image_bytes = fileImg.read()
+
+	#Starts measuring the inference time
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
+
+	#Run the Early-exit dnn inference
+	with torch.no_grad():
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeOverallCalibInferenceStandardDNN(tensor_img, data_dict["p_tar"], data_dict["nr_branch"])
+
+
+	inference_time = time.time() - start
+
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+		saveInferenceTime(inference_time, class_list, data_dict, isTerminate, resultPath, calibration_type="overall_calib")
+	
+	return response_request
+
 
 def edgeBranchesCalibInference(fileImg, data_dict):
 	response_request = {"status": "ok"}
@@ -171,6 +220,33 @@ def edgeBranchesCalibInferenceOnlyEdge(fileImg, data_dict):
 		saveInferenceTime(inference_time, class_list,  data_dict, isTerminate, resultPath, calibration_type="branches_calib")
 	
 	return response_request
+
+
+def edgeBranchesCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict):
+	response_request = {"status": "ok"}
+	
+	resultPath = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_only_edge_standard_dnn.csv"%(model.model_params["model_name"]))
+
+
+	#This line reads the fileImg, obtaining pixel matrix.
+	start = time.time()
+	image_bytes = fileImg.read()
+
+	#Starts measuring the inference time
+	tensor_img = transform_image(image_bytes, model) #transform input data, which resizes the input image
+
+	#Run the Early-exit dnn inference
+	with torch.no_grad():
+		output, conf_list, class_list, isTerminate = model.ee_model.forwardOnlyEdgeBranchesCalibInferenceStandardDNN(tensor_img, 
+			data_dict["p_tar"], data_dict["nr_branch"])
+
+	inference_time = time.time() - start
+	
+	if((response_request["status"] == "ok") and (not data_dict["warmUp"])):
+		saveInferenceTime(inference_time, class_list,  data_dict, isTerminate, resultPath, calibration_type="branches_calib")
+	
+	return response_request
+
 
 
 def saveInferenceTime(inference_time, inf_class,  data_dict, isTerminate, result_path, calibration_type):
