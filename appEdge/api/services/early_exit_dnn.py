@@ -1010,7 +1010,7 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     x = torch.flatten(x, 1)
 
     output = self.classifier(x)
-    output = self.temperature_scale_overall(output, self.temperature_branches, -1)
+    output = self.temperature_scale_branches(output, self.temperature_branches, -1)
 
     conf, infered_class = torch.max(self.softmax(output), 1)
     
