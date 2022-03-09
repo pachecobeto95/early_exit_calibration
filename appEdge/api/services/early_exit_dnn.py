@@ -1016,6 +1016,28 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     
     return output, conf.item(), infered_class.item(), True
 
+  def forwardEarlyExitInference(self, x, p_tar):
+    conf_list, class_list = [], []
+
+    for i, exitBlock in enumerate(self.exits):
+      x = self.stages[i](x)
+
+      output_branch = exitBlock(x)
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      conf_list.append(conf_branch), class_list.append(infered_class_branch)
+
+    x = self.stages[-1](x)
+    
+    x = torch.flatten(x, 1)
+
+    output = self.classifier(x)    
+    output_list.append(output)
+
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    conf_list.append(conf_branch), class_list.append(infered_class_branch)
+   
+    return conf_list, class_list
 
 
 class Early_Exit_DNN_CIFAR(nn.Module):
