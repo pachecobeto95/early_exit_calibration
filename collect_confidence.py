@@ -111,6 +111,9 @@ def main(args):
 	nr_branch_edge = 5
 	distribution = "linear"
 	exit_type = "bnpool"
+	input_dim = 224
+	input_resize = 224
+	input_shape = (3, input_dim, input_dim)
 
 
 	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, pretrained, nr_branch_edge, input_shape, exit_type, 
