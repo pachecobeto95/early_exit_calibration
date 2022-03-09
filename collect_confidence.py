@@ -107,30 +107,21 @@ def main(args):
 	savePath = os.path.join(DIR_NAME, "confidence_branches_%s_%s.csv"%(args.model_name, args.dataset_name))
 	edge_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
-	n_classes = 258
-	pretrained = False
 	#This line defines the number of side branches processed at the edge
 	nr_branch_edge = 5
-	distribution = "linear"
-	exit_type = "bnpool"
-	input_dim = 224
-	input_resize = 224
-	input_shape = (3, input_dim, input_dim)
+	n_classes = config.models_params[args.dataset_name]["n_classes"]
 
-
-	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, pretrained, nr_branch_edge, input_shape, exit_type, 
-		device, distribution, edge_root_path)
-
-	sys.exit()
+	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, config.pretrained, nr_branch_edge, config.input_shape, 
+		config.exit_type, device, config.distribution, edge_root_path)
 
 	logPath = "./logConfidenceCollecting_%s_%s.log"%(args.model_name, args.dataset_name)
 
 	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
-
 	save_indices_path = os.path.join(DIR_NAME, "datasets", args.dataset_name, "indices", "test_idx_caltech256_id_1.npy")
 
 	test_loader = load_dataset(args, dataset_path, save_indices_path)
+	sys.exit()
 	collectingConfidenceExperiment(test_loader, early_exit_dnn, p_tar_list, nr_branch_edge, device, savePath)
 
 
