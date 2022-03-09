@@ -91,7 +91,7 @@ class Resnet(nn.Module):
 		self.conv1 = nn.Conv2d(3, 64, kernel_size=3, padding=1, bias=False)
 		self.bn1 = nn.BatchNorm2d(64)
 		self.relu = nn.ReLU(inplace=True)
-		self.layer1 = self._make_layer(block, 64, num_block[0], 1)
+		self.layer1 = self._make_layer(block, 64,  num_block[0], 1)
 		self.layer2 = self._make_layer(block, 128, num_block[1], 2)
 		self.layer3 = self._make_layer(block, 256, num_block[2], 2)
 		self.layer4 = self._make_layer(block, 512, num_block[3], 2)

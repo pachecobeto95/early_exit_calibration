@@ -35,7 +35,7 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 	transformations_test = transforms.Compose([
 		transforms.Resize(input_dim), 
 		transforms.ToTensor(), 
-		#transforms.Normalize(mean = mean, std = std),
+		transforms.Normalize(mean = mean, std = std),
 		])
 
 

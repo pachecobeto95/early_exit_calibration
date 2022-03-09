@@ -314,6 +314,9 @@ class Early_Exit_DNN(nn.Module):
     self.channel, self.width, self.height = input_shape
     self.backbone_pretrained = backbone_pretrained
     self.backbone_model_path = backbone_model_path
+    self.temperature_overall = None
+    self.temperature_branches = None
+    self.temperature_all_samples = None
 
     build_early_exit_dnn = self.select_dnn_architecture_model()
     build_early_exit_dnn()
@@ -328,9 +331,7 @@ class Early_Exit_DNN(nn.Module):
     architecture_dnn_model_dict = {"alexnet": self.early_exit_alexnet,
                                    "mobilenet": ee_mobilenet,
                                    "resnet18": self.early_exit_resnet18,
-                                   "resnet50": self.early_exit_resnet50_2,
                                    "vgg16": self.early_exit_vgg16, 
-                                   "inceptionV3": self.early_exit_inceptionV3,
                                    "resnet152": self.early_exit_resnet152}
 
     return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
@@ -600,105 +601,6 @@ class Early_Exit_DNN(nn.Module):
     self.softmax = nn.Softmax(dim=1)
     self.set_device()
 
-
-  def early_exit_resnet50_2(self):
-
-    self.stages = nn.ModuleList()
-    self.exits = nn.ModuleList()
-    self.layers = nn.ModuleList()
-    self.cost = []
-    self.stage_id = 0
-
-    backbone_model = models.resnet50(pretrained=True)
-
-    # This obtains the flops total of the backbone model
-    self.total_flops = self.countFlops(backbone_model)
-
-    # This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
-    self.threshold_flop_list = self.where_insert_early_exits()
-
-    x = torch.rand(1, 3, 224, 224)
-    first_layers_list = ["conv1", "bn1", "relu", "maxpool"]
-    for first_layer in first_layers_list:
-      self.layers.append(getattr(backbone_model, first_layer))
-
-    data = nn.Sequential(*self.layers)(x)
-
-    n_layers = 4
-
-    for n in range(1, n_layers+1):
-      backbone_block = getattr(backbone_model, "layer%s"%(n))
-      n_blocks = len(backbone_block)
-      
-      for j in range(n_blocks):
-        bottleneck_layers = backbone_block[j]
-        self.layers.append(bottleneck_layers)
-        
-        if (self.is_suitable_for_exit()):
-          self.add_exit_block()
-
-    self.layers.append(nn.AdaptiveAvgPool2d(output_size=(1, 1)))
-    self.classifier = nn.Sequential(nn.Linear(2048, self.n_classes))
-    self.stages.append(nn.Sequential(*self.layers))
-    self.softmax = nn.Softmax(dim=1)
-
-
-  def early_exit_resnet50(self):
-
-    self.stages = nn.ModuleList()
-    self.exits = nn.ModuleList()
-    self.layers = nn.ModuleList()
-    self.cost = []
-    self.stage_id = 0
-
-    backbone_model = models.resnet50(pretrained=True)
-
-    # This obtains the flops total of the backbone model
-    self.total_flops = self.countFlops(backbone_model)
-
-    # This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
-    self.threshold_flop_list = self.where_insert_early_exits()
-
-    x = torch.rand(1, 3, 224, 224)
-    first_layers_list = ["conv1", "bn1", "relu", "maxpool"]
-    for first_layer in first_layers_list:
-      self.layers.append(getattr(backbone_model, first_layer))
-
-    data = nn.Sequential(*self.layers)(x)
-
-    bottleneck_list = ["conv1", "bn1", "conv2", "bn2", "conv3", "bn3", "relu", "downsample"]
-
-    bottleneck_short_list = bottleneck_list[:-1]
-    n_layers = 4
-
-    for n in range(1, n_layers+1):
-      backbone_block = getattr(backbone_model, "layer%s"%(n))
-      n_blocks = len(backbone_block)
-      
-      for j in range(n_blocks):
-        bottleneck_layers = backbone_block[j]
-        bottleneck_layers_list = bottleneck_list if (j==0) else bottleneck_short_list
-
-        for layer in bottleneck_layers_list:
-          temp_layer = getattr(bottleneck_layers, layer)
-          if (layer == "downsample"):
-            #pass
-            self.layers.append(DownSample(temp_layer, data))
-          else:
-            self.layers.append(temp_layer)
-
-          if (self.is_suitable_for_exit()):
-            self.add_exit_block()
-      
-      data = backbone_block(data)
-
-    self.layers.append(nn.AdaptiveAvgPool2d(output_size=(1, 1)))
-    self.classifier = nn.Sequential(nn.Linear(2048, self.n_classes))
-    self.stages.append(nn.Sequential(*self.layers))
-    self.softmax = nn.Softmax(dim=1)
-    #self.set_device_resnet50()
-
-
   def early_exit_vgg16(self):
     self.stages = nn.ModuleList()
     self.exits = nn.ModuleList()
@@ -747,64 +649,6 @@ class Early_Exit_DNN(nn.Module):
 
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
-
-
-  def early_exit_inceptionV3(self):
-    self.stages = nn.ModuleList()
-    self.exits = nn.ModuleList()
-    self.layers = nn.ModuleList()
-    self.cost = []
-    self.stage_id = 0
-
-    backbone_model = models.inception_v3(self.pretrained)
-    self.total_flops = self.countFlops(backbone_model)
-    self.threshold_flop_list = self.where_insert_early_exits()
-
-    architecture_layer_dict = ["Conv2d_1a_3x3", "Conv2d_2a_3x3", "Conv2d_2b_3x3",
-                              "maxpool1", "Conv2d_3b_1x1", "Conv2d_4a_3x3", "maxpool2",
-                              "Mixed_5b", "Mixed_5c", "Mixed_5d", "Mixed_6a", "Mixed_6b", "Mixed_6c", "Mixed_6d",
-                              "Mixed_6e", "Mixed_7a", "Mixed_7b", "Mixed_7c", "avgpool", "dropout"]
-
-    for block in architecture_layer_dict:
-      layer_list.append(getattr(inception, block))
-      if (self.is_suitable_for_exit()):
-        self.add_exit_block()
-
-
-    self.stages.append(nn.Sequential(*self.layers))
-    self.classifier = backbone_model.fc
-    self.set_device()
-    self.softmax = nn.Softmax(dim=1)
-
-
-  def early_exit_resnet56(self):
-
-    self.stages = nn.ModuleList()
-    self.exits = nn.ModuleList()
-    self.layers = nn.ModuleList()
-    self.cost = []
-    self.stage_id = 0
-
-    self.in_planes = 16
-    n_layers = 3
-    num_blocks =  [9, 9, 9]
-    basic_block_list = ["conv1", "bn1", "relu", "conv2", "bn2"]
-
-    backbone_model = ResNet(BasicBlock, num_blocks, num_classes=self.n_classes)
-    
-    self.total_flops = self.countFlops(backbone_model)
-    self.threshold_flop_list = self.where_insert_early_exits()
-
-    for i in range(1, n_layers + 1):
-      intermediate_block_layer = getattr(backbone_model, "layer%s"%(i))
-
-      for k in range(0, num_blocks[i-1]):
-
-        basic_block = intermediate_block_layer[k]
-        for layer in basic_block_list:
-          self.layers.append(getattr(basic_block, layer))
-          if (self.is_suitable_for_exit()):
-            self.add_exit_block()
 
     
   def early_exit_MobileNet(self):
@@ -869,7 +713,6 @@ class Early_Exit_DNN(nn.Module):
     #  kernel_size=(1, 1), stride=(1, 1)).to(self.device)
     #self.set_device()
     #self.softmax = nn.Softmax(dim=1)
-
 
 
   def early_exit_mobilenet(self):
@@ -956,8 +799,8 @@ class Early_Exit_DNN(nn.Module):
     return output_list, conf_list, class_list
 
 
-  def temperature_scale_overall(self, logits, temp_overall):    
-    return torch.div(logits, temp_overall)
+  def temperature_scale_overall(self, logits):    
+    return torch.div(logits, self.temperature_overall)
 
 
   def temperature_scale_branches(self, logits, temp, exit_branch):
@@ -994,6 +837,52 @@ class Early_Exit_DNN(nn.Module):
     return output_list, conf_list, infered_class_list
 
 
+  def forwardEdgeNoCalibInference(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
+      x = self.stages[i](x)
+
+      if (i+1 in config.disabled_branches):
+        continue
+
+      output_branch = exitBlock(x)
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      if (conf_branch.item() >= p_tar):
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
+
+      else:
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+      
+    return x, conf_list, class_list, False
+
+
+  def forwardEdgeOverallCalibInference(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
+      x = self.stages[i](x)
+
+      if (i+1 in config.disabled_branches):
+        continue
+
+      output_branch = exitBlock(x)
+      
+      output_branch = self.temperature_scale_overall(output_branch)
+
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      if (conf_branch.item() >= p_tar):
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
+
+      else:
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+      
+    return x, conf_list, class_list, False
+
   def forwardOverallCalibration(self, x, temp_overall):
     output_list, conf_list, class_list = [], [], []
     n_exits = self.n_branches + 1
@@ -1023,6 +912,32 @@ class Early_Exit_DNN(nn.Module):
     conf_list.append(conf), class_list.append(infered_class)
 
     return conf_list, class_list
+
+
+  def forwardEdgeBranchesCalibInference(self, x, p_tar, nr_branch_edge):
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:int(nr_branch_edge)]):
+      x = self.stages[i](x)
+
+      if (i+1 in config.disabled_branches):
+        continue
+      
+      output_branch = exitBlock(x)
+      output_branch = self.temperature_scale_branches(output_branch, self.temperature_branches, i)
+
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      if (conf_branch.item() >= p_tar):
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
+
+      else:
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+      
+    return x, conf_list, class_list, False
+
+
 
   def forwardBranchesCalibration(self, x, temp_branches):
     output_list, conf_list, class_list = [], [], []

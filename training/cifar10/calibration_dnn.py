@@ -238,7 +238,6 @@ class ModelBranchesCalibrationAlternative(nn.Module):
     self.lr = lr
     self.max_iter = max_iter
     self.saveTempPath = saveTempPath
-    self.delta = 0.15
     self.model.load_state_dict(torch.load(modelPath, map_location=device)["model_state_dict"])
 
   def forwardBranchesCalibration(self, x):

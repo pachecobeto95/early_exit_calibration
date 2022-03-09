@@ -13,6 +13,7 @@ def get_row_data(row, threshold):
 	conf_branch = row.conf_branch_1.item()
 	conf_final = row.conf_branch_2.item()
 	return conf_branch, conf_final-conf_branch
+	
 	if(conf_final >= threshold):
 		delta_conf = conf_final - conf_branch
 		return conf_branch, delta_conf
@@ -31,7 +32,9 @@ def run_ucb(df, label, threshold_list, overhead, n_rounds, c, bin_lower, bin_upp
 	cum_regret, t = 0, 0
 	inst_regret_list, selected_arm_list = [], []
 
+	#Corrigir trocar em todos Len(). Remover o tqdm
 	for n_round in tqdm(range(n_rounds)):
+		#Plotar o IDX para verificar o seed e a randomness do script
 		idx = random.choice(np.arange(len(df)))
 		row = df.iloc[[idx]]
 
@@ -51,14 +54,16 @@ def run_ucb(df, label, threshold_list, overhead, n_rounds, c, bin_lower, bin_upp
 
 		reward_actions[action].append(reward)
 
+		# Corrigir: SUM e Len(threshold_list)
 		avg_reward_actions = np.array([sum(reward_actions[i])/n_actions[i] for i in range(len(threshold_list))])
 		optimal_reward = max(0, delta_conf - overhead)
 
 		inst_regret = optimal_reward - reward
 
-		inst_regret_list.append(inst_regret)
+		inst_regret_list.append(inst_regret) #inst_regret_list[i] = inst_regret
 		selected_arm_list.append(threshold)
 
+	#Verificar essa * list
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
 	"label":[label]*len(inst_regret_list), "overhead":[round(overhead, 2)]*len(inst_regret_list),
 	"bin_lower": [round(bin_lower, 2)]*len(inst_regret_list), "bin_upper": [round(bin_upper, 2)]*len(inst_regret_list)}
