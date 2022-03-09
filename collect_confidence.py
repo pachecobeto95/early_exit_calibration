@@ -30,7 +30,7 @@ def experiment_early_exit_inference(model, test_loader, p_tar, nr_branch_edge, d
 	with torch.no_grad():
 		for i, (data, target) in enumerate(test_loader, 1):
 			
-			logging.debug("Image id: %s/%s"%(i, test_dataset_size))
+			print("Image id: %s/%s"%(i, test_dataset_size))
 			data, target = data.to(device).float(), target.to(device)
 
 			conf_branches, infered_class_branches = model.forwardEarlyExitInference(data, p_tar)
