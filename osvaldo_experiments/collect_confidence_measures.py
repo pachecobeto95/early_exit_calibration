@@ -68,9 +68,9 @@ def collectingConfidenceExperiment(test_loader, model, p_tar_list, nr_branch_edg
 
 
 	for p_tar in p_tar_list:
-	    logging.debug("P_tar: %s"%(p_tar))
+		logging.debug("P_tar: %s"%(p_tar))
 
-	    confidence_results = experiment_early_exit_inference(model, test_loader, p_tar, nr_branch_edge, device)
+		confidence_results = experiment_early_exit_inference(model, test_loader, p_tar, nr_branch_edge, device)
 
 		save_results(confidence_results, savePath)
 
