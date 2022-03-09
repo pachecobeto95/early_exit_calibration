@@ -1,4 +1,4 @@
-import os, logging, time, sys
+import os, logging, time, sys, config
 import numpy as np
 from load_dataset import load_test_caltech_256
 from PIL import Image
@@ -76,6 +76,8 @@ def collectingConfidenceExperiment(test_loader, model, p_tar_list, nr_branch_edg
 
 
 def loadEarlyExitDNN(model_name, dataset_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution, root_path):
+
+	model_id = config.model_id_dict[model_name]
 
 	if(dataset_name == "caltech256"):
 		ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution)
