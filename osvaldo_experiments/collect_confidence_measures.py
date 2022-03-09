@@ -81,7 +81,7 @@ def loadEarlyExitDNN(model_name, dataset_name, n_classes, pretrained, nr_branche
 		ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution)
 		model_file_name = "ee_%s_branches_%s_id_%s.pth"%(model_name, n_branches, model_id)
 
-	elif((dataset_name == "cifar100") or (dataset_name == "cifar10"))
+	elif((dataset_name == "cifar100") or (dataset_name == "cifar10")):
 
 		ee_model = Early_Exit_DNN_CIFAR(model_name, n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution)
 		model_file_name = "b_%s_early_exit_%s_id_1_%s_decrescent.pth"%(model_name, dataset_name, pretrained)
