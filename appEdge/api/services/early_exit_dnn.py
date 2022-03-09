@@ -1032,7 +1032,6 @@ class Early_Exit_DNN_CALTECH(nn.Module):
     x = torch.flatten(x, 1)
 
     output = self.classifier(x)    
-    output_list.append(output)
 
     conf, infered_class = torch.max(self.softmax(output), 1)
     conf_list.append(conf_branch), class_list.append(infered_class_branch)
