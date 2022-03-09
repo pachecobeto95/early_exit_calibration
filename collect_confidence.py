@@ -99,13 +99,11 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 
 	DIR_NAME = os.path.dirname(__file__)
-	print(DIR_NAME)
-	sys.exit()
 	p_tar_list = [0.7, 0.8, 0.9]
 	dataset_path = os.path.join(DIR_NAME, "datasets", "caltech256", "256_ObjectCategories")
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	savePath = os.path.join(DIR_NAME, "confidence_branches_%s_%s.csv"%(args.model_name, args.dataset_name))
-	root_path = os.path.join(DIR_NAME)
+	edge_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
 	n_classes = 258
 	pretrained = False
@@ -116,7 +114,9 @@ def main(args):
 
 
 	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, pretrained, nr_branch_edge, input_shape, exit_type, 
-		devices, distribution, root_path)
+		devices, distribution, edge_root_path)
+
+	sys.exit()
 
 	logPath = "./logConfidenceCollecting_%s_%s.log"%(args.model_name, args.dataset_name)
 
