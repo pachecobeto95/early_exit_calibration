@@ -104,14 +104,14 @@ def main(args):
 	p_tar_list = [0.7, 0.8, 0.9]
 	dataset_path = os.path.join(DIR_NAME, "datasets", "caltech256", "256_ObjectCategories")
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-	savePath = os.path.join(DIR_NAME, "osvaldo_experiments", "confidence_branches_%s_%s.csv"%(args.model_name, args.dataset_name))
+	savePath = os.path.join(DIR_NAME, "osvaldo_experiments", "confidence_branches_%s_%s_pretrained.csv"%(args.model_name, args.dataset_name))
 	edge_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
 	#This line defines the number of side branches processed at the edge
 	nr_branch_edge = 5
 	n_classes = config.models_params[args.dataset_name]["n_classes"]
 
-	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, config.pretrained, nr_branch_edge, config.input_shape, 
+	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, True, nr_branch_edge, config.input_shape, 
 		config.exit_type, device, config.distribution, edge_root_path)
 
 	logPath = "./logConfidenceCollecting_%s_%s.log"%(args.model_name, args.dataset_name)
