@@ -117,7 +117,7 @@ def main(args):
 
 
 	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, pretrained, nr_branch_edge, input_shape, exit_type, 
-		devices, distribution, edge_root_path)
+		device, distribution, edge_root_path)
 
 	sys.exit()
 
