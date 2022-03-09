@@ -4,7 +4,7 @@ from load_dataset import load_test_caltech_256
 from PIL import Image
 import pandas as pd
 import argparse
-from early_exit_dnn import Early_Exit_DNN_CALTECH, Early_Exit_DNN_CIFAR
+from .appEdge.api.services.early_exit_dnn import Early_Exit_DNN_CALTECH, Early_Exit_DNN_CIFAR
 import torch
 
 def load_dataset(args, dataset_path, savePath_idx):
