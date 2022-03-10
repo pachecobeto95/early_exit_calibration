@@ -51,8 +51,8 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 	test_idx_path = os.path.join(savePath_idx, "test_idx_caltech256_id_%s.npy"%(model_id))
 	val_idx_path = os.path.join(savePath_idx, "validation_idx_caltech256_id_%s.npy"%(model_id))
 
-	val_idx = np.load(test_idx_path, allow_pickle=True)
-	val_idx = np.array(list(test_idx.tolist()))
+	val_idx = np.load(val_idx_path, allow_pickle=True)
+	val_idx = np.array(list(val_idx.tolist()))
 	
 
 	if (os.path.exists(test_idx_path)):
