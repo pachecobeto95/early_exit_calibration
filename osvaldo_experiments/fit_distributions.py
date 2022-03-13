@@ -87,7 +87,7 @@ def fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
 		plotFittedDist(df_results.iloc[:paramsDict["n_rank"], :], conf_branch, gamma, nr_branches, paramsDict)
 		#plotFittedDist(df_ks, conf_branch.values, gamma, nr_branches, paramsDict)
 
-		return df_results_list
+	return df_results_list
 
 def plotFittedDist(df, data, gamma, nr_branches, paramsDict):
 	fig, ax = plt.subplots()
