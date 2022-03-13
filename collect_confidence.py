@@ -79,18 +79,18 @@ def collectingConfidenceExperiment(test_loader, model, p_tar_list, nr_branch_edg
 		save_results(confidence_results, savePath)
 
 
-def loadEarlyExitDNN(model_name, dataset_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution, root_path):
+def loadEarlyExitDNN(args., n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution, root_path):
 
-	model_id = 3
+	model_id = args.model_id
 
 	if(dataset_name == "caltech256"):
-		ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution)
-		model_file_name = "ee_%s_branches_%s_id_%s.pth"%(model_name, nr_branches, model_id)
+		ee_model = Early_Exit_DNN_CALTECH(args.model_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution)
+		model_file_name = "ee_%s_branches_%s_id_%s.pth"%(args.model_name, nr_branches, model_id)
 
 	elif((dataset_name == "cifar100") or (dataset_name == "cifar10")):
 
 		ee_model = Early_Exit_DNN_CIFAR(model_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution)
-		model_file_name = "b_%s_early_exit_%s_id_1_%s_decrescent.pth"%(model_name, dataset_name, pretrained)
+		model_file_name = "b_%s_early_exit_%s_id_1_%s_decrescent.pth"%(args.model_name, args.dataset_name, pretrained)
 	
 	else:
 		logging.debug("Error")
@@ -108,14 +108,14 @@ def main(args):
 	p_tar_list = [0.8]
 	dataset_path = os.path.join(DIR_NAME, "datasets", "caltech256", "256_ObjectCategories")
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-	savePath = os.path.join(DIR_NAME, "osvaldo_experiments", "confidence_branches_%s_%s_val_%s.csv"%(args.model_name, args.dataset_name, 3))
+	savePath = os.path.join(DIR_NAME, "osvaldo_experiments", "confidence_branches_%s_%s_val_%s.csv"%(args.model_name, args.dataset_name, args.model_id))
 	edge_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
 	#This line defines the number of side branches processed at the edge
 	nr_branch_edge = 5
 	n_classes = config.models_params[args.dataset_name]["n_classes"]
 
-	early_exit_dnn = loadEarlyExitDNN(args.model_name, args.dataset_name, n_classes, False, nr_branch_edge, config.input_shape, 
+	early_exit_dnn = loadEarlyExitDNN(args, n_classes, False, nr_branch_edge, config.input_shape, 
 		config.exit_type, device, config.distribution, edge_root_path)
 
 	logPath = "./logConfidenceCollecting_%s_%s.log"%(args.model_name, args.dataset_name)
@@ -139,6 +139,7 @@ if (__name__ == "__main__"):
 		choices=["mobilenet", "resnet18", "resnet152", "vgg16"], help='DNN model name (default: MobileNet)')
 
 	parser.add_argument('--split_ratio', type=float, default=0.2, help='Split Ratio')
+	parser.add_argument('--model_id', type=float, help='MOdel id')
 
 	args = parser.parse_args()
 
