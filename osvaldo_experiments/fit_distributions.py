@@ -136,13 +136,13 @@ def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, 
 		df_errors_fitting["nr_branches"] = [nr_branches]*len(df_errors_fitting)
 		df_errors_fitting["gamma"] = [gamma]*len(df_errors_fitting)
 
-		plt.legend(frameon=False, fontsize=paramsDict1["fontsize"]-2)
-		plt.tick_params(axis='both', which='major', labelsize=paramsDict1["fontsize"]-4)
+		plt.legend(frameon=False, fontsize=paramsDict["fontsize"]-2)
+		plt.tick_params(axis='both', which='major', labelsize=paramsDict["fontsize"]-4)
 		plt.title("Nr Branches: %s, Gamma: %s"%(nr_branches, gamma))
 
-		if(paramsDict1["shouldSave"]):
-			plt.savefig(os.path.join(paramsDict1["plotPath"], "eps", "%s.eps"%(file_name)))
-			plt.savefig(os.path.join(paramsDict1["plotPath"], "jpg", "%s.jpg"%(file_name)))
+		if(paramsDict["shouldSave"]):
+			plt.savefig(os.path.join(paramsDict["plotPath"], "eps", "%s.eps"%(file_name)))
+			plt.savefig(os.path.join(paramsDict["plotPath"], "jpg", "%s.jpg"%(file_name)))
 			df_errors_fitting.to_csv(saveErrosPathLibrary, mode='a', header=not os.path.exists(saveErrosPathLibrary))
 
 def expReliabilityDiagram(df, nr_branches_list, paramsDict):
