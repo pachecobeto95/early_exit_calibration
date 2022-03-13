@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import os, sys
+import os, sys, argparse
 from fitter import Fitter, get_common_distributions, get_distributions
 from scipy import stats
 
