@@ -79,7 +79,7 @@ def collectingConfidenceExperiment(test_loader, model, p_tar_list, nr_branch_edg
 		save_results(confidence_results, savePath)
 
 
-def loadEarlyExitDNN(args., n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution, root_path):
+def loadEarlyExitDNN(args, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution, root_path):
 
 	model_id = args.model_id
 
