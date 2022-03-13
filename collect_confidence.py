@@ -13,8 +13,12 @@ def load_dataset(args, dataset_path, savePath_idx):
 			config.model_id_dict[args.model_name])
 
 	elif(args.dataset_name=="cifar100"):
-		sys.exit()
+		return load_test_cifar100(config.input_dim, dataset_path, args.split_ratio, savePath_idx, 
+					config.model_id_dict[args.model_name])
 
+	else:
+		return load_test_cifar10(config.input_dim, dataset_path, args.split_ratio, savePath_idx, 
+					config.model_id_dict[args.model_name])
 
 def experiment_early_exit_inference(model, test_loader, p_tar, nr_branch_edge, device):
 
@@ -77,7 +81,7 @@ def collectingConfidenceExperiment(test_loader, model, p_tar_list, nr_branch_edg
 
 def loadEarlyExitDNN(model_name, dataset_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution, root_path):
 
-	model_id = config.model_id_dict[model_name]
+	model_id = 3
 
 	if(dataset_name == "caltech256"):
 		ee_model = Early_Exit_DNN_CALTECH(model_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution)
@@ -101,10 +105,10 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 
 	DIR_NAME = os.path.dirname(__file__)
-	p_tar_list = [0.7, 0.8, 0.9]
+	p_tar_list = [0.8]
 	dataset_path = os.path.join(DIR_NAME, "datasets", "caltech256", "256_ObjectCategories")
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-	savePath = os.path.join(DIR_NAME, "osvaldo_experiments", "confidence_branches_%s_%s_val.csv"%(args.model_name, args.dataset_name))
+	savePath = os.path.join(DIR_NAME, "osvaldo_experiments", "confidence_branches_%s_%s_val_%s.csv"%(args.model_name, args.dataset_name, 3))
 	edge_root_path = os.path.join(DIR_NAME, "appEdge", "api", "services", "models")
 
 	#This line defines the number of side branches processed at the edge
