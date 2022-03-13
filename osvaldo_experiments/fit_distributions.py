@@ -224,7 +224,7 @@ def main(args):
 
 	for nr_branches in nr_branches_list:
 		fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
-		expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict, saveResultsPath)
+		#expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict, saveResultsPath)
 
 if (__name__ == "__main__"):
 	# Input Arguments. Hyperparameters configuration
