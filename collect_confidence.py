@@ -96,7 +96,7 @@ def loadEarlyExitDNN(args, n_classes, pretrained, nr_branches, input_shape, exit
 		logging.debug("Error")
 		sys.exit()
 
-	model_path = os.path.join(root_path, args.dataset_name, model_name, "models", model_file_name)
+	model_path = os.path.join(root_path, args.dataset_name, args.model_name, "models", model_file_name)
 	ee_model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 
 	return ee_model
