@@ -119,7 +119,7 @@ def plotFittedDist(df, data, gamma, nr_branches, paramsDict):
 
 
 
-def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict):
+def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict, saveResultsPath):
 	for gamma in gamma_list:
 
 		file_name = "pdf_%s_%s_branches_gamma_%s_%s_using_library"%(paramsDict["model_name"], nr_branches, gamma, paramsDict["mode"])
@@ -224,7 +224,7 @@ def main(args):
 
 	for nr_branches in nr_branches_list:
 		fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
-		expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict)
+		expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict, saveResultsPath)
 
 if (__name__ == "__main__"):
 	# Input Arguments. Hyperparameters configuration
