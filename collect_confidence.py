@@ -83,7 +83,7 @@ def loadEarlyExitDNN(args, n_classes, pretrained, nr_branches, input_shape, exit
 
 	model_id = args.model_id
 
-	if(dataset_name == "caltech256"):
+	if(args.dataset_name == "caltech256"):
 		ee_model = Early_Exit_DNN_CALTECH(args.model_name, n_classes, pretrained, nr_branches, input_shape, exit_type, device, distribution)
 		model_file_name = "ee_%s_branches_%s_id_%s.pth"%(args.model_name, nr_branches, model_id)
 
