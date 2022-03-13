@@ -39,7 +39,7 @@ def compute_p_value(f, data):
 
 
 def kstest(data, dist_name, paramtup):
-	p_value = stats.kstest(data, dist_name, paramtup, ksN)[1]   # return p-value
+	p_value = stats.kstest(data, dist_name, paramtup, 100)[1]   # return p-value
 	return p_value             # return p-value
 
 def fitdist(data, dist):
@@ -215,12 +215,12 @@ def main(args):
 	n_rank = 3
 	shouldSave = True
 	mode = "random"
+	ksN = 100           # Kolmogorov-Smirnov KS test for goodness of fit: samples
+	ALPHA = 0.05        # significance level for hypothesis test
 
 	paramsDict = {"fontsize": fontsize, "shouldSave": shouldSave, "plotPath": plotPath, "mode": mode, "dataset_name": args.dataset_name,  
 	"model_name": args.model_name, "n_bins": n_bins_hist, "n_rank": n_rank}
 	dist_list = ['alpha','anglit','arcsine','beta','betaprime','bradford','burr','burr12','cauchy','chi','chi2','cosine','dgamma','dweibull','expon','exponnorm','exponweib','exponpow','f','fatiguelife','fisk','foldcauchy','foldnorm','genlogistic','genpareto','gennorm','genexpon','genextreme','gausshyper','gamma','gengamma','genhalflogistic','gilbrat','gompertz','gumbel_r','gumbel_l','halfcauchy','halflogistic','halfnorm','halfgennorm','hypsecant','invgamma','invgauss','invweibull','johnsonsb','johnsonsu','kstwobign','laplace','levy','levy_l','logistic','loggamma','loglaplace','lognorm','lomax','maxwell','mielke','nakagami','ncx2','ncf','nct','norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','rdist','reciprocal','rayleigh','rice','recipinvgauss','semicircular','t','triang','truncexpon','truncnorm','tukeylambda','uniform','vonmises','vonmises_line','wald','weibull_min','weibull_max']
-	ksN = 100           # Kolmogorov-Smirnov KS test for goodness of fit: samples
-	ALPHA = 0.05        # significance level for hypothesis test
 
 	for nr_branches in nr_branches_list:
 		fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
