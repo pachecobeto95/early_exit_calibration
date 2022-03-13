@@ -139,7 +139,7 @@ if (__name__ == "__main__"):
 		choices=["mobilenet", "resnet18", "resnet152", "vgg16"], help='DNN model name (default: MobileNet)')
 
 	parser.add_argument('--split_ratio', type=float, default=0.2, help='Split Ratio')
-	parser.add_argument('--model_id', type=float, help='MOdel id')
+	parser.add_argument('--model_id', type=int, help='MOdel id')
 
 	args = parser.parse_args()
 
