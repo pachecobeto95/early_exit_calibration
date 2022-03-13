@@ -62,32 +62,32 @@ def fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
 
 	for gamma in gamma_list:
 		print("Nr Branches: %s, gamma: %s"%(nr_branches, gamma))
-	if(nr_branches == 1):
-		df_branch = df
-	else:
-		df_branch = df[df["conf_branch_%s"%(nr_branches-1)] < gamma]
-		#for i in range(1, nr_branches):
-		#  df = df[df["conf_branch_%s"%(nr_branches-1)] < gamma]
-		#df_branch = df
+		if(nr_branches == 1):
+			df_branch = df
+		else:
+			df_branch = df[df["conf_branch_%s"%(nr_branches-1)] < gamma]
+			#for i in range(1, nr_branches):
+			#  df = df[df["conf_branch_%s"%(nr_branches-1)] < gamma]
+			#df_branch = df
 
-	conf_branch = df_branch["conf_branch_%s"%(nr_branches)].values
-	results_list = [fitdist(conf_branch, dist) for dist in dist_list]
+		conf_branch = df_branch["conf_branch_%s"%(nr_branches)].values
+		results_list = [fitdist(conf_branch, dist) for dist in dist_list]
 
-	pd.options.display.float_format = '{:,.5f}'.format
-	df_results = pd.DataFrame(results_list, columns=["distribution", "KS p-value", "param1", "param2", "param3", "param4", "param5", "param6"])
-	df_results["gamma"] = len(df_results)*[gamma]
-	df_results["nr_branches"] = len(df_results)*[nr_branches]
-	df_results.sort_values(by=["KS p-value"], inplace=True, ascending=False)
-	df_results.reset_index(inplace=True)
-	df_results.drop("index", axis=1, inplace=True)
-	df_results_list.append(df_results)
+		pd.options.display.float_format = '{:,.5f}'.format
+		df_results = pd.DataFrame(results_list, columns=["distribution", "KS p-value", "param1", "param2", "param3", "param4", "param5", "param6"])
+		df_results["gamma"] = len(df_results)*[gamma]
+		df_results["nr_branches"] = len(df_results)*[nr_branches]
+		df_results.sort_values(by=["KS p-value"], inplace=True, ascending=False)
+		df_results.reset_index(inplace=True)
+		df_results.drop("index", axis=1, inplace=True)
+		df_results_list.append(df_results)
 
-	#df_ks = df_results.loc[df_results["KS p-value"] > ALPHA]
-	#print(df_results)
-	plotFittedDist(df_results.iloc[:paramsDict["n_rank"], :], conf_branch, gamma, nr_branches, paramsDict)
-	#plotFittedDist(df_ks, conf_branch.values, gamma, nr_branches, paramsDict)
+		#df_ks = df_results.loc[df_results["KS p-value"] > ALPHA]
+		#print(df_results)
+		plotFittedDist(df_results.iloc[:paramsDict["n_rank"], :], conf_branch, gamma, nr_branches, paramsDict)
+		#plotFittedDist(df_ks, conf_branch.values, gamma, nr_branches, paramsDict)
 
-	return df_results_list
+		return df_results_list
 
 def plotFittedDist(df, data, gamma, nr_branches, paramsDict):
 	fig, ax = plt.subplots()
