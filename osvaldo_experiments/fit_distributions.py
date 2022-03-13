@@ -123,7 +123,7 @@ def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, 
 	for gamma in gamma_list:
 
 		file_name = "pdf_%s_%s_branches_gamma_%s_%s_using_library"%(paramsDict["model_name"], nr_branches, gamma, paramsDict["mode"])
-		saveErrosPathLibrary = os.path.join(saveResultsPath, "results_error_library_%s.csv"%(model_name))
+		saveErrosPathLibrary = os.path.join(saveResultsPath, "results_error_library_%s.csv"%(paramsDict["model_name"]))
 
 		df_branch = df[df["conf_branch_%s"%(nr_branches-1)] < gamma]
 
