@@ -129,7 +129,7 @@ def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, 
 
 		correct_branch, conf_branch = df_branch["correct_branch_%s"%(nr_branches)], df_branch["conf_branch_%s"%(nr_branches)]
 
-		f = Fitter(conf_branch, distributions=get_distributions(), bins=n_bins)
+		f = Fitter(conf_branch, distributions=get_distributions(), bins=100)
 		f.fit()
 		df_errors_fitting = f.summary()
 		df_errors_fitting["p-value"] = compute_p_value(f, conf_branch.values)
