@@ -36,6 +36,8 @@ if __name__ == "__main__":
 	parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
 	parser.add_argument('--n_rounds', type=int, default=1000000, help='Model Id (default: 2000000)')
 
+	args = parser.parse_args()
+
 	result_conf_bin_path = "./ucb_bin_conf_result_c_1.0_current_%s.csv"%(args.model_id)
 	df_conf_bin = pd.read_csv(result_conf_bin_path)
 	df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
