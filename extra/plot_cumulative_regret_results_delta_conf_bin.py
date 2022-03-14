@@ -26,20 +26,26 @@ def plotCumulativeRegretConfBin(df, overhead_list, bin_lowers, bin_uppers, param
 			plt.legend(frameon=False)
 
 
-		plt.savefig(os.path.join(savePath, "cumulative_regret_delta_conf_bin_overhead_%s.pdf"%(overhead)))
+		plt.savefig(os.path.join(savePath, "cumulative_regret_delta_conf_bin_overhead_%s_id_%s.pdf"%(overhead, paramsDict["model_id"])))
+
+if __name__ == "__main__":
+
+	parser = argparse.ArgumentParser(description='UCB using Alexnet')
+	parser.add_argument('--model_id', type=int, default=2, help='Model Id (default: 2)')
+	parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
+	parser.add_argument('--n_rounds', type=int, default=1000000, help='Model Id (default: 2000000)')
+
+	result_conf_bin_path = "./ucb_bin_delta_conf_result_c_1.0_%s.csv"%(args.model_id)
+	df_conf_bin = pd.read_csv(result_conf_bin_path)
+	df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
+	savePath = "./delta_conf_bin_results"
+
+	fontsize = 16
+
+	overhead_list = df_conf_bin.overhead.unique()
+	bin_lowers = df_conf_bin.bin_lower.unique()
+	bin_uppers = df_conf_bin.bin_upper.unique()
 
 
-result_conf_bin_path = "./ucb_bin_delta_conf_result_c_1.0.csv"
-df_conf_bin = pd.read_csv(result_conf_bin_path)
-df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
-savePath = "./delta_conf_bin_results"
-
-fontsize = 16
-
-overhead_list = df_conf_bin.overhead.unique()
-bin_lowers = df_conf_bin.bin_lower.unique()
-bin_uppers = df_conf_bin.bin_upper.unique()
-
-
-paramsDict = {"fontsize": fontsize}
-plotCumulativeRegretConfBin(df_conf_bin, overhead_list, bin_lowers, bin_uppers, paramsDict, savePath)
+	paramsDict = {"fontsize": fontsize, "model_id": args.model_id}
+	plotCumulativeRegretConfBin(df_conf_bin, overhead_list, bin_lowers, bin_uppers, paramsDict, savePath)
