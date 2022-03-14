@@ -26,7 +26,7 @@ def plotCumulativeRegretConfBin(df, overhead_list, bin_lowers, bin_uppers, param
 			plt.legend(frameon=False)
 
 
-		plt.savefig(os.path.join(savePath, "cumulative_regret_delta_conf_bin_overhead_%s_id_%s.pdf"%(overhead, paramsDict["model_id"])))
+		plt.savefig(os.path.join(savePath, "cumulative_regret_delta_conf_bin_overhead_%s.pdf"%(overhead)))
 
 if __name__ == "__main__":
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
 	args = parser.parse_args()
 	
-	result_conf_bin_path = "./ucb_bin_delta_conf_result_c_1.0_id_%s.csv"%(args.model_id)
+	result_conf_bin_path = "./ucb_bin_delta_conf_result_c_1.0.csv"
 	df_conf_bin = pd.read_csv(result_conf_bin_path)
 	df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
 	savePath = "./delta_conf_bin_results"
