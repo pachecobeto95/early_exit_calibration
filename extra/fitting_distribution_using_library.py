@@ -5,6 +5,11 @@ import os, sys, argparse
 from fitter import Fitter, get_common_distributions, get_distributions
 from scipy import stats
 
+def kstest(data, dist_name, paramtup, ksN=100):
+	p_value = stats.kstest(data, dist_name, paramtup, ksN)[1]   # return p-value
+	return p_value             # return p-value
+
+
 def getDeltaConf(df, gamma):
 
 	df_branch = df[df.conf_branch_1 <= gamma]
