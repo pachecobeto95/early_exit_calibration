@@ -53,7 +53,7 @@ def expFittingDistributionsUsingLibrary(df, gamma_list, dist_list, paramsDict):
 
 		if(paramsDict["shouldSave"]):
 			plt.savefig("%s.jpg"%(filePath))
-			plt.savefig("%s.esp"%(filePath))
+			plt.savefig("%s.eps"%(filePath))
 			df_errors_fitting.to_csv(saveErrosPathLibrary, mode='a', header=not os.path.exists(saveErrosPathLibrary))	
 
 if __name__ == "__main__":
