@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
 	args = parser.parse_args()
 	
-	result_conf_bin_path = "./ucb_bin_delta_conf_result_c_1.0_%s.csv"%(args.model_id)
+	result_conf_bin_path = "./ucb_bin_delta_conf_result_c_1.0_id_%s.csv"%(args.model_id)
 	df_conf_bin = pd.read_csv(result_conf_bin_path)
 	df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
 	savePath = "./delta_conf_bin_results"
