@@ -35,13 +35,13 @@ def expFittingDistributionsUsingLibrary(df, gamma_list, dist_list, paramsDict):
 
 	for gamma in gamma_list:
 
-		file_name = "pdf_gamma_%s_using_library"%(gamma)
+		file_name = "pdf_gamma_%s_using_library2"%(gamma)
 		filePath = os.path.join(paramsDict["plotPath"], file_name)
 		saveErrosPathLibrary = os.path.join(paramsDict["plotPath"], "results_error_library.csv")
 
 		delta_conf = getDeltaConf(df, gamma)
 
-		f = Fitter(delta_conf, distributions=get_distributions(), bins=paramsDict["n_bins"])
+		f = Fitter(delta_conf, distributions=get_common_distributions(), bins=paramsDict["n_bins"])
 		f.fit()
 		df_errors_fitting = f.summary()
 		df_errors_fitting["p-value"] = compute_p_value(f, delta_conf)
