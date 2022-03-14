@@ -89,6 +89,7 @@ if __name__ == "__main__":
 
 	df_result = pd.read_csv(results_path)
 	df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
+	plotPath = "./delta_conf_bin_results"
 
 
 	fontsize = 16
