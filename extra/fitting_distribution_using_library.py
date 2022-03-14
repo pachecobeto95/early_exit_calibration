@@ -69,6 +69,8 @@ if __name__ == "__main__":
 
 	df_result = pd.read_csv(results_path)
 	df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
+	df_result = df_result[df_result.conf_branch_2 > df_result.conf_branch_1]
+
 
 
 	fontsize = 16
