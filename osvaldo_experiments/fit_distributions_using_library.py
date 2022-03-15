@@ -71,7 +71,7 @@ def main(args):
 
 	n_exits = 6
 	nr_branches_list = np.arange(2, n_exits)
-	#nr_branches_list = [2, 5, 6]
+	nr_branches_list = [1]
 
 	gamma_list = [0.5, 0.6, 0.7, 0.8, 0.9]
 	n_bins_hist = 100
