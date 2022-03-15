@@ -13,8 +13,7 @@ def compute_p_value(f, data):
 		p_value = kstest(data, dist_name, params)
 		p_value_list.append(p_value)
 
-	return p_value
-
+	return p_value_list
 
 
 def kstest(data, dist_name, paramtup):
@@ -29,17 +28,17 @@ def saveResults(df_list, savePath):
 
 
 
-def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict, saveResultsPath):
+def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, paramsDict, saveResultsPath):
 	for gamma in gamma_list:
 
-		file_name = "pdf_%s_%s_branches_gamma_%s_%s_using_library"%(paramsDict["model_name"], nr_branches, gamma, paramsDict["mode"])
+		file_name = "pdf_%s_%s_branches_gamma_%s_%s_using_library2"%(paramsDict["model_name"], nr_branches, gamma, paramsDict["mode"])
 		saveErrosPathLibrary = os.path.join(saveResultsPath, "results_error_library_%s.csv"%(paramsDict["model_name"]))
 
 		df_branch = df[df["conf_branch_%s"%(nr_branches-1)] < gamma]
 
 		correct_branch, conf_branch = df_branch["correct_branch_%s"%(nr_branches)], df_branch["conf_branch_%s"%(nr_branches)]
 
-		f = Fitter(conf_branch, distributions=get_distributions(), bins=100)
+		f = Fitter(conf_branch, distributions=get_common_distributions(), bins=paramsDict["n_bins"])
 		f.fit()
 		df_errors_fitting = f.summary()
 		df_errors_fitting["p-value"] = compute_p_value(f, conf_branch.values)
@@ -71,8 +70,8 @@ def main(args):
 	df = df[df.p_tar==0.8]
 
 	n_exits = 6
-	#nr_branches_list = np.arange(3, n_exits+1)
-	nr_branches_list = [2, 5, 6]
+	nr_branches_list = np.arange(2, n_exits)
+	#nr_branches_list = [2, 5, 6]
 
 	gamma_list = [0.5, 0.6, 0.7, 0.8, 0.9]
 	n_bins_hist = 100
@@ -86,10 +85,9 @@ def main(args):
 
 	paramsDict = {"fontsize": fontsize, "shouldSave": shouldSave, "plotPath": plotPath, "mode": mode, "dataset_name": args.dataset_name,  
 	"model_name": args.model_name, "n_bins": n_bins_hist, "n_rank": n_rank}
-	dist_list = ['alpha','anglit','arcsine','beta','betaprime','bradford','burr','burr12','cauchy','chi','chi2','cosine','dgamma','dweibull','expon','exponnorm','exponweib','exponpow','f','fatiguelife','fisk','foldcauchy','foldnorm','genlogistic','genpareto','gennorm','genexpon','genextreme','gausshyper','gamma','gengamma','genhalflogistic','gilbrat','gompertz','gumbel_r','gumbel_l','halfcauchy','halflogistic','halfnorm','halfgennorm','hypsecant','invgamma','invgauss','invweibull','johnsonsb','johnsonsu','kstwobign','laplace','levy','levy_l','logistic','loggamma','loglaplace','lognorm','lomax','maxwell','mielke','nakagami','ncx2','ncf','nct','norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','rdist','reciprocal','rayleigh','rice','recipinvgauss','semicircular','t','triang','truncexpon','truncnorm','tukeylambda','uniform','vonmises','vonmises_line','wald','weibull_min','weibull_max']
 
 	for nr_branches in nr_branches_list:
-		expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict, saveResultsPath)
+		expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, paramsDict, saveResultsPath)
 
 if (__name__ == "__main__"):
 	# Input Arguments. Hyperparameters configuration

@@ -34,7 +34,7 @@ def compute_p_value(f, data):
 		p_value = kstest(data, dist_name, params)
 		p_value_list.append(p_value)
 
-	return p_value
+	return p_value_list
 
 
 
@@ -113,7 +113,7 @@ def plotFittedDist(df, data, gamma, nr_branches, paramsDict):
 		plt.xlim(0, 1)
 		plt.legend(loc="best", frameon=False, fontsize=paramsDict["fontsize"])
 	if (paramsDict["shouldSave"]):
-		file_name = "pdf_%s_%s_branches_gamma_%s_%s_%s"%(paramsDict["model_name"], nr_branches, gamma, paramsDict["mode"], paramsDict["dataset_name"])
+		file_name = "pdf_%s_%s_branches_gamma_%s_%s_%s2"%(paramsDict["model_name"], nr_branches, gamma, paramsDict["mode"], paramsDict["dataset_name"])
 		plt.savefig(os.path.join(paramsDict["plotPath"], "eps", "%s.eps"%(file_name)) )
 		plt.savefig(os.path.join(paramsDict["plotPath"], "jpg", "%s.jpg"%(file_name)) )
 
@@ -206,8 +206,8 @@ def main(args):
 	df = df[df.p_tar==0.8]
 
 	n_exits = 6
-	#nr_branches_list = np.arange(3, n_exits+1)
-	nr_branches_list = [2]
+	nr_branches_list = np.arange(2, n_exits+1)
+	#nr_branches_list = [2]
 
 	gamma_list = [0.5, 0.6, 0.7, 0.8, 0.9]
 	n_bins_hist = 100
@@ -221,7 +221,8 @@ def main(args):
 
 	paramsDict = {"fontsize": fontsize, "shouldSave": shouldSave, "plotPath": plotPath, "mode": mode, "dataset_name": args.dataset_name,  
 	"model_name": args.model_name, "n_bins": n_bins_hist, "n_rank": n_rank}
-	dist_list = ['alpha','anglit','arcsine','beta','betaprime','bradford','burr','burr12','cauchy','chi','chi2','cosine','dgamma','dweibull','expon','exponnorm','exponweib','exponpow','f','fatiguelife','fisk','foldcauchy','foldnorm','genlogistic','genpareto','gennorm','genexpon','genextreme','gausshyper','gamma','gengamma','genhalflogistic','gilbrat','gompertz','gumbel_r','gumbel_l','halfcauchy','halflogistic','halfnorm','halfgennorm','hypsecant','invgamma','invgauss','invweibull','johnsonsb','johnsonsu','kstwobign','laplace','levy','levy_l','logistic','loggamma','loglaplace','lognorm','lomax','maxwell','mielke','nakagami','ncx2','ncf','nct','norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','rdist','reciprocal','rayleigh','rice','recipinvgauss','semicircular','t','triang','truncexpon','truncnorm','tukeylambda','uniform','vonmises','vonmises_line','wald','weibull_min','weibull_max']
+	#dist_list = ['alpha','anglit','arcsine','beta','betaprime','bradford','burr','burr12','cauchy','chi','chi2','cosine','dgamma','dweibull','expon','exponnorm','exponweib','exponpow','f','fatiguelife','fisk','foldcauchy','foldnorm','genlogistic','genpareto','gennorm','genexpon','genextreme','gausshyper','gamma','gengamma','genhalflogistic','gilbrat','gompertz','gumbel_r','gumbel_l','halfcauchy','halflogistic','halfnorm','halfgennorm','hypsecant','invgamma','invgauss','invweibull','johnsonsb','johnsonsu','kstwobign','laplace','levy','levy_l','logistic','loggamma','loglaplace','lognorm','lomax','maxwell','mielke','nakagami','ncx2','ncf','nct','norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','rdist','reciprocal','rayleigh','rice','recipinvgauss','semicircular','t','triang','truncexpon','truncnorm','tukeylambda','uniform','vonmises','vonmises_line','wald','weibull_min','weibull_max']
+	dist_list = ['beta','betaprime', 'cauchy', 'chi2','expon','exponnorm','exponweib', 'fatiguelife', 'gennorm','genexpon','genextreme','gausshyper','gamma', 'halfcauchy','halflogistic','halfnorm','halfgennorm','invgauss','johnsonsb', 'norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','recipinvgauss','truncexpon','truncnorm', 'weibull_min','weibull_max']
 
 	for nr_branches in nr_branches_list:
 		fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
