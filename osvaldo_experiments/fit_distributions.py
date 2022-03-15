@@ -84,8 +84,8 @@ def fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
 
 		#df_ks = df_results.loc[df_results["KS p-value"] > ALPHA]
 		#print(df_results)
-		plotFittedDist(df_results.iloc[:paramsDict["n_rank"], :], conf_branch, gamma, nr_branches, paramsDict)
-		#plotFittedDist(df_ks, conf_branch.values, gamma, nr_branches, paramsDict)
+		#plotFittedDist(df_results.iloc[:paramsDict["n_rank"], :], conf_branch, gamma, nr_branches, paramsDict)
+		plotFittedDist(df_results, conf_branch, gamma, nr_branches, paramsDict)
 
 	return df_results_list
 
@@ -119,76 +119,6 @@ def plotFittedDist(df, data, gamma, nr_branches, paramsDict):
 
 
 
-def expFittingDistributionsUsingLibrary(df, gamma_list, nr_branches, dist_list, paramsDict, saveResultsPath):
-	for gamma in gamma_list:
-
-		file_name = "pdf_%s_%s_branches_gamma_%s_%s_using_library"%(paramsDict["model_name"], nr_branches, gamma, paramsDict["mode"])
-		saveErrosPathLibrary = os.path.join(saveResultsPath, "results_error_library_%s.csv"%(paramsDict["model_name"]))
-
-		df_branch = df[df["conf_branch_%s"%(nr_branches-1)] < gamma]
-
-		correct_branch, conf_branch = df_branch["correct_branch_%s"%(nr_branches)], df_branch["conf_branch_%s"%(nr_branches)]
-
-		f = Fitter(conf_branch, distributions=get_distributions(), bins=100)
-		f.fit()
-		df_errors_fitting = f.summary()
-		df_errors_fitting["p-value"] = compute_p_value(f, conf_branch.values)
-		df_errors_fitting["nr_branches"] = [nr_branches]*len(df_errors_fitting)
-		df_errors_fitting["gamma"] = [gamma]*len(df_errors_fitting)
-
-		plt.legend(frameon=False, fontsize=paramsDict["fontsize"]-2)
-		plt.tick_params(axis='both', which='major', labelsize=paramsDict["fontsize"]-4)
-		plt.title("Nr Branches: %s, Gamma: %s"%(nr_branches, gamma))
-
-		if(paramsDict["shouldSave"]):
-			plt.savefig(os.path.join(paramsDict["plotPath"], "eps", "%s.eps"%(file_name)))
-			plt.savefig(os.path.join(paramsDict["plotPath"], "jpg", "%s.jpg"%(file_name)))
-			df_errors_fitting.to_csv(saveErrosPathLibrary, mode='a', header=not os.path.exists(saveErrosPathLibrary))
-
-def expReliabilityDiagram(df, nr_branches_list, paramsDict):
-	for nr_branches in nr_branches_list:
-		correct_branch, conf_branch = df["correct_branch_%s"%(nr_branches)].values, df["conf_branch_%s"%(nr_branches)].values
-		plotReliabilityDiagram(correct_branch, conf_branch, nr_branches, paramsDict)
-
-
-def plotReliabilityDiagram(correct, confs, nr_branches, paramsDict):
-
-	bin_boundaries = np.linspace(0, 1, paramsDict["n_bins"] + 1)
-	bin_lowers = bin_boundaries[:-1]
-	bin_uppers = bin_boundaries[1:]
-	conf_list, acc_list = [], [] 
-
-	bin_size = 1/n_bins
-	positions = np.arange(0+bin_size/2, 1+bin_size/2, bin_size)
-	ece = 0
-
-	for bin_lower, bin_upper in zip(bin_lowers, bin_uppers):
-
-		in_bin = np.where((confs > bin_lower) & (confs <= bin_upper), True, False)
-		prop_in_bin = np.mean(in_bin)
-		confs_in_bin, correct_in_bin = confs[in_bin],correct[in_bin] 
-		avg_confs_in_bin = sum(confs_in_bin)/len(confs_in_bin) if (len(confs_in_bin)>0) else 0
-		avg_acc_in_bin = sum(correct_in_bin)/len(correct_in_bin) if (len(confs_in_bin)>0) else 0
-		conf_list.append(avg_confs_in_bin), acc_list.append(avg_acc_in_bin)
-
-	acc_list = np.array(acc_list)
-	plt.style.use('ggplot')
-	fig, ax = plt.subplots()
-	gap_plt = ax.bar(positions, conf_list, width=bin_size, edgecolor="red", color="red", alpha=0.3, label="Gap", linewidth=2, zorder=2)
-	output_plt = ax.bar(positions, acc_list, width=bin_size, edgecolor="black", color="blue", label="Outputs", zorder = 3)
-	ax.set_aspect('equal')
-	ax.plot([0,1], [0,1], linestyle = "--")
-	ax.set_xlim(0, 1)
-	ax.set_ylim(0, 1)
-	ax.set_title("Nr Branches: %s"%(nr_branches), fontsize=paramsDict["fontsize"] - 2)
-	ax.legend(handles = [gap_plt, output_plt], frameon=False)
-	ax.set_ylabel("Accuracy", fontsize=paramsDict["fontsize"], color="black")
-	ax.set_xlabel("Confidence", fontsize=paramsDict["fontsize"], color="black")
-	props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-
-	if(paramsDict["shouldSave"]):
-		plt.savefig(os.path.join(paramsDict["plotPath"], "eps", "reliability_diagram_branch_%s_%s.eps"%(nr_branches, paramsDict["mode"], paramsDict["dataset_name"]) ))
-		plt.savefig(os.path.join(paramsDict["plotPath"], "jpg", "reliability_diagram_branch_%s_%s.jpg"%(nr_branches, paramsDict["mode"], paramsDict["dataset_name"]) ))
 
 
 def main(args):
@@ -196,7 +126,7 @@ def main(args):
 
 
 	data_path = os.path.join(DIR_NAME, "data")
-	plotPath = os.path.join(DIR_NAME, "plots")
+	plotPath = os.path.join(DIR_NAME, "plots2")
 	saveResultsPath = os.path.join(DIR_NAME, "results")
 
 	df_path = os.path.join(data_path, "no_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, args.mode))
@@ -206,8 +136,8 @@ def main(args):
 	df = df[df.p_tar==0.8]
 
 	n_exits = 6
-	nr_branches_list = np.arange(2, n_exits+1)
-	nr_branches_list = [1]
+	#nr_branches_list = np.arange(2, n_exits+1)
+	nr_branches_list = [1, 2]
 
 	gamma_list = [0.5, 0.6, 0.7, 0.8, 0.9]
 	n_bins_hist = 100
@@ -222,7 +152,8 @@ def main(args):
 	paramsDict = {"fontsize": fontsize, "shouldSave": shouldSave, "plotPath": plotPath, "mode": mode, "dataset_name": args.dataset_name,  
 	"model_name": args.model_name, "n_bins": n_bins_hist, "n_rank": n_rank}
 	#dist_list = ['alpha','anglit','arcsine','beta','betaprime','bradford','burr','burr12','cauchy','chi','chi2','cosine','dgamma','dweibull','expon','exponnorm','exponweib','exponpow','f','fatiguelife','fisk','foldcauchy','foldnorm','genlogistic','genpareto','gennorm','genexpon','genextreme','gausshyper','gamma','gengamma','genhalflogistic','gilbrat','gompertz','gumbel_r','gumbel_l','halfcauchy','halflogistic','halfnorm','halfgennorm','hypsecant','invgamma','invgauss','invweibull','johnsonsb','johnsonsu','kstwobign','laplace','levy','levy_l','logistic','loggamma','loglaplace','lognorm','lomax','maxwell','mielke','nakagami','ncx2','ncf','nct','norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','rdist','reciprocal','rayleigh','rice','recipinvgauss','semicircular','t','triang','truncexpon','truncnorm','tukeylambda','uniform','vonmises','vonmises_line','wald','weibull_min','weibull_max']
-	dist_list = ['beta','betaprime', 'cauchy', 'chi2','expon','exponnorm','exponweib', 'fatiguelife', 'gennorm','genexpon','genextreme','gausshyper','gamma', 'halfcauchy','halflogistic','halfnorm','halfgennorm','invgauss','johnsonsb', 'norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','recipinvgauss','truncexpon','truncnorm', 'weibull_min','weibull_max']
+	#dist_list = ['beta','betaprime', 'cauchy', 'chi2','expon','exponnorm','exponweib', 'fatiguelife', 'gennorm','genexpon','genextreme','gausshyper','gamma', 'halfcauchy','halflogistic','halfnorm','halfgennorm','invgauss','johnsonsb', 'norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','recipinvgauss','truncexpon','truncnorm', 'weibull_min','weibull_max']
+	dist_list = ["powerlognorm", "betaprime", "exponweib", "recipinvgauss", "gausshyper", "norm"]
 
 	for nr_branches in nr_branches_list:
 		fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
