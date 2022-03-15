@@ -74,7 +74,8 @@ def fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
 		results_list = [fitdist(conf_branch, dist) for dist in dist_list]
 
 		pd.options.display.float_format = '{:,.5f}'.format
-		df_results = pd.DataFrame(results_list, columns=["distribution", "KS p-value", "param1", "param2", "param3", "param4", "param5", "param6"])
+		#df_results = pd.DataFrame(results_list, columns=["distribution", "KS p-value", "param1", "param2", "param3", "param4", "param5", "param6"])
+		df_results = pd.DataFrame(results_list, columns=["distribution", "KS p-value", "param1", "param2", "param3", "param4"])
 		df_results["gamma"] = len(df_results)*[gamma]
 		df_results["nr_branches"] = len(df_results)*[nr_branches]
 		df_results.sort_values(by=["KS p-value"], inplace=True, ascending=False)
