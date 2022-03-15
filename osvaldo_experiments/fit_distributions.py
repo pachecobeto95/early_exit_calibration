@@ -153,7 +153,7 @@ def main(args):
 	"model_name": args.model_name, "n_bins": n_bins_hist, "n_rank": n_rank}
 	#dist_list = ['alpha','anglit','arcsine','beta','betaprime','bradford','burr','burr12','cauchy','chi','chi2','cosine','dgamma','dweibull','expon','exponnorm','exponweib','exponpow','f','fatiguelife','fisk','foldcauchy','foldnorm','genlogistic','genpareto','gennorm','genexpon','genextreme','gausshyper','gamma','gengamma','genhalflogistic','gilbrat','gompertz','gumbel_r','gumbel_l','halfcauchy','halflogistic','halfnorm','halfgennorm','hypsecant','invgamma','invgauss','invweibull','johnsonsb','johnsonsu','kstwobign','laplace','levy','levy_l','logistic','loggamma','loglaplace','lognorm','lomax','maxwell','mielke','nakagami','ncx2','ncf','nct','norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','rdist','reciprocal','rayleigh','rice','recipinvgauss','semicircular','t','triang','truncexpon','truncnorm','tukeylambda','uniform','vonmises','vonmises_line','wald','weibull_min','weibull_max']
 	#dist_list = ['beta','betaprime', 'cauchy', 'chi2','expon','exponnorm','exponweib', 'fatiguelife', 'gennorm','genexpon','genextreme','gausshyper','gamma', 'halfcauchy','halflogistic','halfnorm','halfgennorm','invgauss','johnsonsb', 'norm','pareto','pearson3','powerlaw','powerlognorm','powernorm','recipinvgauss','truncexpon','truncnorm', 'weibull_min','weibull_max']
-	dist_list = ["powerlognorm", "betaprime", "exponweib", "recipinvgauss", "gausshyper", "norm"]
+	dist_list = ["powerlognorm", "betaprime", "exponweib", "recipinvgauss"]
 
 	for nr_branches in nr_branches_list:
 		fitMultipleDistributions(df, gamma_list, nr_branches, dist_list, paramsDict)
