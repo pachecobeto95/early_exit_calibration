@@ -234,7 +234,7 @@ n_branches = 1
 
 root_path = "."
 model_save_path = os.path.join(root_path, "new_models", "ee_alexnet_testing_for_ucb_%s.pth"%(args.model_id))
-expSavePath = os.path.join(root_path, "new_models", "results_ee_alexnet_for_ucb_%s.pth"%(args.model_id))
+expSavePath = os.path.join(root_path, "new_models", "results_ee_alexnet_for_ucb_%s.csv"%(args.model_id))
 
 train_loader, val_loader, test_loader = load_cifar_10(batch_size_train, batch_size_test, input_dim, split_ratio)
 
