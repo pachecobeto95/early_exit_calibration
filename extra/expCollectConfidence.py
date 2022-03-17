@@ -229,6 +229,8 @@ batch_size_train = 256
 batch_size_test = 1
 n_exits = 1
 split_ratio = 0.2
+pretrained = True
+n_branches = 1
 
 root_path = "."
 model_save_path = os.path.join(root_path, "new_models", "ee_alexnet_testing_for_ucb_%s.pth"%(args.model_id))
