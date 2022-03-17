@@ -247,7 +247,7 @@ def save_results(result, save_path):
 
 def expCollectingData(model, test_loader, device, n_branches):
 	df_result = pd.DataFrame()
-	n_exits = nr_branch_edge + 1
+	n_exits = n_branches + 1
 	conf_branches_list, infered_class_branches_list, target_list = [], [], []
 	correct_list, id_list = [], []
 
