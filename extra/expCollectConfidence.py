@@ -236,6 +236,8 @@ expSavePath = os.path.join(root_path, "new_models", "results_ee_alexnet_for_ucb_
 train_loader, val_loader, test_loader = load_cifar_10(batch_size_train, batch_size_test, input_dim, split_ratio)
 
 early_exit_dnn = build_b_alexnet(device, n_classes, inserted_layer, pretrained)
+early_exit_dnn.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
+
 
 result = expCollectingData(early_exit_dnn, test_loader, device, n_branches)
 save_results(result, expSavePath)
