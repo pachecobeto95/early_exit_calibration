@@ -340,7 +340,7 @@ patience = 10
 count = 0
 df = pd.DataFrame()
 n_branches = 1
-weight_list = [0.3, 1]
+weight_list = [1, 0.3]
 
 while (count < patience):
   epoch+=1
