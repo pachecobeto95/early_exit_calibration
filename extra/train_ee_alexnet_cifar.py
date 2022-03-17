@@ -261,7 +261,7 @@ def expCollectingData(model, test_loader, device, n_branches):
 			#print("Image id: %s/%s"%(i, test_dataset_size))
 			data, target = data.to(device).float(), target.to(device)
 
-			conf_branches, infered_class_branches = model.forwardEarlyExitInference(data, p_tar)
+			_, conf_branches, infered_class_branches = model(data)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
