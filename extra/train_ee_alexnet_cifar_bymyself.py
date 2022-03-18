@@ -498,6 +498,7 @@ count = 0
 df = pd.DataFrame()
 n_branches = 1
 weight_list = [1, 1]
+n_exits = n_branches + 1
 
 while (count < patience):
   epoch+=1
