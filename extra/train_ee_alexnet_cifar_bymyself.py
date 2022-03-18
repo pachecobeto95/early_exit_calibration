@@ -150,6 +150,7 @@ class Early_Exit_AlexNet(nn.Module):
     self.distribution = distribution
     self.device = device
     self.channel, self.width, self.height = input_shape
+    self.pool_size = 1
 
     self.early_exit_alexnet()
 
