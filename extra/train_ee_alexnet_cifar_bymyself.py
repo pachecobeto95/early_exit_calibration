@@ -26,6 +26,8 @@ from typing import Callable, Any, Optional, List, Type, Union
 import torch.nn.init as init
 import functools
 from tqdm import tqdm
+from pthflops import count_ops
+
 from scipy.stats import entropy
 
 def load_cifar_10(batch_size_train, batch_size_test, input_resize, split_rate=0.2):
