@@ -76,7 +76,7 @@ class Early_Exit_AlexNet(nn.Module):
   def __init__(self, n_classes: int, 
                pretrained: bool, n_branches: int, input_shape:tuple, 
                exit_type: str, device, distribution="linear"):
-    super(Early_Exit_DNN, self).__init__()
+    super(Early_Exit_AlexNet, self).__init__()
 
     """
     This classes builds an early-exit DNNs architectures
@@ -422,12 +422,7 @@ lr = [1.5e-4, 0.001]
 
 
 early_exit_dnn = Early_Exit_AlexNet(n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution)
-
-
-
-
-
-
+early_exit_dnn = early_exit_dnn.to(device)
 
 criterion = nn.CrossEntropyLoss()
 
