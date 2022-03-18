@@ -224,7 +224,7 @@ class Early_Exit_AlexNet(nn.Module):
     backbone_model = models.alexnet(self.pretrained)
 
     # It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
-    self.verifies_nr_exit_alexnet(backbone_model.features)
+    #self.verifies_nr_exit_alexnet(backbone_model.features)
     
     # This obtains the flops total of the backbone model
     self.total_flops = self.countFlops(backbone_model)
