@@ -319,15 +319,15 @@ early_exit_dnn = build_b_alexnet(device, n_classes, inserted_layer, pretrained)
 criterion = nn.CrossEntropyLoss()
 
 
-optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
-                      {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], weight_decay=weight_decay)
-
-#optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
+#optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
 #                      {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-#                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], 
-#                      momentum=momentum, weight_decay=weight_decay,
-#                      nesterov=True)
+#                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], weight_decay=weight_decay)
+
+optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
+                      {'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
+                      {'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], 
+                      momentum=momentum, weight_decay=weight_decay,
+                      nesterov=True)
 
 #optimizer = optim.SGD(early_exit_dnn.stages.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
 #scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
@@ -340,7 +340,7 @@ patience = 10
 count = 0
 df = pd.DataFrame()
 n_branches = 1
-weight_list = [1, 0.3]
+weight_list = [1, 1]
 
 while (count < patience):
   epoch+=1
