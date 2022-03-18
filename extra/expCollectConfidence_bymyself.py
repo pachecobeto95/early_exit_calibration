@@ -383,6 +383,10 @@ n_exits = 1
 split_ratio = 0.2
 pretrained = True
 n_branches = 1
+distribution = "linear"
+exit_type = "bnpool"
+input_shape = (3, input_dim, input_dim)
+
 
 root_path = "."
 model_save_path = os.path.join(root_path, "new_models", "ee_alexnet_testing_for_ucb_%s.pth"%(args.model_id))
@@ -390,8 +394,9 @@ expSavePath = os.path.join(root_path, "new_models", "results_ee_alexnet_for_ucb_
 
 train_loader, val_loader, test_loader = load_cifar_10(batch_size_train, batch_size_test, input_dim, split_ratio)
 
-early_exit_dnn = 
+early_exit_dnn = Early_Exit_AlexNet(n_classes, pretrained, n_branches, input_shape, exit_type, device, distribution)
 early_exit_dnn.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
+early_exit_dnn = early_exit_dnn.to(device)
 
 
 result = expCollectingData(early_exit_dnn, test_loader, device, n_branches)
