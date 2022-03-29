@@ -48,18 +48,18 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
     
 	test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 
-	#test_idx_path = os.path.join(savePath_idx, "test_idx_caltech256_id_%s.npy"%(model_id))
-	#val_idx_path = os.path.join(savePath_idx, "validation_idx_caltech256_id_%s.npy"%(model_id))
-	val_idx_path = '/home/gta/pacheco/early_exit_calibration/datasets/caltech256/indices/validation_idx_caltech256_id_1.npy'
-	val_idx = np.load(val_idx_path, allow_pickle=True)
-	val_idx = np.array(list(val_idx.tolist()))
+	test_idx_path = os.path.join(savePath_idx, "test_idx_caltech256_id_%s.npy"%(model_id))
+	val_idx_path = os.path.join(savePath_idx, "validation_idx_caltech256_id_%s.npy"%(model_id))
+	#val_idx_path = '/home/gta/pacheco/early_exit_calibration/datasets/caltech256/indices/validation_idx_caltech256_id_1.npy'
+	#val_idx = np.load(val_idx_path, allow_pickle=True)
+	#val_idx = np.array(list(val_idx.tolist()))
 	
 
-	#if (os.path.exists(test_idx_path)):
-	#	test_idx = np.load(test_idx_path, allow_pickle=True)
-	#	test_idx = np.array(list(test_idx.tolist()))
-	#else:
-	#	_, test_idx = get_indices(train_set, split_ratio)
+	if (os.path.exists(test_idx_path)):
+		test_idx = np.load(test_idx_path, allow_pickle=True)
+		test_idx = np.array(list(test_idx.tolist()))
+	else:
+		_, test_idx = get_indices(train_set, split_ratio)
 
 	#nr_samples = len(train_set)
 	#indices = list(range(nr_samples))
@@ -71,11 +71,11 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 	#_, test_idx2 = indices[:train_size], indices[train_size:]
 
 	#print((np.array(test_idx2)==test_idx).all())
-	#test_data = torch.utils.data.Subset(test_set, indices=test_idx)
-	#test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4)
+	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
+	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4)
 
-	val_data = torch.utils.data.Subset(val_set, indices=val_idx)
-	val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4)
+	#val_data = torch.utils.data.Subset(val_set, indices=val_idx)
+	#val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4)
 
 
 	return val_loader 
