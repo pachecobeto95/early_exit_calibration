@@ -117,7 +117,7 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
 
-	p_tar_list = [0.7, 0.8, 0.9]
+	p_tar_list = [0.83, 0.86]
 	dataset_path = config.models_params[args.dataset_name]["dataset_path"]
 
 	logPath = "./logTest_%s_%s.log"%(args.model_name, args.dataset_name)
@@ -129,7 +129,7 @@ def main(args):
 	save_indices_path = config.models_params[args.dataset_name]["indices"]
 
 	#This line defines the number of side branches processed at the edge
-	nr_branch_edge = np.arange(2, config.nr_branch_model+1)
+	nr_branch_edge = np.arange(3, config.nr_branch_model+1)
 
 	#print("Sending Confs")
 	logging.debug("Sending Confs")
