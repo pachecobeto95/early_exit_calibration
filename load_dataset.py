@@ -50,7 +50,7 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 
 	#test_idx_path = os.path.join(savePath_idx, "test_idx_caltech256_id_%s.npy"%(model_id))
 	#val_idx_path = os.path.join(savePath_idx, "validation_idx_caltech256_id_%s.npy"%(model_id))
-	val_idx_path = '/home/gta/pacheco/datasets/caltech256/indices/validation_idx_caltech256_id_1.npy'
+	val_idx_path = '/home/gta/pacheco/early_exit_calibration/datasets/caltech256/indices/validation_idx_caltech256_id_1.npy'
 	val_idx = np.load(val_idx_path, allow_pickle=True)
 	val_idx = np.array(list(val_idx.tolist()))
 	
