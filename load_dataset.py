@@ -78,7 +78,7 @@ def load_test_caltech_256(input_dim, dataset_path, split_ratio, savePath_idx, mo
 	#val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4)
 
 
-	return val_loader 
+	return test_loader 
 
 
 def loadCifar10(root_path, indices_path, model_id, batch_size_train, batch_size_test, input_size, crop_size, split_rate=0.1, seed=42):
