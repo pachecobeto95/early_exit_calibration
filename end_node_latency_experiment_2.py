@@ -135,7 +135,7 @@ def main(args):
 	logging.debug("Sending Confs")
 
 	sendModelConf(config.urlConfModelEdge, config.nr_branch_model, args.dataset_name, args.model_name, args.location)
-	sendModelConf(config.urlConfModelCloud, config.nr_branch_model, args.dataset_name, args.model_name)
+	sendModelConf(config.urlConfModelCloud, config.nr_branch_model, args.dataset_name, args.model_name, args.location)
 	
 	#print("Finish Confs")
 	logging.debug("Finish Confs")
