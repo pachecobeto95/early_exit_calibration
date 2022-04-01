@@ -20,7 +20,8 @@ def edgeNoCalibInference(fileImg, data_dict):
 	#This line reads the fileImg, obtaining pixel matrix.
 	response_request = {"status": "ok"}
 
-	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_%s.csv"%(model.model_params["model_name"],
+		model.model_params["location"] ))
 
 	start = time.time()
 	image_bytes = fileImg.read()
@@ -98,7 +99,8 @@ def edgeNoCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict):
 def edgeOverallCalibInference(fileImg, data_dict):
 	response_request = {"status": "ok"}
 
-	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"],
+		model.model_params["location"]))
 
 	#This line reads the fileImg, obtaining pixel matrix.
 	start = time.time()
@@ -174,7 +176,8 @@ def edgeOverallCalibInferenceOnlyEdgeStandardDNN(fileImg, data_dict):
 def edgeBranchesCalibInference(fileImg, data_dict):
 	response_request = {"status": "ok"}
 
-	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s.csv"%(model.model_params["model_name"]))
+	result_path = os.path.join(config.RESULTS_INFERENCE_TIME_EDGE, "inference_time_results_%s_%s.csv"%(model.model_params["model_name"], 
+		model.model_params["location"]))
 
 
 	#This line reads the fileImg, obtaining pixel matrix.

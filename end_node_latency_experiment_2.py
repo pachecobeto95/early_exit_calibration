@@ -54,7 +54,7 @@ def sendData(url, data):
 	#except ConnectTimeout as timeout_err:
 	#	print("Timeout error: ", timeout_err)
 
-def sendModelConf(url, n_branches, dataset_name, model_name):
+def sendModelConf(url, n_branches, dataset_name, model_name, location):
 	
 	pretrained_str = "ft" if (model_name=="") else "scratch"
 	
@@ -62,7 +62,7 @@ def sendModelConf(url, n_branches, dataset_name, model_name):
 	"n_classes": config.models_params[dataset_name]["n_classes"], 
 	"input_shape": config.models_params[dataset_name]["input_shape"],
 	"model_id": config.model_id_dict[model_name],
-	"pretrained": pretrained_str}
+	"pretrained": pretrained_str, "location": location}
 
 	sendData(url, data_dict)
 
@@ -117,7 +117,7 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
 
-	p_tar_list = [0.83, 0.86]
+	p_tar_list = [0.8, 0.83, 0.86]
 	dataset_path = config.models_params[args.dataset_name]["dataset_path"]
 
 	logPath = "./logTest_%s_%s.log"%(args.model_name, args.dataset_name)
@@ -134,7 +134,7 @@ def main(args):
 	#print("Sending Confs")
 	logging.debug("Sending Confs")
 
-	sendModelConf(config.urlConfModelEdge, config.nr_branch_model, args.dataset_name, args.model_name)
+	sendModelConf(config.urlConfModelEdge, config.nr_branch_model, args.dataset_name, args.model_name, args.location)
 	sendModelConf(config.urlConfModelCloud, config.nr_branch_model, args.dataset_name, args.model_name)
 	
 	#print("Finish Confs")
@@ -159,6 +159,8 @@ if (__name__ == "__main__"):
 		choices=["mobilenet", "resnet18", "resnet152", "vgg16"], help='DNN model name (default: MobileNet)')
 
 	parser.add_argument('--split_ratio', type=float, default=0.2, help='Split Ratio')
+
+	parser.add_argument('--location', type=str, choices=["ohio", "sp"], help='Location of Cloud Server')
 
 	args = parser.parse_args()
 
