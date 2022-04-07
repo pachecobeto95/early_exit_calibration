@@ -32,7 +32,7 @@ def plotCumulativeRegretConfBin(df, overhead_list, bin_lowers, bin_uppers, param
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='UCB using Alexnet')
-	parser.add_argument('--model_id', type=int, default=2, help='Model Id (default: 2)')
+	parser.add_argument('--model_id', type=int, default=3, help='Model Id (default: 2)')
 	parser.add_argument('--c', type=float, default=1.0, help='Parameter c (default: 1.0)')
 	parser.add_argument('--n_rounds', type=int, default=1000000, help='Model Id (default: 2000000)')
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 	df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
 	savePath = "./conf_bin_results"
 
-	fontsize = 16
+	fontsize = 18
 
 	overhead_list = df_conf_bin.overhead.unique()
 	bin_lowers = df_conf_bin.bin_lower.unique()
