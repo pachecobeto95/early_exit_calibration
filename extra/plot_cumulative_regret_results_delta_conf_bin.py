@@ -42,7 +42,7 @@ if __name__ == "__main__":
 	df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
 	savePath = "./delta_conf_bin_results"
 
-	fontsize = 16
+	fontsize = 18
 
 	overhead_list = df_conf_bin.overhead.unique()
 	bin_lowers = df_conf_bin.bin_lower.unique()
