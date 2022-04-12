@@ -25,6 +25,7 @@ def plotCumulativeRegretConfBin(df, overhead_list, bin_lowers, bin_uppers, param
 		plt.ylabel("Cumulative Regret", fontsize=paramsDict["fontsize"])
 		plt.xlabel("Epochs", fontsize=paramsDict["fontsize"])
 		plt.legend(frameon=False, fontsize=paramsDict["fontsize"]-4)
+		plt.tight_layout()
 
 
 		plt.savefig(os.path.join(savePath, "cumulative_regret_delta_conf_bin_overhead_%s.pdf"%(overhead)))
@@ -43,7 +44,7 @@ if __name__ == "__main__":
 	df_conf_bin = df_conf_bin.loc[:, ~df_conf_bin.columns.str.contains('^Unnamed')] 
 	savePath = "./delta_conf_bin_results"
 
-	fontsize = 18
+	fontsize = 20
 
 	overhead_list = df_conf_bin.overhead.unique()
 	bin_lowers = df_conf_bin.bin_lower.unique()
