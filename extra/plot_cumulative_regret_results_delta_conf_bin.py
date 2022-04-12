@@ -20,10 +20,11 @@ def plotCumulativeRegretConfBin(df, overhead_list, bin_lowers, bin_uppers, param
 			y = df_final.cumulative_regret.values
 
 			plt.plot(x, y, label="[%s, %s]"%(bin_lower, bin_upper))      
-			plt.title("Overhead: %s"%(overhead))
-			plt.ylabel("Cumulative Regret", fontsize=paramsDict["fontsize"])
-			plt.xlabel("Epochs")
-			plt.legend(frameon=False)
+
+		ax.tick_params(axis='both', which='major', labelsize=paramsDict["fontsize"]-2)
+		plt.ylabel("Cumulative Regret", fontsize=paramsDict["fontsize"])
+		plt.xlabel("Epochs", fontsize=paramsDict["fontsize"])
+		plt.legend(frameon=False, fontsize=paramsDict["fontsize"]-4)
 
 
 		plt.savefig(os.path.join(savePath, "cumulative_regret_delta_conf_bin_overhead_%s.pdf"%(overhead)))
