@@ -38,7 +38,7 @@ def run_ucb(df_temp, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper
 		conf_branch = row.conf_branch_1.item()
 		conf_final = row.conf_branch_2.item()
 
-		confidence_action = conf_branch if (action==0) else conf_final	
+		confidence_action = conf_branch if (action==0) else conf_final
 
 		reward = compute_reward(conf_branch, overhead)
 
@@ -52,14 +52,13 @@ def run_ucb(df_temp, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper
 
 		inst_regret = optimal_reward - reward
 		cumulative_regret += inst_regret
-		cumulative_regret_list[n_round] = cumulative_regret 
+		cumulative_regret_list[n_round] = cumulative_regret
 
-		inst_regret_list[n_round] = round(inst_regret, 5)
-		selected_arm_list[n_round] = round(threshold, 2) 
+		inst_regret_list[n_round] = inst_regret
+		selected_arm_list[n_round] = threshold
 
 		if (n_round%100000 == 0):
 			print("N Round: %s, Overhead: %s"%(n_round, overhead), file=open(logPath, "a"))
-
 
 	result = {"selected_arm": selected_arm_list, "regret": inst_regret_list, 
 	"overhead":[round(overhead, 2)]*n_rounds,
