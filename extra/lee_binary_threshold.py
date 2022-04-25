@@ -17,6 +17,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	df_result = pd.read_csv(savePath) if(os.path.exists(savePath)) else pd.DataFrame()
 
 	amount_arms = len(threshold_list)
+	avg_reward_actions, n_actions = np.zeros(amount_arms), np.zeros(amount_arms)
 
 	df_size = len(df)
 	indices_list = np.arange(df_size)
