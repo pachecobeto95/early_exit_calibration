@@ -35,6 +35,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		if (n_round < amount_arms):
 			action = random.randint(0, amount_arms-1)
 		else:
+			avg_reward_actions = np.array([sum(reward_actions[i])/n_actions[i] for i in range(amount_arms)])
 			q = avg_reward_actions + np.sqrt(2*np.log(n_round)/(n_actions+delta))
 			action = np.argmax(q)
 
@@ -52,7 +53,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 		reward_actions[action].append(reward)
 
-		avg_reward_actions = np.array([sum(reward_actions[i])/n_actions[i] for i in range(amount_arms)])
+		#avg_reward_actions = np.array([sum(reward_actions[i])/n_actions[i] for i in range(amount_arms)])
 
 		optimal_reward = max (conf_branch/overhead, conf_final/overhead)
 
