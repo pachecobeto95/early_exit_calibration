@@ -10,7 +10,7 @@ import logging
 def compute_reward(conf_branch, overhead):
 	return conf_branch/overhead
 
-def run_ucb(df_temp, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, savePath, logPath, verbose):
+def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, savePath, logPath, verbose):
 	df = df.sample(frac=1)
 	delta = 1e-10
 
