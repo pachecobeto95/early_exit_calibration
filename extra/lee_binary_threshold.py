@@ -47,7 +47,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 
 		reward_actions[action].append(reward)
 
-		avg_reward_actions = np.mean(reward_actions, axis=1)
+		avg_reward_actions = np.array([sum(reward_actions[i])/n_actions[i] for i in range(amount_arms)])
 
 		optimal_reward = max (conf_branch/overhead, conf_final/overhead)
 
