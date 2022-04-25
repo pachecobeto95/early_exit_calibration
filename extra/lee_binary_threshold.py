@@ -17,6 +17,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	df_result = pd.read_csv(savePath) if(os.path.exists(savePath)) else pd.DataFrame()
 
 	amount_arms = len(threshold_list)
+
 	avg_reward_actions, n_actions = np.zeros(amount_arms), np.zeros(amount_arms)
 
 	df_size = len(df)
@@ -34,11 +35,10 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		if (n_round < amount_arms):
 			action = random.randint(0, amount_arms-1)
 		else:
-			q = avg_reward_actions + c*np.sqrt(np.log(n_round)/(n_actions+delta))
+			q = avg_reward_actions + np.sqrt(2*np.log(n_round)/(n_actions+delta))
 			action = np.argmax(q)
 
 		
-		print(threshold_list, action)
 		threshold = threshold_list[action]
 
 		conf_branch = row.conf_branch_1.item()
@@ -114,7 +114,7 @@ if __name__ == "__main__":
 	threshold_list = [0, 1]
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
-	savePath = os.path.join(".", "ucb_bin_delta_conf_result_c_%s_id_%s.csv"%(args.c, args.model_id))
+	savePath = os.path.join(".", "lee_ucb_bin_delta_conf_result_c_%s_id_%s.csv"%(args.c, args.model_id))
 	logPath = os.path.join(".", "logLEEMUltipleThresholds_%s.txt"%(args.model_id))
 
 	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
