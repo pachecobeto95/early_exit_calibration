@@ -32,7 +32,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 		row = df.iloc[[idx]]
 
 		if (n_round < amount_arms):
-			action = random.randint(0, amount_arms)
+			action = random.randint(0, amount_arms-1)
 		else:
 			q = avg_reward_actions + c*np.sqrt(np.log(n_round)/(n_actions+delta))
 			action = np.argmax(q)
