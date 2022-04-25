@@ -112,7 +112,7 @@ if __name__ == "__main__":
 	df_result = pd.read_csv(results_path)
 	df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
 	threshold_list = [0, 1]
-	overhead_list = np.arange(0, 1.1, 0.1)
+	overhead_list = np.arange(0.1, 1.1, 0.1)
 	verbose = False
 	savePath = os.path.join(".", "lee_ucb_bin_delta_conf_result_c_%s_id_%s.csv"%(args.c, args.model_id))
 	logPath = os.path.join(".", "logLEEMUltipleThresholds_%s.txt"%(args.model_id))
