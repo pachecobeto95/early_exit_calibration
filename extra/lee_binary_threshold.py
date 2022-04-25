@@ -38,7 +38,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 			action = np.argmax(q)
 
 		
-		print(threshold_list)
+		print(threshold_list, action)
 		threshold = threshold_list[action]
 
 		conf_branch = row.conf_branch_1.item()
