@@ -26,7 +26,7 @@ def run_ucb(df, threshold_list, overhead, n_rounds, c, bin_lower, bin_upper, sav
 	cumulative_regret_list = np.zeros(n_rounds)
 	cumulative_regret = 0
 	inst_regret_list, selected_arm_list = np.zeros(n_rounds), np.zeros(n_rounds)
-	
+
 	for n_round in range(n_rounds):
 		idx = random.choice(indices_list)
 		row = df.iloc[[idx]]
@@ -109,7 +109,7 @@ if __name__ == "__main__":
 	results_path = os.path.join(root_path, "inference_exp_ucb_%s.csv"%(args.model_id))
 	df_result = pd.read_csv(results_path)
 	df_result = df_result.loc[:, ~df_result.columns.str.contains('^Unnamed')]
-	threshold_list = np.arange(0, 1.1, 0.1)
+	threshold_list = [0, 1]
 	overhead_list = np.arange(0, 1.1, 0.1)
 	verbose = False
 	savePath = os.path.join(".", "ucb_bin_delta_conf_result_c_%s_id_%s.csv"%(args.c, args.model_id))
