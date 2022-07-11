@@ -28,6 +28,7 @@ from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse, ssl
 from torchvision.datasets import CIFAR10, CIFAR100
+from pthflops import count_ops
 
 
 class BaseBlock(nn.Module):
