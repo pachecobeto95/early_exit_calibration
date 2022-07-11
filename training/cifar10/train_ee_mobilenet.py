@@ -208,7 +208,7 @@ class Early_Exit_DNN(nn.Module):
     """
     This method counts the numper of Flops in a given full DNN model or intermediate DNN model.
     """
-    inputs = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
+    inputs = torch.rand(1, self.channel, self.width, self.height).to(self.device)
     flops, all_data = count_ops(model, inputs, print_readable=False, verbose=False)
     return flops
 
