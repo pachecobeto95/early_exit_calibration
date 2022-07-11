@@ -236,7 +236,6 @@ class Early_Exit_DNN(nn.Module):
     intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers)))
     x = torch.rand(1, self.channel, self.width, self.height).to(self.device)
     current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
-    sys.exit()
     return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
 
   def add_exit_block(self):
@@ -248,8 +247,7 @@ class Early_Exit_DNN(nn.Module):
     self.stages.append(nn.Sequential(*self.layers))
     x = torch.rand(1, self.channel, self.width, self.height).to(self.device)
     feature_shape = nn.Sequential(*self.stages)(x).shape
-    sys.exit()
-    self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device))#.to(self.device))
+    self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device).to(self.device))#.to(self.device))
     self.layers = nn.ModuleList()
     self.stage_id += 1    
 
@@ -265,7 +263,6 @@ class Early_Exit_DNN(nn.Module):
     last_channel = 1280
     
     # Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
-    #x = torch.rand((1, 3, 32, 32)).to(self.device)
     backbone_model = MobileNetV2(self.n_classes).to(self.device)
 
 
@@ -280,15 +277,16 @@ class Early_Exit_DNN(nn.Module):
     #self.layers.append(backbone_model.network[0])
 
 
-    for i in range(16):
+    for i in range(17):
       self.layers.append(backbone_model.bottlenecks[i])
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
-
+	self.layers.append(backbone_model.conv1) 
+	self.layers.append(backbone_model.bn1) 
 
     self.stages.append(nn.Sequential(*self.layers))
-    self.classifier = backbone_model.network[-1]
+    self.classifier = backbone_model.fc
     self.set_device()
     self.softmax = nn.Softmax(dim=1)
 
