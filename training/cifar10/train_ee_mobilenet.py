@@ -201,7 +201,7 @@ class Early_Exit_DNN(nn.Module):
 
 		intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers)))
 		x = torch.rand(1, 3, self.width, self.height).to(self.device)
-		flops, _ = get_model_complexity_info(model, (3, 32, 32), as_strings=True,
+		flops, _ = get_model_complexity_info(intermediate_model, (3, 32, 32), as_strings=True,
 			print_per_layer_stat=True, verbose=True)		
 		return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
 
