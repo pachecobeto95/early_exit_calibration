@@ -187,10 +187,9 @@ class Early_Exit_DNN(nn.Module):
 	def where_insert_early_exits(self):
 
 		threshold_flop_list = []
-		distribution_method = self.select_distribution_method()
 
 		for i in range(self.n_branches):
-			threshold_flop_list.append(distribution_method(i))
+			threshold_flop_list.append(linear_distribution(i))
 
 		return threshold_flop_list
 
