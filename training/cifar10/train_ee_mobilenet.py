@@ -28,7 +28,7 @@ from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse, ssl
 from torchvision.datasets import CIFAR10, CIFAR100
-from ptflops import count_ops
+from pthflops import count_ops
 from ptflops import get_model_complexity_info
 
 
