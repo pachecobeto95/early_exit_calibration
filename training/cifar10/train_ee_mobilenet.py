@@ -355,6 +355,8 @@ class Early_Exit_DNN(nn.Module):
     print(x.shape)
     x = torch.flatten(x, 1)
     print(x.shape)
+    x = F.adaptive_avg_pool2d(x, 1)
+    print(x.shape)
     sys.exit()
     output = self.classifier(x)
     infered_conf, infered_class = torch.max(self.softmax(output), 1)
