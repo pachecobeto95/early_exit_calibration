@@ -335,6 +335,36 @@ class Early_Exit_DNN(nn.Module):
     self.classifier = backbone_model.fc
     self.softmax = nn.Softmax(dim=1)
 
+    def forward(self):
+    """
+    This method is used to train the early-exit DNN model
+    """
+    
+        output_list, conf_list, class_list  = [], [], []
+
+        for i, exitBlock in enumerate(self.exits):
+      
+          x = self.stages[i](x)
+          output_branch = exitBlock(x)
+          output_list.append(output_branch)
+
+          #Confidence is the maximum probability of belongs one of the predefined classes and inference_class is the argmax
+          conf, infered_class = torch.max(self.softmax(output_branch), 1)
+          conf_list.append(conf)
+          class_list.append(infered_class)
+
+        x = self.stages[-1](x)
+
+        x = torch.flatten(x, 1)
+        output = self.classifier(x)
+        infered_conf, infered_class = torch.max(self.softmax(output), 1)
+        output_list.append(output)
+        conf_list.append(infered_conf)
+        class_list.append(infered_class)
+
+        return output_list, conf_list, class_list
+
+
 
 
 def loadCifar10(batch_size, input_size, crop_size, split_rate, seed=42):
