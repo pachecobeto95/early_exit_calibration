@@ -236,6 +236,7 @@ class Early_Exit_DNN(nn.Module):
     intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers)))
     x = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
     current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
+    sys.exit()
     return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
 
   def add_exit_block(self):
@@ -275,18 +276,12 @@ class Early_Exit_DNN(nn.Module):
 
     self.layers.append(backbone_model.conv0)
     self.layers.append(backbone_model.bn0)
-
-    print(backbone_model)
-    sys.exit()
     
-    self.layers.append(backbone_model.network[0])
+    #self.layers.append(backbone_model.network[0])
 
-    if (self.is_suitable_for_exit()):
-      self.add_exit_block()
 
-    for i in range(1, 8):
-      self.layers.append(backbone_model.network[i])
-
+    for i in range(16):
+      self.layers.append(backbone_model.bottlenecks[i])
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
