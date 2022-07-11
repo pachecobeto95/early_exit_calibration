@@ -139,8 +139,6 @@ class Early_Exit_DNN(nn.Module):
 
   def select_dnn_architecture_model(self):
   
-    ee_mobilenet = self.early_exit_mobilenet if (self.pretrained) else self.early_exit_MobileNet
-
     architecture_dnn_model_dict = {"mobilenet": self.early_exit_MobileNet}
 
     return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
