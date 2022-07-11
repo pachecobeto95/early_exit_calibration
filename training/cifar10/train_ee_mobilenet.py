@@ -524,7 +524,7 @@ if (__name__ == "__main__"):
 			save_dict = {"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(),
 			"epoch": epoch, "val_loss": result["val_loss"]}
     
-			torch.save(save_dict, early_exit_model_path)
+			torch.save(save_dict, "./mobilenet.pth")
 
 		else:
 			print("Current Patience: %s"%(count))
