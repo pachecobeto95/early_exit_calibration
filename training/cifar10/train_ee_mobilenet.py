@@ -282,8 +282,8 @@ class Early_Exit_DNN(nn.Module):
       if (self.is_suitable_for_exit()):
         self.add_exit_block()
 
-	self.layers.append(backbone_model.conv1) 
-	self.layers.append(backbone_model.bn1) 
+    self.layers.append(backbone_model.conv1) 
+    self.layers.append(backbone_model.bn1) 
 
     self.stages.append(nn.Sequential(*self.layers))
     self.classifier = backbone_model.fc
