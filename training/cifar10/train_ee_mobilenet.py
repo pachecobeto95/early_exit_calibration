@@ -31,230 +31,232 @@ from torchvision.datasets import CIFAR10, CIFAR100
 from pthflops import count_ops
 from ptflops import get_model_complexity_info
 
-
-class BaseBlock(nn.Module):
-	alpha = 1
-
-	def __init__(self, input_channel, output_channel, t = 6, downsample = False):
-
-		super(BaseBlock, self).__init__()
-		self.stride = 2 if downsample else 1
-		self.downsample = downsample
-		self.shortcut = (not downsample) and (input_channel == output_channel) 
-
-		input_channel = int(self.alpha * input_channel)
-		output_channel = int(self.alpha * output_channel)
-		        
-		# for main path:
-		c  = t * input_channel
-		# 1x1   point wise conv
-		self.conv1 = nn.Conv2d(input_channel, c, kernel_size = 1, bias = False)
-		self.bn1 = nn.BatchNorm2d(c)
-		# 3x3   depth wise conv
-		self.conv2 = nn.Conv2d(c, c, kernel_size = 3, stride = self.stride, padding = 1, groups = c, bias = False)
-		self.bn2 = nn.BatchNorm2d(c)
-		# 1x1   point wise conv
-		self.conv3 = nn.Conv2d(c, output_channel, kernel_size = 1, bias = False)
-		self.bn3 = nn.BatchNorm2d(output_channel)
-
-	def forward(self, inputs):
-		# main path
-		x = F.relu6(self.bn1(self.conv1(inputs)), inplace = True)
-		x = F.relu6(self.bn2(self.conv2(x)), inplace = True)
-		x = self.bn3(self.conv3(x))
-
-		# shortcut path
-		x = x + inputs if self.shortcut else x
-
-		return x
-
-
 class MobileNetV2(nn.Module):
-	def __init__(self, output_size, alpha = 1):
-		super(MobileNetV2, self).__init__()
-		self.output_size = output_size
+    def __init__(self, output_size, alpha = 1):
+        super(MobileNetV2, self).__init__()
+        self.output_size = output_size
 
-		# first conv layer 
-		self.conv0 = nn.Conv2d(3, int(32*alpha), kernel_size = 3, stride = 1, padding = 1, bias = False)
-		self.bn0 = nn.BatchNorm2d(int(32*alpha))
+        # first conv layer 
+        self.conv0 = nn.Conv2d(3, int(32*alpha), kernel_size = 3, stride = 1, padding = 1, bias = False)
+        self.bn0 = nn.BatchNorm2d(int(32*alpha))
 
-		# build bottlenecks
-		BaseBlock.alpha = alpha
-		self.bottlenecks = nn.Sequential(
-			BaseBlock(32, 16, t = 1, downsample = False),
-			BaseBlock(16, 24, downsample = False),
-			BaseBlock(24, 24),
-			BaseBlock(24, 32, downsample = False),
-			BaseBlock(32, 32),
-			BaseBlock(32, 32),
-			BaseBlock(32, 64, downsample = True),
-			BaseBlock(64, 64),
-			BaseBlock(64, 64),
-			BaseBlock(64, 64),
-			BaseBlock(64, 96, downsample = False),
-			BaseBlock(96, 96),
-			BaseBlock(96, 96),
-			BaseBlock(96, 160, downsample = True),
-			BaseBlock(160, 160),
-			BaseBlock(160, 160),
-			BaseBlock(160, 320, downsample = False))
+        # build bottlenecks
+        BaseBlock.alpha = alpha
+        self.bottlenecks = nn.Sequential(
+            BaseBlock(32, 16, t = 1, downsample = False),
+            BaseBlock(16, 24, downsample = False),
+            BaseBlock(24, 24),
+            BaseBlock(24, 32, downsample = False),
+            BaseBlock(32, 32),
+            BaseBlock(32, 32),
+            BaseBlock(32, 64, downsample = True),
+            BaseBlock(64, 64),
+            BaseBlock(64, 64),
+            BaseBlock(64, 64),
+            BaseBlock(64, 96, downsample = False),
+            BaseBlock(96, 96),
+            BaseBlock(96, 96),
+            BaseBlock(96, 160, downsample = True),
+            BaseBlock(160, 160),
+            BaseBlock(160, 160),
+            BaseBlock(160, 320, downsample = False))
 
-		# last conv layers and fc layer
-		self.conv1 = nn.Conv2d(int(320*alpha), 1280, kernel_size = 1, bias = False)
-		self.bn1 = nn.BatchNorm2d(1280)
-		self.fc = nn.Linear(1280, output_size)
+        # last conv layers and fc layer
+        self.conv1 = nn.Conv2d(int(320*alpha), 1280, kernel_size = 1, bias = False)
+        self.bn1 = nn.BatchNorm2d(1280)
+        self.fc = nn.Linear(1280, output_size)
 
-		# weights init
-		self.weights_init()
-
-
-	def weights_init(self):
-		for m in self.modules():
-			if isinstance(m, nn.Conv2d):
-				n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-				m.weight.data.normal_(0, math.sqrt(2. / n))
-
-			elif isinstance(m, nn.BatchNorm2d):
-				m.weight.data.fill_(1)
-				m.bias.data.zero_()
+        # weights init
+        self.weights_init()
 
 
-	def forward(self, inputs):
+    def weights_init(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, math.sqrt(2. / n))
 
-		x = F.relu6(self.bn0(self.conv0(inputs)), inplace = True)
+            elif isinstance(m, nn.BatchNorm2d):
+                m.weight.data.fill_(1)
+                m.bias.data.zero_()
 
-		x = self.bottlenecks(x)
 
-		x = F.relu6(self.bn1(self.conv1(x)), inplace = True)
+    def forward(self, inputs):
 
-		x = F.adaptive_avg_pool2d(x, 1)
-		x = x.view(x.shape[0], -1)
-		x = self.fc(x)
+        # first conv layer
+        x = F.relu6(self.bn0(self.conv0(inputs)), inplace = True)
+        # assert x.shape[1:] == torch.Size([32, 32, 32])
 
-		return x
+        # bottlenecks
+        x = self.bottlenecks(x)
+        # assert x.shape[1:] == torch.Size([320, 8, 8])
+
+        # last conv layer
+        x = F.relu6(self.bn1(self.conv1(x)), inplace = True)
+        # assert x.shape[1:] == torch.Size([1280,8,8])
+
+        # global pooling and fc (in place of conv 1x1 in paper)
+        x = F.adaptive_avg_pool2d(x, 1)
+        x = x.view(x.shape[0], -1)
+        x = self.fc(x)
+
+        return x
+
 
 
 class Early_Exit_DNN(nn.Module):
-	def __init__(self, model_name: str, n_classes: int, 
-		n_branches: int, input_shape:tuple, exit_type: str, device, distribution="linear"):
+  def __init__(self, model_name: str, n_classes: int, 
+               pretrained: bool, backbone_pretrained: bool, backbone_model_path: str, 
+               n_branches: int, input_shape:tuple, exit_type: str, device, distribution="linear"):
+    super(Early_Exit_DNN, self).__init__()
 
-		super(Early_Exit_DNN, self).__init__()
+    """
+    This classes builds an early-exit DNNs architectures
+    Args:
 
-		self.model_name = model_name
-		self.n_classes = n_classes
-		self.n_branches = n_branches
-		self.input_shape = input_shape
-		self.exit_type = exit_type
-		self.distribution = distribution
-		self.device = device
-		self.channel, self.width, self.height = input_shape
+    model_name: model name 
+    n_classes: number of classes in a classification problem, according to the dataset
+    pretrained: 
+    n_branches: number of branches (early exits) inserted into middle layers
+    input_shape: shape of the input image
+    exit_type: type of the exits
+    distribution: distribution method of the early exit blocks.
+    device: indicates if the model will processed in the cpu or in gpu
+    
+    Note: the term "backbone model" refers to a regular DNN model, considering no early exits.
 
-		build_early_exit_dnn = self.select_dnn_architecture_model()
-		build_early_exit_dnn()
+    """
+    self.model_name = model_name
+    self.n_classes = n_classes
+    self.pretrained = pretrained
+    self.n_branches = n_branches
+    self.input_shape = input_shape
+    self.exit_type = exit_type
+    self.distribution = distribution
+    self.device = device
+    self.channel, self.width, self.height = input_shape
 
-	def select_dnn_architecture_model(self):
-		"""
-		This method selects the backbone to insert the early exits.
-		"""
+    build_early_exit_dnn = self.select_dnn_architecture_model()
+    build_early_exit_dnn()
 
-		architecture_dnn_model_dict = {"mobilenet": self.early_exit_mobilenet}
-		return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
+  def select_dnn_architecture_model(self):
+  
+    ee_mobilenet = self.early_exit_mobilenet if (self.pretrained) else self.early_exit_MobileNet
 
-	def invalid_model(self):
-		raise Exception("This DNN model has not implemented yet.")
+    architecture_dnn_model_dict = {"mobilenet": self.early_exit_MobileNet}
 
-	def linear_distribution(self, i):
-		"""
-		This method defines the Flops to insert an early exits, according to a linear distribution.
-		"""
-		flop_margin = 1.0 / (self.n_branches+1)
+    return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
+    
+  def linear_distribution(self, i):
+    """
+    This method defines the Flops to insert an early exits, according to a linear distribution.
+    """
+    flop_margin = 1.0 / (self.n_branches+1)
+    return self.total_flops * flop_margin * (i+1)
 
-		return float(self.total_flops[:6]) * flop_margin * (i+1)
+  def verifies_nr_exits(self, backbone_model):
+    """
+    This method verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
+    """
+    
+    total_layers = len(list(backbone_model.children()))
+    if (self.n_branches >= total_layers):
+      raise Exception("The number of early exits is greater than number of layers in the DNN backbone model.")
 
-	def verifies_nr_exits(self, backbone_model):
+  def countFlops(self, model):
+    """
+    This method counts the numper of Flops in a given full DNN model or intermediate DNN model.
+    """
+    inputs = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
+    flops, all_data = count_ops(model, inputs, print_readable=False, verbose=False)
+    return flops
 
-		total_layers = len(list(backbone_model.children()))
-		if (self.n_branches >= total_layers):
-			raise Exception("The number of early exits is greater than number of layers in the DNN backbone model.")
+  def where_insert_early_exits(self):
+    """
+    This method defines where insert the early exits, according to the dsitribution method selected.
+    Args:
 
-	def countFlops(self, model):
+    total_flops: Flops of the backbone (full) DNN model.
+    """
+    threshold_flop_list = []
 
-		inputs = torch.rand(1, self.channel, self.width, self.height).to(self.device)
-		#flops, all_data = count_ops(model, inputs, print_readable=False, verbose=False)
-		flops, _ = get_model_complexity_info(model, (3, 32, 32), as_strings=True,
-			print_per_layer_stat=True, verbose=True)		
-		return flops
+    for i in range(self.n_branches):
+      threshold_flop_list.append(self.linear_distribution(i))
 
-	def where_insert_early_exits(self):
+    return threshold_flop_list
 
-		threshold_flop_list = []
+  def invalid_model(self):
+    raise Exception("This DNN model has not implemented yet.")
 
-		for i in range(self.n_branches):
-			threshold_flop_list.append(self.linear_distribution(i))
+  def is_suitable_for_exit(self):
+    """
+    This method answers the following question. Is the position to place an early exit?
+    """
+    intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers)))
+    x = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
+    current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
+    return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
 
-		return threshold_flop_list
+  def add_exit_block(self):
+    """
+    This method adds an early exit in the suitable position.
+    """
+    input_tensor = torch.rand(1, self.channel, self.width, self.height)
 
-	def invalid_model(self):
-		raise Exception("This DNN model has not implemented yet.")
+    self.stages.append(nn.Sequential(*self.layers))
+    x = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
+    feature_shape = nn.Sequential(*self.stages)(x).shape
+    sys.exit()
+    self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device))#.to(self.device))
+    self.layers = nn.ModuleList()
+    self.stage_id += 1    
 
-	def is_suitable_for_exit(self):
+    
+  def early_exit_MobileNet(self):
+    self.stages = nn.ModuleList()
+    self.exits = nn.ModuleList()
+    self.layers = nn.ModuleList()
+    self.cost = []
+    self.stage_id = 0
 
-		intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers)))
-		x = torch.rand(1, 3, self.width, self.height).to(self.device)
-		print(x.shape)
-		sys.exit()
-		current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
-		#current_flop, _ = get_model_complexity_info(intermediate_model, x, as_strings=True,
-		#	print_per_layer_stat=True, verbose=True)
-		return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
+    n_blocks = 18
+    last_channel = 1280
+    
+    # Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
+    x = torch.rand((1, 3, 32, 32))
+    backbone_model = MobileNetV2(self.n_classes).to(self.device)
+    print(backbone_model(x))
+    sys.exit()
 
-	def add_exit_block(self):
-		input_tensor = torch.rand(1, self.channel, self.width, self.height)
+    # It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
+    self.verifies_nr_exits(backbone_model.network)
 
-		self.stages.append(nn.Sequential(*self.layers))
-		x = torch.rand(1, 3, self.width, self.height).to(self.device)
+    if(self.backbone_pretrained):
+      backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
 
-		feature_shape = nn.Sequential(*self.stages)(x).shape
-		self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device))#.to(self.device))
-		self.layers = nn.ModuleList()
-		self.stage_id += 1    
+    self.total_flops = self.countFlops(backbone_model)
 
-	def early_exit_mobilenet(self):
-		self.stages = nn.ModuleList()
-		self.exits = nn.ModuleList()
-		self.layers = nn.ModuleList()
-		self.cost = []
-		self.stage_id = 0
+    # This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
+    self.threshold_flop_list = self.where_insert_early_exits()
 
-		n_blocks = 18
-		last_channel = 1280
 
-		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
-		backbone_model = MobileNetV2(self.n_classes).to(self.device)
+    self.layers.append(backbone_model.network[0])
 
-		# It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
-		self.verifies_nr_exits(backbone_model)
+    if (self.is_suitable_for_exit()):
+      self.add_exit_block()
 
-		self.total_flops = self.countFlops(backbone_model)
+    for i in range(1, 8):
+      self.layers.append(backbone_model.network[i])
 
-		# This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
-		self.threshold_flop_list = self.where_insert_early_exits()
+      if (self.is_suitable_for_exit()):
+        self.add_exit_block()
 
-		self.layers.append(backbone_model.bottlenecks[0])
 
-		if (self.is_suitable_for_exit()):
-			self.add_exit_block()
 
-		for i in range(1, 8):
-			self.layers.append(backbone_model.bottlenecks[i])
-
-			if (self.is_suitable_for_exit()):
-				self.add_exit_block()
-
-		self.stages.append(nn.Sequential(*self.layers))
-		self.classifier = backbone_model.bottlenecks[-1]
-		self.set_device()
-		self.softmax = nn.Softmax(dim=1)
+    self.stages.append(nn.Sequential(*self.layers))
+    self.classifier = backbone_model.network[-1]
+    self.set_device()
+    self.softmax = nn.Softmax(dim=1)
 
 
 
