@@ -211,7 +211,7 @@ class Early_Exit_DNN(nn.Module):
 		backbone_model = MobileNetV2(self.n_classes).to(self.device)
 
 		# It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
-		self.verifies_nr_exits(backbone_model.network)
+		self.verifies_nr_exits(backbone_model)
 
 		self.total_flops = self.countFlops(backbone_model)
 
