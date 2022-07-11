@@ -365,6 +365,58 @@ def loadCifar10(batch_size, input_size, crop_size, split_rate, seed=42):
 
 	return train_loader, testloader
 
+def trainEvalEarlyExit(model, dataLoader, criterion, optimizer, n_branches, epoch, device, loss_weights, train):
+	if(train):
+		model.train()
+	else:
+		model.eval()
+
+	mode = "train" if(train) else "val"
+	running_loss = []
+	n_exits = n_branches + 1
+	acc_dict = {i: [] for i in range(1, (n_exits)+1)}
+
+
+	for (data, target) in tqdm(dataLoader):
+		data, target = data.to(device), target.to(device)
+
+		if (train):
+			optimizer.zero_grad()
+			output_list, conf_list, class_list = model(data)
+			loss = 0
+			for j, (output, inf_class, weight) in enumerate(zip(output_list, class_list, loss_weights), 1):
+				loss = loss + weight*criterion(output, target)
+				acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
+
+			loss.backward()
+			optimizer.step()
+		
+		else:
+			with torch.no_grad():
+				output_list, conf_list, class_list = model(data)
+				loss = 0
+				for j, (output, inf_class, weight) in enumerate(zip(output_list, class_list, loss_weights), 1):
+					loss += weight*criterion(output, target)
+					acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
+
+
+		running_loss.append(float(loss.item()))
+
+		# clear variables
+		del data, target, output_list, conf_list, class_list
+		torch.cuda.empty_cache()
+
+	loss = round(np.average(running_loss), 4)
+	print("Epoch: %s"%(epoch))
+	print("%s Loss: %s"%(mode, loss))
+
+	result_dict = {"epoch":epoch, "%s_loss"%(mode): loss}
+	for key, value in acc_dict.items():
+		result_dict.update({"%s_acc_branch_%s"%(mode, key): round(np.average(acc_dict[key]), 4)})    
+		print("%s Acc Branch %s: %s"%(mode, key, result_dict["%s_acc_branch_%s"%(mode, key)]))
+  
+	return result_dict
+
 
 if (__name__ == "__main__"):
 	parser = argparse.ArgumentParser(description='Training the Early-Exit MobileNetV2.')
@@ -412,9 +464,43 @@ if (__name__ == "__main__"):
 
 	train_loader, test_loader = loadCifar10(args.batch_size, input_size, crop_size, args.split_rate, seed=args.seed)
 
-	print("Success")
+	optimizer = optim.SGD(model.parameters(), lr=args.lr,momentum=args.momentum, weight_decay=args.weight_decay,
+		nesterov=True)
 
+	scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=args.lr_decay, patience=int(args.patience/2), verbose=True)
 
+	while (count <= args.patience):
+		epoch += 1
+		print("Current Epoch: %s"%(epoch))
+
+		result = {}
+		result_train = trainEvalEarlyExit(model, train_loader, criterion, optimizer, args.n_branches, 
+			epoch, device, loss_weights, train=True)
+		
+		result_val = trainEvalEarlyExit(model, test_loader, criterion, optimizer, args.n_branches, 
+			epoch, device, loss_weights, train=False)
+		
+		#scheduler.step()
+		result.update(result_train), result.update(result_val) 
+
+		#df = df.append(pd.Series(result), ignore_index=True)
+		#df.to_csv(history_path)
+
+		if (result["val_loss"] < best_val_loss):
+			best_val_loss = result["val_loss"]
+			count = 0
+			save_dict = {"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(),
+			"epoch": epoch, "val_loss": result["val_loss"]}
+    
+			torch.save(save_dict, early_exit_model_path)
+
+		else:
+			print("Current Patience: %s"%(count))
+			count += 1
+
+	print("Stop! Patience is finished")
+	#trainEvalEarlyExit(early_exit_dnn, test_loader, criterion, optimizer, args.n_branches, 
+	#	epoch, device, loss_weights, train=False)
 
 
 
