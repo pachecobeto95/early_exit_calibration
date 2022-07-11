@@ -439,11 +439,10 @@ if (__name__ == "__main__"):
 	#all_result_calib_path = os.path.join(result_dir_path, "all_samples_calib_results_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 
 
-	early_exit_dnn = Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.backbone_pretrained, 
-		backbone_model_path, args.n_branches, input_shape, args.exit_type, device, distribution=args.distribution)
-	early_exit_dnn = early_exit_dnn.to(device)
+	model = Early_Exit_DNN(model_name, n_classes, args.n_branches, input_shape, args.exit_type, device, distribution=args.distribution)
+	model = model.to(device)
 
-	early_exit_dnn.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
+	model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 
 
 	resultPathDict = {"no_calib": result_no_calib_path, 
@@ -458,20 +457,19 @@ if (__name__ == "__main__"):
 
 	for threshold in threshold_list:
 		print("Ptar: %s"%(threshold))
-		no_calib_result = testEarlyExitInference(early_exit_dnn, early_exit_dnn.n_branches, test_loader, 
+		no_calib_result = testEarlyExitInference(model, model.n_branches, test_loader, 
 			threshold, device, model_type="no_calib")
 
-		scaled_models_dict = calibratingEEModels(early_exit_dnn, val_loader, threshold, device, model_path, temperaturePath, args)
+		scaled_models_dict = calibratingEEModels(model, test_loader, threshold, device, model_path, temperaturePath, args)
 
 
-		overall_result = testEarlyExitInference(scaled_models_dict["calib_overall"], early_exit_dnn.n_branches, test_loader, 
+		overall_result = testEarlyExitInference(scaled_models_dict["calib_overall"], model.n_branches, test_loader, 
 			threshold, device, model_type="calib_overall")
 
-		branches_result = testEarlyExitInference(scaled_models_dict["calib_branches"], early_exit_dnn.n_branches, 
+		branches_result = testEarlyExitInference(scaled_models_dict["calib_branches"], model.n_branches, 
 			test_loader, threshold, device, model_type="calib_branches")
 
-		all_samples_result = testEarlyExitInference(scaled_models_dict["calib_branches_all_samples"], 
-			early_exit_dnn.n_branches, test_loader, threshold, device, model_type="calib_branches_all_samples")
+		#all_samples_result = testEarlyExitInference(scaled_models_dict["calib_branches_all_samples"], 
+		#	model.n_branches, test_loader, threshold, device, model_type="calib_branches_all_samples")
 
-		save_all_results_ee_calibration(no_calib_result, overall_result, branches_result, 
-			all_samples_result, resultPathDict)
+		save_all_results_ee_calibration(no_calib_result, overall_result, branches_result, resultPathDict)
