@@ -28,8 +28,6 @@ from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse
 
-loadCifar10(args.batch_size, input_size, crop_size, args.split_rate, seed=args.seed)
-
 
 def loadCifar10(batch_size, input_size, crop_size, split_rate, seed=42):
 	ssl._create_default_https_context = ssl._create_unverified_context
