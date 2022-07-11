@@ -412,7 +412,7 @@ if (__name__ == "__main__"):
 
 	train_loader, test_loader = loadCifar10(args.batch_size, input_size, crop_size, args.split_rate, seed=args.seed)
 
-
+	print("Success")
 
 
 
