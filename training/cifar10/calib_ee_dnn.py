@@ -96,7 +96,7 @@ if (__name__ == "__main__"):
 
 	threshold_list = [0.7, 0.75, 0.8]
 
-	model_path = os.path.join(root_path, "mobilenet.pth"%(args.model_name, args.dataset_name, args.model_id, mode, args.loss_weight_type))
+	model_path = os.path.join(root_path, "mobilenet.pth")
 	#save_overall_temp_path = os.path.join(temp_dir_path, "overall_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	#save_branches_temp_path = os.path.join(temp_dir_path, "branches_temperature_%s_early_exit_%s_id_%s_%s.csv"%(args.model_name, args.dataset_name, args.model_id, mode))
 	
