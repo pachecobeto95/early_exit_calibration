@@ -350,8 +350,9 @@ class Early_Exit_DNN(nn.Module):
       conf_list.append(conf)
       class_list.append(infered_class)
 
+    print(x.shape)
     x = self.stages[-1](x)
-
+    print(x.shape)
     x = torch.flatten(x, 1)
     print(x.shape)
     sys.exit()
