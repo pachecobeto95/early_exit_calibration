@@ -273,7 +273,10 @@ class Early_Exit_DNN(nn.Module):
     # This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
     self.threshold_flop_list = self.where_insert_early_exits()
 
-    print(backbone_model)
+    self.layers.append(backbone_model.conv0)
+    self.layers.append(backbone_model.bn0)
+
+    print(backbone_model.conv0)
     sys.exit()
     
     self.layers.append(backbone_model.network[0])
