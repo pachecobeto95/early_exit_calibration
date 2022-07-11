@@ -119,6 +119,19 @@ class MobileNetV2(nn.Module):
 				m.bias.data.zero_()
 
 
+	def forward(self, inputs):
+
+		x = F.relu6(self.bn0(self.conv0(inputs)), inplace = True)
+
+		x = self.bottlenecks(x)
+
+		x = F.relu6(self.bn1(self.conv1(x)), inplace = True)
+
+		x = F.adaptive_avg_pool2d(x, 1)
+		x = x.view(x.shape[0], -1)
+		x = self.fc(x)
+
+		return x
 
 
 class Early_Exit_DNN(nn.Module):
