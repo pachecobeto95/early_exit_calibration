@@ -32,6 +32,52 @@ from pthflops import count_ops
 from ptflops import get_model_complexity_info
 
 
+class EarlyExitBlock(nn.Module):
+  """
+  This EarlyExitBlock allows the model to terminate early when it is confident for classification.
+  """
+  def __init__(self, input_shape, n_classes, exit_type, device):
+    super(EarlyExitBlock, self).__init__()
+    self.input_shape = input_shape
+
+    _, channel, width, height = input_shape
+    self.expansion = width * height if exit_type == 'plain' else 1
+
+    self.layers = nn.ModuleList()
+
+    if (exit_type == 'bnpool'):
+      self.layers.append(nn.BatchNorm2d(channel))
+
+    if (exit_type != 'plain'):
+      self.layers.append(nn.AdaptiveAvgPool2d(1))
+    
+    #This line defines the data shape that fully-connected layer receives.
+    current_channel, current_width, current_height = self.get_current_data_shape()
+
+    self.layers = self.layers.to(device)
+
+    #This line builds the fully-connected layer
+    self.classifier = nn.Sequential(nn.Linear(current_channel*current_width*current_height, n_classes)).to(device)
+
+    self.softmax_layer = nn.Softmax(dim=1)
+
+
+  def get_current_data_shape(self):
+    _, channel, width, height = self.input_shape
+    temp_layers = nn.Sequential(*self.layers)
+
+    input_tensor = torch.rand(1, channel, width, height)
+    _, output_channel, output_width, output_height = temp_layers(input_tensor).shape
+    return output_channel, output_width, output_height
+        
+  def forward(self, x):
+    for layer in self.layers:
+      x = layer(x)
+    x = x.view(x.size(0), -1)
+    output = self.classifier(x)
+    return output
+
+
 class BaseBlock(nn.Module):
     alpha = 1
 
