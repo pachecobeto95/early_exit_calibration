@@ -127,7 +127,6 @@ class Early_Exit_DNN(nn.Module):
     """
     self.model_name = model_name
     self.n_classes = n_classes
-    self.pretrained = pretrained
     self.n_branches = n_branches
     self.input_shape = input_shape
     self.exit_type = exit_type
