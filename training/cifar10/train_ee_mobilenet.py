@@ -106,7 +106,6 @@ class MobileNetV2(nn.Module):
 
 class Early_Exit_DNN(nn.Module):
   def __init__(self, model_name: str, n_classes: int, 
-               pretrained: bool, backbone_pretrained: bool, backbone_model_path: str, 
                n_branches: int, input_shape:tuple, exit_type: str, device, distribution="linear"):
     super(Early_Exit_DNN, self).__init__()
 
