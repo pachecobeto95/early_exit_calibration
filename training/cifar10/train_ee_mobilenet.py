@@ -201,6 +201,8 @@ class Early_Exit_DNN(nn.Module):
 
 		intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers)))
 		x = torch.rand(1, 3, self.width, self.height).to(self.device)
+		print(x.shape)
+		sys.exit()
 		current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
 		#current_flop, _ = get_model_complexity_info(intermediate_model, x, as_strings=True,
 		#	print_per_layer_stat=True, verbose=True)
@@ -211,8 +213,7 @@ class Early_Exit_DNN(nn.Module):
 
 		self.stages.append(nn.Sequential(*self.layers))
 		x = torch.rand(1, 3, self.width, self.height).to(self.device)
-		print(x.shape)
-		sys.exit()
+
 		feature_shape = nn.Sequential(*self.stages)(x).shape
 		self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device))#.to(self.device))
 		self.layers = nn.ModuleList()
