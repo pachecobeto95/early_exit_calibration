@@ -452,7 +452,7 @@ if (__name__ == "__main__"):
 	parser.add_argument('--weight_decay', type=float, default= 0.00004, help='Weight Decay (default: 0.00004)')
 	parser.add_argument('--momentum', type=float, default=0.9, help='Momentum (default: 0.9)')
 	parser.add_argument('--lr_decay', type=float, default=0.98, help='Learning Rate Decay (default: 0.98)')
-	parser.add_argument('--batch_size', type=int, default=512, help='Batch Size (default: 512)')
+	parser.add_argument('--batch_size', type=int, default=128, help='Batch Size (default: 512)')
 	parser.add_argument('--seed', type=int, default=42, help='Seed (default: 42)')
 	parser.add_argument('--split_rate', type=float, default=0.2, help='Split rate of the dataset (default: 0.2)')
 	parser.add_argument('--patience', type=int, default=10, help='Patience (default: 10)')
