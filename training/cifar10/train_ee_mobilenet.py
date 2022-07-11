@@ -246,7 +246,7 @@ class Early_Exit_DNN(nn.Module):
     input_tensor = torch.rand(1, self.channel, self.width, self.height)
 
     self.stages.append(nn.Sequential(*self.layers))
-    x = torch.rand(1, self.channel, self.width, self.height)#.to(self.device)
+    x = torch.rand(1, self.channel, self.width, self.height).to(self.device)
     feature_shape = nn.Sequential(*self.stages)(x).shape
     sys.exit()
     self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device))#.to(self.device))
