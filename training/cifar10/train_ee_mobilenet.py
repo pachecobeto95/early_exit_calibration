@@ -336,9 +336,6 @@ class Early_Exit_DNN(nn.Module):
     self.softmax = nn.Softmax(dim=1)
 
     def forward(self):
-    """
-    This method is used to train the early-exit DNN model
-    """
     
         output_list, conf_list, class_list  = [], [], []
 
