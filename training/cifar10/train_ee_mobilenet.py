@@ -353,6 +353,8 @@ class Early_Exit_DNN(nn.Module):
     x = self.stages[-1](x)
 
     x = torch.flatten(x, 1)
+    print(x.shape)
+    sys.exit()
     output = self.classifier(x)
     infered_conf, infered_class = torch.max(self.softmax(output), 1)
     output_list.append(output)
