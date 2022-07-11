@@ -276,7 +276,7 @@ class Early_Exit_DNN(nn.Module):
     self.layers.append(backbone_model.conv0)
     self.layers.append(backbone_model.bn0)
 
-    print(backbone_model.conv0)
+    print(backbone_model)
     sys.exit()
     
     self.layers.append(backbone_model.network[0])
