@@ -28,7 +28,8 @@ from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
 import argparse, ssl
 from torchvision.datasets import CIFAR10, CIFAR100
-from pthflops import count_ops
+#from ptflops import count_ops
+from ptflops import get_model_complexity_info
 
 
 class BaseBlock(nn.Module):
@@ -165,7 +166,9 @@ class Early_Exit_DNN(nn.Module):
 	def countFlops(self, model):
 
 		inputs = torch.rand(1, self.channel, self.width, self.height).to(self.device)
-		flops, all_data = count_ops(model, inputs, print_readable=False, verbose=False)
+		#flops, all_data = count_ops(model, inputs, print_readable=False, verbose=False)
+		flops, _ = get_model_complexity_info(model, (3, 32, 32), as_strings=True,
+			print_per_layer_stat=True, verbose=True)		
 		return flops
 
 	def where_insert_early_exits(self):
