@@ -335,7 +335,7 @@ class Early_Exit_DNN(nn.Module):
     self.classifier = backbone_model.fc
     self.softmax = nn.Softmax(dim=1)
 
-    def forward(self):
+    def forward(self, x):
     
         output_list, conf_list, class_list  = [], [], []
 
