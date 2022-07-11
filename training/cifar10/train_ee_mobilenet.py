@@ -264,18 +264,13 @@ class Early_Exit_DNN(nn.Module):
     last_channel = 1280
     
     # Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
-    x = torch.rand((1, 3, 32, 32)).to(self.device)
+    #x = torch.rand((1, 3, 32, 32)).to(self.device)
     backbone_model = MobileNetV2(self.n_classes).to(self.device)
-    print(backbone_model(x))
-    sys.exit()
 
-    # It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
-    self.verifies_nr_exits(backbone_model.network)
-
-    if(self.backbone_pretrained):
-      backbone_model.load_state_dict(torch.load(self.backbone_model_path, map_location=self.device)["model_state_dict"])
 
     self.total_flops = self.countFlops(backbone_model)
+
+    sys.exit()
 
     # This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
     self.threshold_flop_list = self.where_insert_early_exits()
