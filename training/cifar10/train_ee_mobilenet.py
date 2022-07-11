@@ -51,7 +51,7 @@ def loadCifar10(batch_size, input_size, crop_size, split_rate, seed=42):
 		transforms.Normalize(mean, std)])
 
 	trainset = CIFAR10(".", transform=transform_train, train=True, download=True)
-	train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
+	train_loader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4)
 
 	testset = CIFAR10(".", transform=transform_test, train=False, download=True)
 	testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle = False, num_workers=4)
