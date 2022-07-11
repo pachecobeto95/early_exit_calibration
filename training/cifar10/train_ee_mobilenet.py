@@ -26,7 +26,7 @@ from tqdm import tqdm
 from networks.mobilenet import MobileNetV2_2
 from utils import create_dir
 from load_dataset import loadCifar10, loadCifar100
-import argparse
+import argparse, ssl
 
 
 def loadCifar10(batch_size, input_size, crop_size, split_rate, seed=42):
