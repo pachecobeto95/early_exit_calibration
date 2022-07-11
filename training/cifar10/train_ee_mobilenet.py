@@ -105,7 +105,7 @@ if (__name__ == "__main__"):
 	
 	#model = model.to(device)
 
-	train_loader, val_loader, test_loader = loadCifar10(args.batch_size, input_size, crop_size, args.split_rate, seed=args.seed)
+	train_loader, test_loader = loadCifar10(args.batch_size, input_size, crop_size, args.split_rate, seed=args.seed)
 
 
 
