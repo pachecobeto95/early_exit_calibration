@@ -168,6 +168,7 @@ class Early_Exit_DNN(nn.Module):
 		This method defines the Flops to insert an early exits, according to a linear distribution.
 		"""
 		flop_margin = 1.0 / (self.n_branches+1)
+		print("oi")
 		print(self.total_flops)
 		sys.exit()
 		return self.total_flops * flop_margin * (i+1)
