@@ -15,7 +15,7 @@ Figure 1 illustrates an early-exit DNN with multiple side branches inserted into
 extracted in the previous layers v1, · · · , vi. In the experimental results, we insert five side branches. Thus, we have six exits, including the DNN backbone’s output layer. 
 
 ![Figure 1 - Illustration of adaptive model partitioning between the edge device and cloud via
-early-exit DNNs.]()
+early-exit DNNs.](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/motivation/adaptive_offloading_via_ee_comnet2.png)
 
 As illustrated in Figure 1, the early-exit DNN is split into two parts: the first part being implemented on the edge device and the second remotely at the
 cloud server. Side branches are included only in the first part. At inference time, given an input **x**, the device estimates the prediction confidence for the
@@ -56,8 +56,8 @@ and probability of offloading with and without calibration. The next section wil
 This subsection evaluates the benefits of TS in calibrating early-exit DNNs based on reliability diagrams and the ECE metric. For conciseness, we only
 present results for Caltech-256 since Cifar-100.
 
-             |  MobileNetV2 - Caltech256         |   
-:-------------------------:|:-------------------------:|:-------------------------:
+The following figures present the reliability diagram for MobileNetV2 on Caltech256.
+
 Conventional             |  Global TS          |  Per-branch TS 
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_conventional_alt-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_overall_alt-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_early_alt-1.png) |
@@ -66,6 +66,7 @@ Conventional             |  Global TS          |  Per-branch TS
 | ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_5_conventional_alt-1.png)   |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_5_overall_alt-1.png)|  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_5_early_alt-1.png)
 
 
+The following figures present the reliability diagram for ResNet18 on Caltech256.
 
 
 ### Offloading Probability
