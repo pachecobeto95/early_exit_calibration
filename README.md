@@ -56,7 +56,8 @@ and probability of offloading with and without calibration. The next section wil
 This subsection evaluates the benefits of TS in calibrating early-exit DNNs based on reliability diagrams and the ECE metric. For conciseness, we only
 present results for Caltech-256 since Cifar-100.
 
-             |  Global TS          |   ||
+Conventional             |  Global TS          |  Per-branch TS 
+:-------------------------:|:-------------------------:|:-------------------------:
 Conventional             |  Global TS          |  Per-branch TS 
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_conventional_alt-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_overall_alt-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_early_alt-1.png) |
