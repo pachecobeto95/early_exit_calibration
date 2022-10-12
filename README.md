@@ -59,7 +59,7 @@ present results for Caltech-256 since Cifar-100.
 
 Conventional             |  Global TS          |  Per-branch TS 
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_conventional_alt-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_overall_alt-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_early_alt-1.png)
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_conventional_alt-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_overall_alt-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_early_alt-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_early_alt-1.png) 
 
 ### Offloading Probability
 We evaluate the impact of calibrating an early-exit DNN on the offloading probability. Figures 6 and 7 show the probability of classifying at the
