@@ -56,7 +56,7 @@ and probability of offloading with and without calibration. The next section wil
 This subsection evaluates the benefits of TS in calibrating early-exit DNNs based on reliability diagrams and the ECE metric. For conciseness, we only
 present results for Caltech-256 since Cifar-100.
 
-Conventional             |  Global TS          |  Per-branch TS 
+             |  MobileNetV2 - Caltech256         |   
 :-------------------------:|:-------------------------:|:-------------------------:
 Conventional             |  Global TS          |  Per-branch TS 
 :-------------------------:|:-------------------------:|:-------------------------:
