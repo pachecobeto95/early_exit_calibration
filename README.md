@@ -56,6 +56,10 @@ and probability of offloading with and without calibration. The next section wil
 This subsection evaluates the benefits of TS in calibrating early-exit DNNs based on reliability diagrams and the ECE metric. For conciseness, we only
 present results for Caltech-256 since Cifar-100.
 
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_conventional_alt-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/reliability_diagram/reliability_diagram_branch_2_early_alt-1.png)
+
 ### Offloading Probability
 We evaluate the impact of calibrating an early-exit DNN on the offloading probability. Figures 6 and 7 show the probability of classifying at the
 edge considering a given number k of side branches.
