@@ -14,7 +14,7 @@ to classify.
 Figure 1 illustrates an early-exit DNN with multiple side branches inserted into its intermediary layers. The vertices v1, · · · , vN represent the DNN backbone’s layers. The vertices b1, · · · , bk are the side branches, each of which contains a fully-connected layer capable of classifying inputs based on the features
 extracted in the previous layers v1, · · · , vi. In the experimental results, we insert five side branches. Thus, we have six exits, including the DNN backbone’s output layer. 
 
-![embed]https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/motivation/adaptive_offloading_via_ee_comnet2.pdf[/embed]
+[embed]https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/motivation/adaptive_offloading_via_ee_comnet2.pdf[/embed]
 
 As illustrated in Figure 1, the early-exit DNN is split into two parts: the first part being implemented on the edge device and the second remotely at the
 cloud server. Side branches are included only in the first part. At inference time, given an input **x**, the device estimates the prediction confidence for the
