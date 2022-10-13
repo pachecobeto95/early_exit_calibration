@@ -84,6 +84,22 @@ Conventional             |  Global TS          |  Per-branch TS
 | ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/reliability_diagram/reliability_diagram_branch_4_conventional_alt-1.png)   |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/reliability_diagram/reliability_diagram_branch_4_overall_alt-1.png)|  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/reliability_diagram/reliability_diagram_branch_4_early_alt-1.png)
 | ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/reliability_diagram/reliability_diagram_branch_5_conventional_alt-1.png)   |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/reliability_diagram/reliability_diagram_branch_5_overall_alt-1.png)|  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/reliability_diagram/reliability_diagram_branch_5_early_alt-1.png)
 
+
+
+The following figures present the reliability diagram for ResNet152 on Caltech256.
+
+Conventional             |  Global TS          |  Per-branch TS 
+:-------------------------:|:-------------------------:|:-------------------------:
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_2_conventional_alt-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_2_overall_alt-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_2_early_alt-1.png) |
+| ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_3_conventional_alt-1.png)   |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_3_overall_alt-1.png)|  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_3_early_alt-1.png)
+| ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_4_conventional_alt-1.png)   |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_4_overall_alt-1.png)|  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_4_early_alt-1.png)
+| ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_5_conventional_alt-1.png)   |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_5_overall_alt-1.png)|  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/reliability_diagram/reliability_diagram_branch_5_early_alt-1.png)
+
+
+
+
+
+
 ### Offloading Probability
 We evaluate the impact of calibrating an early-exit DNN on the offloading probability. Figures 6 and 7 show the probability of classifying at the
 edge considering a given number k of side branches.
