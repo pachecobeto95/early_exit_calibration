@@ -163,7 +163,7 @@ k = 3             |  k = 4          |  k = 5
 The following figures show the average edge accuracy considering a early-exit ResNet18 evaluated on Caltech-256 dataset.
 k = 3             |  k = 4          |  k = 5 
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/inference_outage/inference_outage_x_threshold_3_branch-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/inference_outage/inference_outage_x_threshold_4_branch-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/inference_outage/inference_outage_x_threshold_5_branch-1.png) 
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/inference_outage/inference_outage_x_threshold_4_branches-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/inference_outage/inference_outage_x_threshold_4_branches-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/inference_outage/inference_outage_x_threshold_5_branches-1.png) 
 
 The following figures show the average edge accuracy considering a early-exit VGG16 evaluated on Caltech-256 dataset.
 k = 3             |  k = 4          |  k = 5 
