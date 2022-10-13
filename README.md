@@ -125,8 +125,12 @@ The following figures show the edge probability considering a early-exit ResNet1
 
 
 ### Average Accuracy Before and After Calibration
-This section evaluates the impact of calibration on the average accuracy
-in the same numerical setting considered in the previous section. 
+This section evaluates the impact of calibration on the average edge accuracy in the same numerical setting considered in the previous section. The following figures show the average edge accuracy considering k side branches at the edge device.
+
+The following figures show the average edge accuracy considering a early-exit MobileNetV2 evaluated on Caltech-256 dataset.
+           k=2             |   k=3                     |      k=4                  |         k=5 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_5_branches-1.png)
 
 ### Edge Inference Outage Probability
 The next figures evaluated the edge inference outage probability versus the
