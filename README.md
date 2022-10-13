@@ -107,6 +107,23 @@ The following figures show the edge probability considering a early-exit MobileN
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 ![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_5_branches-1.png)
 
+The following figures show the edge probability considering a early-exit ResNet18 evaluated on Caltech-256 dataset.
+           k=2             |   k=3                     |      k=4                  |         k=5 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/edge_probability/edge_probability_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/edge_probability/edge_probability_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/edge_probability/edge_probability_5_branches-1.png)
+
+The following figures show the edge probability considering a early-exit VGG16 evaluated on Caltech-256 dataset.
+           k=2             |   k=3                     |      k=4                  |         k=5 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/edge_probability/edge_probability_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/edge_probability/edge_probability_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/edge_probability/edge_probability_5_branches-1.png)
+
+The following figures show the edge probability considering a early-exit ResNet152 evaluated on Caltech-256 dataset.
+           k=2             |   k=3                     |      k=4                  |         k=5 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/edge_probability/edge_probability_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/edge_probability/edge_probability_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/edge_probability/edge_probability_5_branches-1.png)
+
+
+
 ### Average Accuracy Before and After Calibration
 This section evaluates the impact of calibration on the average accuracy
 in the same numerical setting considered in the previous section. 
