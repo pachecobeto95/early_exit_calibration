@@ -177,22 +177,28 @@ k = 3             |  k = 4          |  k = 5
 
 
 ### Missed Deadline Probability
-The next figures show the missed deadline probability as a function of
-the latency deadline for several early-exit DNN models on different datasets.
+This section presents results of missed deadline probability as a function of the latency deadline for several early-exit DNN models on different datasets. As explained before, the event missed deadline occurs when the early-exit DNN model cannot meet the application-defined accuracy and latency requirements. Therefore, we compute missed deadline probability as a fraction of batches that the event missed deadline occurs. First, we focus on showing the results on Caltech-256 dataset.
+
+
+The next figures show the results of missed deadline probability evaluating an early-exit MobileNetV2 considering the cloud location on Ohio, USA.
 
 k = 3             |  k = 4          |  k = 5 
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_3_branches_ptar_0.8_ohio_more_points-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_4_branches_ptar_0.8_ohio_more_points-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_5_branches_ptar_0.8_ohio_more_points-1.png) 
 
+The next figures show the results of missed deadline probability evaluating an early-exit MobileNetV2 considering the cloud location on São Paulo, Brazil.
+
 k = 3             |  k = 4          |  k = 5 
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_3_branches_ptar_0.8_sp_more_points-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_4_branches_ptar_0.8_sp_more_points-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_5_branches_ptar_0.8_sp_more_points-1.png) 
 
-ResNet18
+The next figures show the results of missed deadline probability evaluating an early-exit ResNet18 considering the cloud location on Ohio, USA.
 
 k = 3             |  k = 4          |  k = 5 
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/missed_deadline/missed_deadline_3_branches_ptar_0.8_ohio_more_points-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/missed_deadline/missed_deadline_4_branches_ptar_0.8_ohio_more_points-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/missed_deadline/missed_deadline_5_branches_ptar_0.8_ohio_more_points-1.png)
+
+The next figures show the results of missed deadline probability evaluating an early-exit ResNet18 considering the cloud location on São Paulo, Brazil.
 
 k = 3             |  k = 4          |  k = 5 
 :-------------------------:|:-------------------------:|:-------------------------:
