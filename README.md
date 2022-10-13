@@ -106,10 +106,9 @@ edge considering a given number k of side branches at the edge device.
 
 The following figures show the edge probability considering a early-exit MobileNetV2 evaluated on Caltech-256 dataset.
 
-             |  
+Solarized dark             |  Solarized Ocean
 :-------------------------:|:-------------------------:
-![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![k=3]([https://...Ocean.png](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_3_branches-1.png)) |
-|![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![k=3]([https://...Ocean.png](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_3_branches-1.png))
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![]([https://...Ocean.png](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_3_branches-1.png))
 
 
 ### Average Accuracy Before and After Calibration
