@@ -108,7 +108,7 @@ The following figures show the edge probability considering a early-exit MobileN
 
 Solarized dark             |  Solarized Ocean
 :-------------------------:|:-------------------------:
-![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![]([https://...Ocean.png](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_3_branches-1.png))
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_2_branches-1.png)  |  ![]([https://...Ocean.png](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/edge_probability/edge_probability_3_branches-1.png))|
 
 
 ### Average Accuracy Before and After Calibration
