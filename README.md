@@ -180,3 +180,11 @@ k = 3             |  k = 4          |  k = 5
 The next figures show the missed deadline probability as a function of
 the latency deadline for several early-exit DNN models on different datasets.
 
+k = 3             |  k = 4          |  k = 5 
+:-------------------------:|:-------------------------:|:-------------------------:
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_3_branches_ptar_0.8_ohio_more_points-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_4_branches_ptar_0.8_ohio_more_points-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_5_branches_ptar_0.8_ohio_more_points-1.png) 
+
+k = 3             |  k = 4          |  k = 5 
+:-------------------------:|:-------------------------:|:-------------------------:
+![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_3_branches_ptar_0.8_sp_more_points-1.png)  |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_4_branches_ptar_0.8_sp_more_points-1.png) |  ![](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/missed_deadline/missed_deadline_5_branches_ptar_0.8_sp_more_points-1.png) 
+
