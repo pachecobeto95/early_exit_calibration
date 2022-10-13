@@ -132,6 +132,24 @@ The following figures show the average edge accuracy considering a early-exit Mo
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 ![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/mobilenet/caltech256/accuracy/accuracy_edge_threshold_5_branches-1.png)
 
+
+The following figures show the average edge accuracy considering a early-exit ResNet18 evaluated on Caltech-256 dataset.
+           k=2             |   k=3                     |      k=4                  |         k=5 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/accuracy/accuracy_edge_threshold_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/accuracy/accuracy_edge_threshold_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/accuracy/accuracy_edge_threshold_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet18/caltech256/accuracy/accuracy_edge_threshold_5_branches-1.png)
+
+The following figures show the average edge accuracy considering a early-exit VGG16 evaluated on Caltech-256 dataset.
+           k=2             |   k=3                     |      k=4                  |         k=5 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/accuracy/accuracy_edge_threshold_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/accuracy/accuracy_edge_threshold_3_branch-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/accuracy/accuracy_edge_threshold_4_branch-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/vgg16/caltech256/accuracy/accuracy_edge_threshold_5_branch-1.png)
+
+The following figures show the average edge accuracy considering a early-exit ResNet152 evaluated on Caltech-256 dataset.
+           k=2             |   k=3                     |      k=4                  |         k=5 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![k=2](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/accuracy/accuracy_edge_threshold_2_branches-1.png)  |  ![k=3](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/accuracy/accuracy_edge_threshold_3_branches-1.png) |  ![k=4](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/accuracy/accuracy_edge_threshold_4_branches-1.png)|  ![k=5](https://github.com/pachecobeto95/early_exit_calibration/blob/main/plots/resnet152/caltech256/accuracy/accuracy_edge_threshold_5_branches-1.png)
+
+
+
 ### Edge Inference Outage Probability
 The next figures evaluated the edge inference outage probability versus the
 desired reliability level ptar for several early-exit DNN models on different datasets.
